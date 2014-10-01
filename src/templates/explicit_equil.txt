@@ -1,0 +1,33 @@
+Peptides: Equilibration
+&cntrl
+  imin = 0, 
+  irest = 1, 
+  ntx = 7, 
+  iwrap=1,
+  ntb = 2, 
+  pres0 = 1.0, 
+  ntp = 1,
+  taup = 2.0,
+  cut = 10.0, 
+  ntc = [NTC],
+  ntf = [NTF],
+  tempi = 300.0, 
+  temp0 = 300.0,
+  ntt = 3, 
+  gamma_ln = 1.0,
+  nstlim = [TIMESTEPS], 
+  dt = [DT],
+  ntpr = 100, 
+  ntwx = 100, 
+  ntwr = 1000,
+  ifqnt=1
+ /
+ &qmmm
+  qmmask='[QMREGION]',
+  qmcharge=[QMCHARGE],
+  qm_theory="[QMTHEORY]",
+  qmshake=[QMSHAKE],
+  qm_ewald=1, 
+  qm_pme=1
+ /
+END

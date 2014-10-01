@@ -1,0 +1,19 @@
+
+== REQUIREMENTS REQUIREMENTS
+== PLMD: Peptide Ligand Molecular Dynamics
+==========================================
+
+==== 1. Simulation Setup Module
+===============================
+
+* Easy plug & play of multiple peptides & ions into MD simulations
+* Set up multiple cases with random ligand posisions
+* Control the details of the submission scripts
+* Control the details of the Amber input files (minimization, heating and production runs)
+* Save appropriate files required for subsequent advanced analyses (e.g. binding energies)
+* Be able to call simulation analysis module after each sub-run and email graphs to user
+
+==== 2. Simulation Result Analysis
+==================================
+
+* 

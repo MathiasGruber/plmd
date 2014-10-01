@@ -1,0 +1,21 @@
+Peptide: Minimization in solvatebox
+&cntrl
+  imin = 1,
+  maxcyc = 10000,
+  ncyc = 5000,
+  ntb = 1,
+  ntr = 1,
+  ntc = [NTC],
+  ntf = [NTF],
+  cut = 10.0,
+  ifqnt=1
+ /
+&qmmm
+  qmmask='[QMREGION]',
+  qmcharge=[QMCHARGE],
+  qm_theory="[QMTHEORY]",
+  qmshake=[QMSHAKE],
+  qm_ewald=1, 
+  qm_pme=1
+ /
+END
