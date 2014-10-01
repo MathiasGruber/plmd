@@ -11,6 +11,13 @@ The modules furthermore aims to be easily extensible, so that as more and more
 simulation setups needs to be explored, these can easily be integrated into the
 PLMD module. 
 
+PLMD REQUIREMENTS
+====================
+
+PLMD requires both Amber12 and AmberTools to be installed and set up properly in 
+environment
+
+
 Installation
 ============================
 
@@ -26,13 +33,6 @@ export PATH
 where path-to-PLMD represents the location of the PLMD folder. This 
 snippet can conveniently be placed at the bottom of your .bashrc file, so that
 it'll be available on all future sessions.
-
-PLMD REQUIREMENTS
-====================
-
-PLMD requires both Amber12 and AmberTools to be installed and set up properly in 
-environment
-
 
 How To: Setting up a simulation
 =============================
