@@ -14,8 +14,10 @@ PLMD module.
 PLMD REQUIREMENTS
 ====================
 
-PLMD requires both Amber12 and AmberTools to be installed and set up properly in 
-environment
+* PLMD requires both Amber12 and AmberTools to be installed and set up properly in 
+environment.
+
+* The scripts were specifically designed to run at the DTU HPC cluster: http://www.cc.dtu.dk, but may work elsewhere as well
 
 
 Installation
