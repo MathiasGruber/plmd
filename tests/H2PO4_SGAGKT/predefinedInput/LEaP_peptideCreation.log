@@ -26,9 +26,5 @@ Loading library: /Users/mathiasgruber/amber12/dat/leap/lib/solvents.lib
 Writing pdb file: predefinedInput/peptides.pdb
  Converting N-terminal residue name to PDB format: NSER -> SER
  Converting C-terminal residue name to PDB format: CTHR -> THR
- Converting N-terminal residue name to PDB format: NSER -> SER
- Converting C-terminal residue name to PDB format: CTHR -> THR
- Converting N-terminal residue name to PDB format: NSER -> SER
- Converting C-terminal residue name to PDB format: CTHR -> THR
 
 *** Error: tl_getline(): not interactive, use stdio.

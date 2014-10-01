@@ -16,6 +16,8 @@ class Setup:
         self.peptideCount = config.getint('inputFiles', 'peptideCount')
         self.cases = config.getint('inputFiles', 'cases')
         
+        self.quiet = config.getint('inputFiles', 'quiet')
+        
         self.ff = config.get('simulationParameters', 'forceField')
         self.qmCharge = config.get('simulationParameters', 'qmCharge')
         self.qmShake = config.get('simulationParameters', 'qmShake')
@@ -82,9 +84,10 @@ class Setup:
         print "wallClock: " + self.wallClock
         print "mdRuns: " + self.mdRuns
 
-        var = raw_input("Please confirm this submission with any key press. Press 'n' to discontinue")
-        if var == 'n':
-            raise Exception('Configuration file was not confirmed')
+        if self.quiet == False:
+            var = raw_input("Please confirm this submission with any key press. Press 'n' to discontinue")
+            if var == 'n':
+                raise Exception('Configuration file was not confirmed')
 
     # In case a special peptide was specified, or a predifned ligand was chosen
     def setupInputFiles(self):
@@ -334,9 +337,10 @@ class Setup:
     def confirmProgress(self):
         
         # Let user review results
-        var = raw_input("Please review above and confirm with any key press. Press 'n' to discontinue")
-        if var == 'n':
-            raise Exception('Progress was disconinued at the request of the user')
+        if self.quiet == False:
+            var = raw_input("Please review above and confirm with any key press. Press 'n' to discontinue")
+            if var == 'n':
+                raise Exception('Progress was disconinued at the request of the user')
             
     # A function for printing the current stage of the process to the user
     def printStage( self,info ):
@@ -367,7 +371,8 @@ class Setup:
         self.createFolder( "cases/"+folderString+"/pdb-files" )            
         
         # Let the user keep up
-        raw_input("Press any key to continue")
+        if self.quiet == False:
+            raw_input("Press any key to continue")
         
     # Function for creation of folders
     def createFolder( self, folderDir ):

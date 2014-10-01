@@ -3,12 +3,6 @@ source /Users/mathiasgruber/amber12/dat/leap/cmd/leaprc.ff12SB
 
 # Import structures
 compound = sequence { NSER GLY ALA GLY LYS CTHR }
-peptide0 = sequence { NSER GLY ALA GLY LYS CTHR }
-translate peptide0 {0 0 0}
-compound = combine { compound peptide0 }
-peptide1 = sequence { NSER GLY ALA GLY LYS CTHR }
-translate peptide1 {0 10 0}
-compound = combine { compound peptide1 }
 
 # Solvate & save again
 savepdb compound predefinedInput/peptides.pdb

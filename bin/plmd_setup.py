@@ -18,6 +18,7 @@ parser.add_argument('-pLigand', dest='ligand', help='Predefined Ligand from list
 parser.add_argument('-lCount', dest='ligandCount', help='Number of ligands to include.')
 parser.add_argument('-pPeptide', dest='peptide', help='3-letter notation string for automatic peptide generation with LEaP, e.g. "NSER GLY ALA GLY LYS CTHR"')
 parser.add_argument('-pCount', dest='peptideCount', help='Number of peptides to include. Only works for automatically LEaP generated peptides sequences.')
+parser.add_argument('--quiet', dest='quiet',action='store_const', const=True, default=False, help="Don't show status messages during setup.")
 
 # Start execution
 try:
@@ -51,6 +52,9 @@ try:
         if args.peptideCount:
             print "Setting the peptide count to: "+args.peptideCount
             config.set('inputFiles', 'peptideCount', args.peptideCount )
+    
+    # If quiet option was requested, then update the config var
+    config.set('inputFiles', 'quiet', args.quiet )
     
     # Instantiate PLMD and pass the configuration file
     plmd = plmd.caseSetup.Setup( config )

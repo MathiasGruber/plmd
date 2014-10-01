@@ -30,26 +30,14 @@ Loading parameters: /Users/mathiasgruber/amber12/dat/leap/parm/gaff.dat
 Reading title:
 AMBER General Force Field for organic molecules (Version 1.5, January 2013)
 Loading PDB file: ./predefinedInput/peptides.pdb
-  total atoms in file: 222
-Loading Mol2 file: ./predefinedInput/PO4.mol2
-Reading MOLECULE named PO4
-Loading Mol2 file: ./predefinedInput/PO4.mol2
-Reading MOLECULE named PO4
-Loading Mol2 file: ./predefinedInput/PO4.mol2
-Reading MOLECULE named PO4
-Loading Mol2 file: ./predefinedInput/PO4.mol2
-Reading MOLECULE named PO4
+  total atoms in file: 74
 Loading Mol2 file: ./predefinedInput/PO4.mol2
 Reading MOLECULE named PO4
 Writing pdb file: cases/0/pdb-files/finalLEaP_nowat.pdb
  Converting N-terminal residue name to PDB format: NSER -> SER
  Converting C-terminal residue name to PDB format: CTHR -> THR
- Converting N-terminal residue name to PDB format: NSER -> SER
- Converting C-terminal residue name to PDB format: CTHR -> THR
- Converting N-terminal residue name to PDB format: NSER -> SER
- Converting C-terminal residue name to PDB format: CTHR -> THR
 Checking Unit.
-WARNING: The unperturbed charge of the unit: -12.000000 is not zero.
+WARNING: The unperturbed charge of the unit: -2.000000 is not zero.
 
  -- ignoring the warning.
 
@@ -59,7 +47,7 @@ Building bond parameters.
 Building angle parameters.
 Building proper torsion parameters.
 Building improper torsion parameters.
- total 33 improper torsions applied
+ total 11 improper torsions applied
 Building H-Bond parameters.
 Incorporating Non-Bonded adjustments.
 Not Marking per-residue atom chain types.
@@ -69,27 +57,23 @@ Marking per-residue atom chain types.
 
 	res	total affected
 
-	CTHR	3
-	NSER	3
-	PO4	5
+	CTHR	1
+	NSER	1
+	PO4	1
   )
  (no restraints)
-  Solute vdw bounding box:              28.366 32.649 15.130
-  Total bounding box for atom centers:  48.366 52.649 35.130
+  Solute vdw bounding box:              26.027 18.812 12.180
+  Total bounding box for atom centers:  46.027 38.812 32.180
   Solvent unit box:                     18.774 18.774 18.774
-  Total vdw box size:                   51.627 55.536 38.379 angstroms.
-  Volume: 110038.141 A^3 
-  Total mass 48770.076 amu,  Density 0.736 g/cc
-  Added 2594 residues.
+  Total vdw box size:                   48.797 41.891 35.644 angstroms.
+  Volume: 72860.573 A^3 
+  Total mass 30305.912 amu,  Density 0.691 g/cc
+  Added 1648 residues.
 Writing pdb file: cases/0/pdb-files/finalLEaP.pdb
  Converting N-terminal residue name to PDB format: NSER -> SER
  Converting C-terminal residue name to PDB format: CTHR -> THR
- Converting N-terminal residue name to PDB format: NSER -> SER
- Converting C-terminal residue name to PDB format: CTHR -> THR
- Converting N-terminal residue name to PDB format: NSER -> SER
- Converting C-terminal residue name to PDB format: CTHR -> THR
 Checking Unit.
-WARNING: The unperturbed charge of the unit: -12.000000 is not zero.
+WARNING: The unperturbed charge of the unit: -2.000000 is not zero.
 
  -- ignoring the warning.
 
@@ -99,7 +83,7 @@ Building bond parameters.
 Building angle parameters.
 Building proper torsion parameters.
 Building improper torsion parameters.
- total 33 improper torsions applied
+ total 11 improper torsions applied
 Building H-Bond parameters.
 Incorporating Non-Bonded adjustments.
 Not Marking per-residue atom chain types.
@@ -109,10 +93,10 @@ Marking per-residue atom chain types.
 
 	res	total affected
 
-	CTHR	3
-	NSER	3
-	PO4	5
-	WAT	2594
+	CTHR	1
+	NSER	1
+	PO4	1
+	WAT	1648
   )
  (no restraints)
 
