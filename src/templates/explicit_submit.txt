@@ -25,7 +25,7 @@ if [[ -e [FOLDER]/md-files/min.rst ]]; then
     echo '-- min.rst file exists, skipping minimization 1'
 else
     echo '-- Running Minimization 1'
-    mpirun $amber -O -i [FOLDER]/in_files/min.in -o [FOLDER]/md-logs/outMin.log -c [FOLDER]/md-files/peptide.inpcrd -p [FOLDER]/md-files/peptide.prmtop -r [FOLDER]/md-files/min.rst -ref [FOLDER]/md-files/peptide.inpcrd
+    mpirun $amber -O -i [FOLDER]/in_files/explicit_min.in -o [FOLDER]/md-logs/outMin.log -c [FOLDER]/md-files/peptide.inpcrd -p [FOLDER]/md-files/peptide.prmtop -r [FOLDER]/md-files/min.rst -ref [FOLDER]/md-files/peptide.inpcrd
     
     # Create pdb file for the minimized structure
     ${AMBERHOME}/bin/ambpdb -p [FOLDER]/md-files/peptide.prmtop < [FOLDER]/md-files/min.rst > [FOLDER]/pdb-files/minimization.pdb
@@ -38,7 +38,7 @@ if [[ -e [FOLDER]/md-files/equil0.rst ]]; then
     echo '-- equil0.rst file exists, skipping heating'
 elif [[ -e [FOLDER]/md-files/min.rst ]]; then
     echo '-- Running Heating'
-    mpirun $amber -O -i [FOLDER]/in_files/heat.in -o [FOLDER]/md-logs/outHeat.log -c [FOLDER]/md-files/min.rst -p [FOLDER]/md-files/peptide.prmtop -r [FOLDER]/md-files/equil0.rst -x [FOLDER]/md-files/heat.mdcrd -ref [FOLDER]/md-files/min.rst
+    mpirun $amber -O -i [FOLDER]/in_files/explicit_heat.in -o [FOLDER]/md-logs/outHeat.log -c [FOLDER]/md-files/min.rst -p [FOLDER]/md-files/peptide.prmtop -r [FOLDER]/md-files/equil0.rst -x [FOLDER]/md-files/heat.mdcrd -ref [FOLDER]/md-files/min.rst
     
     # Convert the resulting structure to a pdb-file
     ${AMBERHOME}/bin/ambpdb -p [FOLDER]/md-files/peptide.prmtop < [FOLDER]/md-files/equil0.rst > [FOLDER]/pdb-files/heating.pdb
@@ -56,7 +56,7 @@ local cStep=$1
 local pStep=$(($1-1))
 
 # Start amber MD simulation
-mpirun $amber -O -i [FOLDER]/in_files/equil.in -o [FOLDER]/md-logs/outMD${cStep}.log -c [FOLDER]/md-files/equil${pStep}.rst -p [FOLDER]/md-files/peptide.prmtop -r [FOLDER]/md-files/equil${cStep}.rst -x [FOLDER]/md-files/equil${cStep}.mdcrd
+mpirun $amber -O -i [FOLDER]/in_files/explicit_equil.in -o [FOLDER]/md-logs/outMD${cStep}.log -c [FOLDER]/md-files/equil${pStep}.rst -p [FOLDER]/md-files/peptide.prmtop -r [FOLDER]/md-files/equil${cStep}.rst -x [FOLDER]/md-files/equil${cStep}.mdcrd
 
 # Create pdb file from results
 $AMBERHOME/bin/ambpdb -p [FOLDER]/md-files/peptide.prmtop < [FOLDER]/md-files/equil${cStep}.rst > [FOLDER]/pdb-files/equil${cStep}.pdb
