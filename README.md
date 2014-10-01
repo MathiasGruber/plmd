@@ -1,10 +1,4 @@
-plmd
-====
-
-PLMD: Peptide Ligand Molecular Dynamics, is a python module for managing the creation, running and analysis of molecular dynamics simulations of peptide-ion interactions using Amber12 and AmberTools.
-
-== DESCRIPTION 
-== PLMD: Peptide Ligand Molecular Dynamics
+PLMD: Peptide Ligand Molecular Dynamics
 ==============
 
 The purpose of this module is automatize the use of the Molecular Dynamics 
@@ -17,47 +11,47 @@ The modules furthermore aims to be easily extensible, so that as more and more
 simulation setups needs to be explored, these can easily be integrated into the
 PLMD module. 
 
-== Installation
+Installation
 ============================
 
 To install the library, you must save the PLMD/ folder to a location of your 
 choice, and then specify the following environment variable in your shell:
 
-PLMDHOME=/zhome/20/f/54098/PLMD
+PLMDHOME=path-to-PLMD
 export PLMDHOME
 PATH=$PLMDHOME/bin:$PATH
 export PYTHONPATH=$PYTHONPATH:$PLMDHOME/src
 export PATH
 
-where /zhome/20/f/54098/PLMD represents the location of the PLMD folder. This 
+where path-to-PLMD represents the location of the PLMD folder. This 
 snippet can conveniently be placed at the bottom of your .bashrc file, so that
-it'll be available on all future bash sessions.
+it'll be available on all future sessions.
 
-== PLMD REQUIREMENTS
+PLMD REQUIREMENTS
 ====================
 
-PLMD requires the module "mdanalysis" to work. This module can be retrieved at:
-https://code.google.com/p/mdanalysis/
+PLMD requires both Amber12 and AmberTools to be installed and set up properly in 
+environment
 
 
-== Setting up a simulation
+How To: Setting up a simulation
 =============================
 
 * Create a directory where you want to run your simulations
 * Create/retrieve your input files (peptide & ligand)
-* Run the command "setupAmberLigandSim peptide.pdb ligand.mol2"
-* This will create the file setupAll.py in your directory. This file contains all the information required to setup the simulation
+* Create a configuration file in your directory (see plmd/tools/defaultExample.cfg for sample)
+* Run the command "plmd_setup configFile.cfg" to setup case directories
+* Type "plmd_setup -h" for further information
 
-== Phase 2: Setup the cases & submit to queue
+How To: Submit to queue
 =============================================
 
-* Once you're done editing the setupAll.py file, you execute it by typing "python setupAll.py"
-* This will set up all the specified cases, input files etc. 
-* It will also create a file called "submitAll.py".
-* Running "python submitAll.py" will submit all the cases to the queue.
+* To submit a case directory to the cluster queue use: "plmd_submit cases/" where cases/ is the directory created during previous step.
+* The plmd_submit command will walk through all subdirectories and submit all identified cases.
 
-== Phase 3: Post-processing
+How To: Run Post-processing
 ===========================
 
-* Once the simulations are completed
+* To run postprocessing on a given case use the command "plmd_analyze cases/" which will run postprocessing on all cases found in your cases/ directory.
+* Type "plmd_analyze -h" for further information
 
