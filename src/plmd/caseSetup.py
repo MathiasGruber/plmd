@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import os
+import os, shutil
 import structureManipulation, peptideConstructor
 from copy import deepcopy
 
@@ -93,11 +93,7 @@ class Setup:
         self.printStage( "Stage 0. Ensuring integrity of input files" )
         
         # Create directory
-        if os.path.isdir( "predefinedInput" ):
-            os.system("rm -r predefinedInput")
-        os.system("mkdir predefinedInput")
-        
-        # Move specified files if they are there
+        self.createFolder ( "predefinedInput" )       
                
         # Check if a peptide should be made
         if self.pPeptide != None:
@@ -111,7 +107,6 @@ class Setup:
             
             # Overwrite default configs
             self.peptide = "predefinedInput/peptides.pdb"
-            
               
         # Check if we should use predefined ion from package
         if self.pLigand != None:
@@ -123,15 +118,13 @@ class Setup:
             if os.path.isfile( self.PLMDHOME+"/src/ligands/"+self.pLigand+".mol2" ):
                 
                 # Copy and set
-                os.system( "cp "+self.PLMDHOME+"/src/ligands/"+self.pLigand+".mol2 predefinedInput/" )                
+                shutil.copy( self.PLMDHOME+"/src/ligands/"+self.pLigand+".mol2", "predefinedInput/"+self.pLigand+".mol2" )
                 self.ligand = "predefinedInput/"+self.pLigand+".mol2"
                 
             else:
                 
                 # Raise error
                 raise Exception("Tried to include invalid pre-defined ligand.")                
-           
-        
 
     # Main functon for setting up all the cases
     def setupCases(self):
@@ -358,20 +351,7 @@ class Setup:
         self.printStage( "Stage 2, Creating main cases/ folder" )
         
         # Check if folder already exists, confirm deletion
-        if os.path.isdir("cases") == True:
-            var = raw_input("This will delete any previous data in the cases/ folder. Confirm with any key press. Press 'n' to discontinue")
-            if var == 'n':
-                raise Exception('You opted not to delete the previous cases/ folder')
-                
-            # Delete all in old folder
-            os.system("rm -rf cases/*")
-        else:
-            
-            # Create new folder
-            os.system("mkdir cases")
-        
-            # Let the user keep up
-            var = raw_input("Press any key to continue")
+        self.createFolder( "cases" )        
             
     # Create simulation folder structure
     def creatCaseFolder(self, folderString):
@@ -380,17 +360,29 @@ class Setup:
         self.printStage( "Stage 3, Case: "+folderString+". Setting up case folder structures" )
             
         # Setup required folders
-        os.system("mkdir cases/"+folderString)
-        os.system("mkdir cases/"+folderString+"/md-files/")
-        os.system("mkdir cases/"+folderString+"/in_files/")
-        os.system("mkdir cases/"+folderString+"/md-logs/")
-        os.system("mkdir cases/"+folderString+"/pdb-files/")
+        self.createFolder( "cases/"+folderString )            
+        self.createFolder( "cases/"+folderString+"/md-files" )            
+        self.createFolder( "cases/"+folderString+"/in_files" )            
+        self.createFolder( "cases/"+folderString+"/md-logs" )            
+        self.createFolder( "cases/"+folderString+"/pdb-files" )            
         
-        print "Created the following folder structure"
-        for dirname, dirnames, filenames in os.walk("cases/"+folderString):
-            for subdirname in dirnames:
-                print os.path.join(dirname, subdirname)
-                
         # Let the user keep up
-        var = raw_input("Press any key to continue")
+        raw_input("Press any key to continue")
         
+    # Function for creation of folders
+    def createFolder( self, folderDir ):
+        
+        # Check if the folder is already there
+        if os.path.isdir( folderDir ) == True:
+            var = raw_input("This will delete any previous data in the "+folderDir+"/ folder. Confirm with any key press. Press 'n' to discontinue")
+            if var == 'n':
+                raise Exception('You opted not to delete the '+folderDir+'/ folder')
+                
+            # Delete all in old folder
+            shutil.rmtree( folderDir )
+        
+        # Create new folder
+        os.mkdir( folderDir )
+        
+        # Print info
+        print "Created the folder: " + folderDir + "/"

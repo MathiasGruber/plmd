@@ -1,6 +1,6 @@
 import os
 
-# Class that deals with all LEaP interaction
+# Class that handles creation of new linear peptides using LEaP
 class Creator:
     
     # Constructor for sanity checks

@@ -5,19 +5,19 @@ source /Users/mathiasgruber/amber12/dat/leap/cmd/leaprc.gaff
 # Import structures
 compound = loadpdb predefinedInput/peptides.pdb
 ligand0 = loadmol2 predefinedInput/PO4.mol2
-translate ligand0 {24.7756569489 12.74763415 1.96772419951 }
+translate ligand0 {22.5803026371 8.83062421518 -7.71826826381 }
 compound = combine { compound ligand0 }
 ligand1 = loadmol2 predefinedInput/PO4.mol2
-translate ligand1 {-0.925704108849 14.0577560821 1.69040582692 }
+translate ligand1 {22.7682331513 4.95643032437 -1.41435275276 }
 compound = combine { compound ligand1 }
 ligand2 = loadmol2 predefinedInput/PO4.mol2
-translate ligand2 {24.5279041307 26.5917037698 -2.31880578393 }
+translate ligand2 {25.7678041614 22.2634786994 -2.37746098327 }
 compound = combine { compound ligand2 }
 ligand3 = loadmol2 predefinedInput/PO4.mol2
-translate ligand3 {22.4411194142 6.10867076823 -6.47087096843 }
+translate ligand3 {3.8815953555 -0.549726401376 -5.6875370484 }
 compound = combine { compound ligand3 }
 ligand4 = loadmol2 predefinedInput/PO4.mol2
-translate ligand4 {17.8789953196 28.5209337855 5.9845751898 }
+translate ligand4 {3.1162982238 -2.32158207566 -4.38512436252 }
 compound = combine { compound ligand4 }
    
 # Save no water files

@@ -74,13 +74,13 @@ Marking per-residue atom chain types.
 	PO4	5
   )
  (no restraints)
-  Solute vdw bounding box:              31.416 31.950 17.998
-  Total bounding box for atom centers:  51.416 51.950 37.998
+  Solute vdw bounding box:              28.366 32.649 15.130
+  Total bounding box for atom centers:  48.366 52.649 35.130
   Solvent unit box:                     18.774 18.774 18.774
-  Total vdw box size:                   54.779 54.622 40.862 angstroms.
-  Volume: 122264.349 A^3 
-  Total mass 54913.532 amu,  Density 0.746 g/cc
-  Added 2935 residues.
+  Total vdw box size:                   51.627 55.536 38.379 angstroms.
+  Volume: 110038.141 A^3 
+  Total mass 48770.076 amu,  Density 0.736 g/cc
+  Added 2594 residues.
 Writing pdb file: cases/0/pdb-files/finalLEaP.pdb
  Converting N-terminal residue name to PDB format: NSER -> SER
  Converting C-terminal residue name to PDB format: CTHR -> THR
@@ -112,7 +112,7 @@ Marking per-residue atom chain types.
 	CTHR	3
 	NSER	3
 	PO4	5
-	WAT	2935
+	WAT	2594
   )
  (no restraints)
 
