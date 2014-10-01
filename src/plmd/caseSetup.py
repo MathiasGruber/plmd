@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import os
-import calcPosition, peptideConstructor
+import structureManipulation, peptideConstructor
 from copy import deepcopy
 
 class Setup:
@@ -137,12 +137,12 @@ class Setup:
     def setupCases(self):
         
         # Get the coordinates & resnames of peptide & ligand. Passed by reference.
-        calcPosition.processStructureFile( self.peptide , "pdb", self.peptideCoordinates, self.peptideResnames )
-        calcPosition.processStructureFile( self.ligand , "mol2", self.ligandCoordinates, self.ligandResnames )
+        structureManipulation.processStructureFile( self.peptide , "pdb", self.peptideCoordinates, self.peptideResnames )
+        structureManipulation.processStructureFile( self.ligand , "mol2", self.ligandCoordinates, self.ligandResnames )
         
         # Get center of masses
-        self.peptideCenterOfMass = calcPosition.centerOfMass( self.peptideCoordinates )
-        self.ligandCenterOfMass = calcPosition.centerOfMass( self.ligandCoordinates )
+        self.peptideCenterOfMass = structureManipulation.centerOfMass( self.peptideCoordinates )
+        self.ligandCenterOfMass = structureManipulation.centerOfMass( self.ligandCoordinates )
         
         # Create main folder for project
         self.createMainFolder()        
@@ -160,7 +160,7 @@ class Setup:
             # LEaP performs the translation using this vector
             self.ligandsForLEaP[:] = []
             for x in range(0, self.ligandCount):
-                self.ligandsForLEaP.append( calcPosition.calcIonPosition( 
+                self.ligandsForLEaP.append( structureManipulation.calcIonPosition( 
                     deepcopy(self.peptideCenterOfMass), 
                     deepcopy(self.peptideCoordinates),
                     deepcopy(self.ligandCenterOfMass), 

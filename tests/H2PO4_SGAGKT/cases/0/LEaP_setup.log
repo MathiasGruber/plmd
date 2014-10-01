@@ -30,7 +30,13 @@ Loading parameters: /Users/mathiasgruber/amber12/dat/leap/parm/gaff.dat
 Reading title:
 AMBER General Force Field for organic molecules (Version 1.5, January 2013)
 Loading PDB file: ./predefinedInput/peptides.pdb
-  total atoms in file: 28
+  total atoms in file: 222
+Loading Mol2 file: ./predefinedInput/PO4.mol2
+Reading MOLECULE named PO4
+Loading Mol2 file: ./predefinedInput/PO4.mol2
+Reading MOLECULE named PO4
+Loading Mol2 file: ./predefinedInput/PO4.mol2
+Reading MOLECULE named PO4
 Loading Mol2 file: ./predefinedInput/PO4.mol2
 Reading MOLECULE named PO4
 Loading Mol2 file: ./predefinedInput/PO4.mol2
@@ -38,44 +44,12 @@ Reading MOLECULE named PO4
 Writing pdb file: cases/0/pdb-files/finalLEaP_nowat.pdb
  Converting N-terminal residue name to PDB format: NSER -> SER
  Converting C-terminal residue name to PDB format: CTHR -> THR
-Checking Unit.
-WARNING: The unperturbed charge of the unit: -6.000000 is not zero.
-
- -- ignoring the warning.
-
-Building topology.
-Building atom parameters.
-Building bond parameters.
-Building angle parameters.
-Building proper torsion parameters.
-Building improper torsion parameters.
- total 3 improper torsions applied
-Building H-Bond parameters.
-Incorporating Non-Bonded adjustments.
-Not Marking per-residue atom chain types.
-Marking per-residue atom chain types.
-  (Residues lacking connect0/connect1 - 
-   these don't have chain types marked:
-
-	res	total affected
-
-	CTHR	1
-	NSER	1
-	PO4	2
-  )
- (no restraints)
-  Solute vdw bounding box:              14.808 10.257 9.680
-  Total bounding box for atom centers:  34.808 30.257 29.680
-  Solvent unit box:                     18.774 18.774 18.774
-  Total vdw box size:                   37.435 33.399 31.855 angstroms.
-  Volume: 39828.264 A^3 
-  Total mass 16430.382 amu,  Density 0.685 g/cc
-  Added 890 residues.
-Writing pdb file: cases/0/pdb-files/finalLEaP.pdb
+ Converting N-terminal residue name to PDB format: NSER -> SER
+ Converting C-terminal residue name to PDB format: CTHR -> THR
  Converting N-terminal residue name to PDB format: NSER -> SER
  Converting C-terminal residue name to PDB format: CTHR -> THR
 Checking Unit.
-WARNING: The unperturbed charge of the unit: -6.000000 is not zero.
+WARNING: The unperturbed charge of the unit: -12.000000 is not zero.
 
  -- ignoring the warning.
 
@@ -85,7 +59,7 @@ Building bond parameters.
 Building angle parameters.
 Building proper torsion parameters.
 Building improper torsion parameters.
- total 3 improper torsions applied
+ total 33 improper torsions applied
 Building H-Bond parameters.
 Incorporating Non-Bonded adjustments.
 Not Marking per-residue atom chain types.
@@ -95,10 +69,50 @@ Marking per-residue atom chain types.
 
 	res	total affected
 
-	CTHR	1
-	NSER	1
-	PO4	2
-	WAT	890
+	CTHR	3
+	NSER	3
+	PO4	5
+  )
+ (no restraints)
+  Solute vdw bounding box:              31.416 31.950 17.998
+  Total bounding box for atom centers:  51.416 51.950 37.998
+  Solvent unit box:                     18.774 18.774 18.774
+  Total vdw box size:                   54.779 54.622 40.862 angstroms.
+  Volume: 122264.349 A^3 
+  Total mass 54913.532 amu,  Density 0.746 g/cc
+  Added 2935 residues.
+Writing pdb file: cases/0/pdb-files/finalLEaP.pdb
+ Converting N-terminal residue name to PDB format: NSER -> SER
+ Converting C-terminal residue name to PDB format: CTHR -> THR
+ Converting N-terminal residue name to PDB format: NSER -> SER
+ Converting C-terminal residue name to PDB format: CTHR -> THR
+ Converting N-terminal residue name to PDB format: NSER -> SER
+ Converting C-terminal residue name to PDB format: CTHR -> THR
+Checking Unit.
+WARNING: The unperturbed charge of the unit: -12.000000 is not zero.
+
+ -- ignoring the warning.
+
+Building topology.
+Building atom parameters.
+Building bond parameters.
+Building angle parameters.
+Building proper torsion parameters.
+Building improper torsion parameters.
+ total 33 improper torsions applied
+Building H-Bond parameters.
+Incorporating Non-Bonded adjustments.
+Not Marking per-residue atom chain types.
+Marking per-residue atom chain types.
+  (Residues lacking connect0/connect1 - 
+   these don't have chain types marked:
+
+	res	total affected
+
+	CTHR	3
+	NSER	3
+	PO4	5
+	WAT	2935
   )
  (no restraints)
 

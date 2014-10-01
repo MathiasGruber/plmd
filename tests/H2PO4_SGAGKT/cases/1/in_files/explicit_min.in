@@ -11,7 +11,7 @@ Peptide: Minimization in solvatebox
   ifqnt=1
  /
 &qmmm
-  qmmask=':3-4',
+  qmmask=':19-23',
   qmcharge=-2,
   qm_theory="PM6-D",
   qmshake=1,

@@ -1,6 +1,5 @@
 #!/usr/bin/python
 import argparse, ConfigParser, sys
-import plmd.structureManipulation
 import plmd.caseSetup
 import traceback
 
@@ -54,7 +53,7 @@ try:
             config.set('inputFiles', 'peptideCount', args.peptideCount )
     
     # Instantiate PLMD and pass the configuration file
-    plmd = plmd.Setup( config )
+    plmd = plmd.caseSetup.Setup( config )
     
     # Setup all the cases
     plmd.setupCases()
