@@ -25,7 +25,7 @@ To install the library, you must save the PLMD/ folder to a location of your
 choice, and then specify the following environment variable in your shell:
 
 ```
-> PLMDHOME=path-to-PLMD
+PLMDHOME=path-to-PLMD
 export PLMDHOME
 PATH=$PLMDHOME/bin:$PATH
 export PYTHONPATH=$PYTHONPATH:$PLMDHOME/src
