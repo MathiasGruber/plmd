@@ -23,8 +23,14 @@ environment.
 Installation
 ============================
 
-To install the library, you must save the PLMD/ folder to a location of your 
-choice, and then specify the following environment variable in your shell:
+You can get the latest version of this git repository by following command:
+
+```
+git clone git://github.com/MathiasGruber/plmd.git
+```
+
+This will create a "plmd" directory with all the required files. Before you can use the package it
+must be linked within your environment. This can be done by running following commands in your shell:
 
 ```
 PLMDHOME=path-to-plmd
@@ -34,7 +40,7 @@ export PYTHONPATH=$PYTHONPATH:$PLMDHOME/src
 export PATH
 ```
 
-where path-to-PLMD represents the location of the PLMD folder. This 
+where path-to-plmd represents the location of the plmd/ folder. This 
 snippet can conveniently be placed at the bottom of your .bashrc file, so that
 it'll be available on all future sessions.
 
