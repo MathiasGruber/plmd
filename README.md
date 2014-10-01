@@ -44,6 +44,12 @@ where path-to-plmd represents the location of the plmd/ folder. This
 snippet can conveniently be placed at the bottom of your .bashrc file, so that
 it'll be available on all future sessions.
 
+To update to the latest version simply do a pull from within the plmd directory:
+
+```
+git pull
+``` 
+
 How To: Setting up a simulation
 =============================
 
