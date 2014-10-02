@@ -1,18 +1,18 @@
 #!/usr/bin/python
-import argparse, os, sys
-import traceback
 
-# Argument parsing & help page
-parser = argparse.ArgumentParser(description=
-"""PLMD (Peptide Ligand Molecular Dynamics) 
-Scans supplied directory for PLMD cases and submits all found cases using their submission script
-""")
-
-# Only argument is the configFile
-parser.add_argument('scanDir', help='Directory to scan for MD cases to submit to queue')
-
-# Start execution
 try:
+    
+    import argparse, os, sys
+    import traceback
+    
+    # Argument parsing & help page
+    parser = argparse.ArgumentParser(description=
+    """PLMD (Peptide Ligand Molecular Dynamics) 
+    Scans supplied directory for PLMD cases and submits all found cases using their submission script
+    """)
+    
+    # Only argument is the configFile
+    parser.add_argument('scanDir', help='Directory to scan for MD cases to submit to queue')    
     
     # Parse arguments
     args = parser.parse_args()  

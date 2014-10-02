@@ -1,20 +1,21 @@
 #!/usr/bin/python
-import argparse, ConfigParser, sys, os
-import plmd.baseClass
-import traceback
 
-# Argument parsing & help page
-parser = argparse.ArgumentParser(description=
-"""PLMD (Peptide Ligand Molecular Dynamics) 
-is designed to aid in setting up and running MD simulations of small
-peptides and ionic ligands using Amber and AmberTools MD packages. 
-""")
-
-# Only argument is the configFile
-parser.add_argument('configFile', help='a configuration file with details of the simulation')
-
-# Start execution
 try:
+    
+    import argparse, ConfigParser, sys, os
+    import plmd.baseClass
+    import traceback
+    
+    # Argument parsing & help page
+    parser = argparse.ArgumentParser(description=
+    """PLMD (Peptide Ligand Molecular Dynamics) 
+    is designed to aid in setting up and running MD simulations of small
+    peptides and ionic ligands using Amber and AmberTools MD packages. 
+    """)
+    
+    # Only argument is the configFile
+    parser.add_argument('configFile', help='a configuration file with details of the simulation')    
+    
     # Parse arguments
     args = parser.parse_args()  
     

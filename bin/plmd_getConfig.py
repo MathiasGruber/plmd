@@ -1,15 +1,16 @@
 #!/usr/bin/python
-import ConfigParser, argparse
-import traceback
-
-# Argument parsing & help page
-parser = argparse.ArgumentParser(description=
-"""PLMD (Peptide Ligand Molecular Dynamics) 
-Retrieves a default configuration file for use with PLMD
-""")
 
 # Start execution
 try:
+    
+    import ConfigParser, argparse
+    import traceback
+    
+    # Argument parsing & help page
+    parser = argparse.ArgumentParser(description=
+    """PLMD (Peptide Ligand Molecular Dynamics) 
+    Retrieves a default configuration file for use with PLMD
+    """)
     
     # The default config options
     config = ConfigParser.RawConfigParser()

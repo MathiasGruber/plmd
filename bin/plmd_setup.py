@@ -1,27 +1,28 @@
 #!/usr/bin/python
-import argparse, ConfigParser, sys
-import plmd.caseSetup
-import traceback
 
-# Argument parsing & help page
-parser = argparse.ArgumentParser(description=
-"""PLMD (Peptide Ligand Molecular Dynamics) 
-Sets up case directories and input files for Molecular Dynamics in Amber12.
-""")
-
-# Predefined ligands available in this package
-predefinedLigands = [ "PO4","HPO4","H2PO4","SO4","HSO4","H2SO4" ]
-
-# Only argument is the configFile
-parser.add_argument('configFile', help='a configuration file with details of the simulation')
-parser.add_argument('-pLigand', dest='ligand', help='Predefined Ligand from list: '+', '.join(predefinedLigands))
-parser.add_argument('-lCount', dest='ligandCount', help='Number of ligands to include.')
-parser.add_argument('-pPeptide', dest='peptide', help='3-letter notation string for automatic peptide generation with LEaP, e.g. "NSER GLY ALA GLY LYS CTHR"')
-parser.add_argument('-pCount', dest='peptideCount', help='Number of peptides to include. Only works for automatically LEaP generated peptides sequences.')
-parser.add_argument('--quiet', dest='quiet',action='store_const', const=True, default=False, help="Don't show status messages during setup.")
-
-# Start execution
 try:
+    
+    import argparse, ConfigParser, sys
+    import plmd.caseSetup
+    import traceback
+    
+    # Argument parsing & help page
+    parser = argparse.ArgumentParser(description=
+    """PLMD (Peptide Ligand Molecular Dynamics) 
+    Sets up case directories and input files for Molecular Dynamics in Amber12.
+    """)
+    
+    # Predefined ligands available in this package
+    predefinedLigands = [ "PO4","HPO4","H2PO4","SO4","HSO4","H2SO4" ]
+    
+    # Only argument is the configFile
+    parser.add_argument('configFile', help='a configuration file with details of the simulation')
+    parser.add_argument('-pLigand', dest='ligand', help='Predefined Ligand from list: '+', '.join(predefinedLigands))
+    parser.add_argument('-lCount', dest='ligandCount', help='Number of ligands to include.')
+    parser.add_argument('-pPeptide', dest='peptide', help='3-letter notation string for automatic peptide generation with LEaP, e.g. "NSER GLY ALA GLY LYS CTHR"')
+    parser.add_argument('-pCount', dest='peptideCount', help='Number of peptides to include. Only works for automatically LEaP generated peptides sequences.')
+    parser.add_argument('--quiet', dest='quiet',action='store_const', const=True, default=False, help="Don't show status messages during setup.")
+    
     # Parse arguments
     args = parser.parse_args()  
     

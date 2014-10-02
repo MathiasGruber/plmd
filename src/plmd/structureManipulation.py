@@ -2,6 +2,7 @@
 import math
 import numpy as np
 from random import gauss
+from copy import deepcopy
 
 # Function to make a random vector in n-dimensional space
 def make_rand_vector(dims,length):
@@ -23,7 +24,7 @@ def processStructureFile( filename , filetype, coor, resnames ):
         i = 1
         for line in pdb:
             if line[0:4] == 'ATOM' or line[0:4] == 'HETA':
-                coor[i] = [ float(line[31:38]),float(line[39:46]),float(line[47:54]) ]
+                coor.append( [ float(line[31:38]),float(line[39:46]),float(line[47:54]) ] )
                 resnames.append( line[17:20] )
                 i = i + 1
     elif filetype == "mol2":
@@ -37,7 +38,7 @@ def processStructureFile( filename , filetype, coor, resnames ):
                 continue
             if readCoords == True:
                 data = line.split()
-                coor[i] = [ float(data[2]),float(data[3]),float(data[4]) ]
+                coor.append( [ float(data[2]),float(data[3]),float(data[4]) ] )
                 resnames.append( data[7] )
                 i = i + 1
     else:
@@ -47,7 +48,7 @@ def processStructureFile( filename , filetype, coor, resnames ):
 # Calculate the center of mass (CoM) of a coordinate list (not accounting for density diffs)
 def centerOfMass( structureCoords ):
     avgX,avgY,avgZ = np.array([]),np.array([]),np.array([])
-    for k, strucCor in structureCoords.items():
+    for strucCor in structureCoords:
         avgX = np.append( avgX, strucCor[0] )
         avgY = np.append( avgY, strucCor[1] )
         avgZ = np.append( avgZ, strucCor[2] )
@@ -63,10 +64,12 @@ def calcVector( structureFrom, structureTo ):
 
 # Translate a structure (pass by reference)
 def translateStructure( structureCoords, translateVector ):
-    for i in structureCoords:
+    for i, s in enumerate(structureCoords):
+        
         structureCoords[i][0] = structureCoords[i][0] + translateVector[0]
         structureCoords[i][1] = structureCoords[i][1] + translateVector[1]
         structureCoords[i][2] = structureCoords[i][2] + translateVector[2]
+        
     
 # Calculate the shortest distance between two structures
 def shortestDistance( peptideCoord, ligandCoord ):
@@ -74,8 +77,9 @@ def shortestDistance( peptideCoord, ligandCoord ):
     peptideAtomID = 0
     ligandAtomID = 0
     curDistance = 0
-    for i in peptideCoord:
-        for n in ligandCoord:
+    
+    for i, pepCoor in enumerate(peptideCoord):
+        for n, ligCoor in enumerate(ligandCoord):
             curDistance = distance( peptideCoord[i], ligandCoord[n] )
             if curDistance < shortestDist:
                 shortestDist = curDistance
@@ -92,7 +96,15 @@ def reduceVectorMagnitude( vector , magReduction ):
     return newVector
 
 # Calculate ion position
-def calcIonPosition( peptideCoM, peptideCoords, ligandCoM, ligandCoords ):
+def calcIonPosition( peptideCoM, peptideCoords, ligandCoM, ligandCoords, otherLigands = {} ):
+    
+    # Get all the coordinates to aim the ligand towards (peptide + other ligands)
+    if otherLigands:
+        for translation in otherLigands:
+            obstacleLigand =  deepcopy(ligandCoords)
+            translateStructure( obstacleLigand , translation )
+            for coor in obstacleLigand:
+                peptideCoords.append(coor)       
     
     # Translate ligand to be on top of peptide
     ligandToPeptideVector = calcVector( peptideCoM, ligandCoM )
@@ -101,7 +113,7 @@ def calcIonPosition( peptideCoM, peptideCoords, ligandCoM, ligandCoords ):
     # Get random 3d vector with 100A length and translate ligand along it
     randomVector = make_rand_vector(3, 100) 
     translateStructure( ligandCoords, randomVector )
-    
+
     # Get shortest distance between peptide and ion and translate along that
     # Stay a distance of 3.5AA away from the peptide though
     shortestDist = shortestDistance( peptideCoords, ligandCoords )

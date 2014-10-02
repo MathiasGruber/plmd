@@ -32,9 +32,9 @@ class Setup:
         self.mdRuns = config.get('submissionParameters', 'mdRuns')
         
         # Variables for storing initial data about the components
-        self.peptideCoordinates = {}
+        self.peptideCoordinates = []
         self.peptideCenterOfMass = []
-        self.ligandCoordinates = {}
+        self.ligandCoordinates = []
         self.ligandCenterOfMass = []
         
         # Variables used during case setup
@@ -156,12 +156,15 @@ class Setup:
             # LEaP performs the translation using this vector
             self.ligandsForLEaP[:] = []
             for x in range(0, self.ligandCount):
-                self.ligandsForLEaP.append( structureManipulation.calcIonPosition( 
-                    deepcopy(self.peptideCenterOfMass), 
-                    deepcopy(self.peptideCoordinates),
-                    deepcopy(self.ligandCenterOfMass), 
-                    deepcopy(self.ligandCoordinates)
-                ))
+                self.ligandsForLEaP.append( 
+                    structureManipulation.calcIonPosition( 
+                        deepcopy(self.peptideCenterOfMass), 
+                        deepcopy(self.peptideCoordinates),
+                        deepcopy(self.ligandCenterOfMass), 
+                        deepcopy(self.ligandCoordinates),
+                        self.ligandsForLEaP
+                    )
+                )
             
             # Create LEaP input File for case
             self.leapCreateInput( str(i) )
