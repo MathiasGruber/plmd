@@ -44,10 +44,11 @@ where path-to-plmd represents the location of the plmd/ folder. This
 snippet can conveniently be placed at the bottom of your .bashrc file, so that
 it'll be available on all future sessions.
 
-To update to the latest version simply do a pull from within the plmd directory:
+This module is still under constant development. To update to the latest version (and delete all local changes) simply do a pull from within the plmd directory as follows:
 
 ```
-git pull
+git fetch --all
+git reset --hard origin/master
 ``` 
 
 How To: Setting up a simulation
