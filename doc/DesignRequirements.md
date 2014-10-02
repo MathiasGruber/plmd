@@ -28,5 +28,7 @@ PLMD: Peptide Ligand Molecular Dynamics
   8. Time correlation
   9. 2d RMSd analysis
   10. Cluster analysis of peptide structures
+  11. Hydrogen binding
+  12. Block analysis
 * Upon completion be able to send plots & pdb files in zip package to email specified in config file
 * Should contain a module for visualizing the molecules, and create images & vmd states of all the different stages automatically
