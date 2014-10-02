@@ -72,7 +72,11 @@ plmd_setup.py defaultExample.cfg -pPeptide "NSER GLY ALA GLY LYS CTHR" -pLigand 
 How To: Submit to queue
 =============================================
 
-* To submit a case directory to the cluster queue use: "plmd_submit cases/" where cases/ is the directory created during previous step.
+* To submit a case directory to the cluster queue use: 
+```
+plmd_submit cases/
+```
+where `cases/` is the directory created during previous step.
 * The plmd_submit command will walk through all subdirectories and submit all identified cases.
 
 How To: Run Post-processing
