@@ -1,16 +1,17 @@
 #!/usr/bin/python
-import argparse, sys, os, re
-import traceback
 
-# Argument parsing & help page
-parser = argparse.ArgumentParser(description=
-"""PLMD (Peptide Ligand Molecular Dynamics) 
-Clears up unimportant logging data from MD runs, but retains the initial case structure & results.
-""")
-
-
-# Start execution
 try:
+
+    # Import modules
+    import argparse, sys, os, re
+    import traceback
+    
+    # Argument parsing & help page
+    parser = argparse.ArgumentParser(description=
+    """PLMD (Peptide Ligand Molecular Dynamics) 
+    Clears up unimportant logging data from MD runs, but retains the initial case structure & results.
+    """)    
+    
     # Parse arguments
     args = parser.parse_args()  
     
