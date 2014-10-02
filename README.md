@@ -51,13 +51,22 @@ git fetch --all
 git reset --hard origin/master
 ``` 
 
-How To: Setting up a simulation
+How To: Setting up a set of cases
 =============================
 
 * Create a directory where you want to run your simulations
-* Create/retrieve your input files (peptide & ligand)
-* Create a configuration file in your directory (see plmd/tools/defaultExample.cfg for sample)
-* Run the command "plmd_setup configFile.cfg" to setup case directories
+* Go to that directory.
+* Retrieve default configuration file with the command 
+```
+plmd_getConfig.py
+```
+* Review the configuration file. Ligand & peptide input files do not have to be specified.
+* Setup cases according to config file by typing
+
+```
+plmd_setup.py defaultExample.cfg -pPeptide "NSER GLY ALA GLY LYS CTHR" -pLigand HPO4 --quiet
+```
+* This will create a cases/ directory with all your chases set up and ready for submission.
 * Type "plmd_setup -h" for further information
 
 How To: Submit to queue
