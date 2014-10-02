@@ -7,4 +7,9 @@ Improvements
 Bug Fixes
 ==
 
-* Ensure that ligands are not placed on top of each other
+* Ensure that ligands are not placed on top of each other :+1:
+
+Features
+== 
+
+* Analysis module
