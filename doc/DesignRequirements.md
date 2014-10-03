@@ -3,6 +3,8 @@ DESIGN REQUIREMENTS
 PLMD: Peptide Ligand Molecular Dynamics
 ==========================================
 
+The two major components of this package are a module for setting up & running multiple molecular dynamics simulations of a given peptide-ligand interaction, and a module for subsequent analysis of the results.
+
 1. Simulation Setup Module
 ===============================
 
