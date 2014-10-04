@@ -1,0 +1,30 @@
+-I: Adding /Users/mathiasgruber/amber12/dat/leap/prep to search path.
+-I: Adding /Users/mathiasgruber/amber12/dat/leap/lib to search path.
+-I: Adding /Users/mathiasgruber/amber12/dat/leap/parm to search path.
+-I: Adding /Users/mathiasgruber/amber12/dat/leap/cmd to search path.
+-f: Source predefinedInput/LEaP.ff.
+
+Welcome to LEaP!
+(no leaprc in search path)
+Sourcing: ./predefinedInput/LEaP.ff
+----- Source: /Users/mathiasgruber/amber12/dat/leap/cmd/leaprc.ff12SB
+----- Source of /Users/mathiasgruber/amber12/dat/leap/cmd/leaprc.ff12SB done
+Log file: ./leap.log
+Loading parameters: /Users/mathiasgruber/amber12/dat/leap/parm/parm10.dat
+Reading title:
+PARM99 + frcmod.ff99SB + frcmod.parmbsc0 + OL3 for RNA
+Loading parameters: /Users/mathiasgruber/amber12/dat/leap/parm/frcmod.ff12SB
+Reading force field modification type file (frcmod)
+Reading title:
+ff12SB protein backbone and sidechain parameters
+Loading library: /Users/mathiasgruber/amber12/dat/leap/lib/amino12.lib
+Loading library: /Users/mathiasgruber/amber12/dat/leap/lib/aminoct12.lib
+Loading library: /Users/mathiasgruber/amber12/dat/leap/lib/aminont12.lib
+Loading library: /Users/mathiasgruber/amber12/dat/leap/lib/nucleic12.lib
+Loading library: /Users/mathiasgruber/amber12/dat/leap/lib/ions08.lib
+Loading library: /Users/mathiasgruber/amber12/dat/leap/lib/solvents.lib
+Writing pdb file: predefinedInput/peptides.pdb
+ Converting N-terminal residue name to PDB format: NSER -> SER
+ Converting C-terminal residue name to PDB format: CTHR -> THR
+
+*** Error: tl_getline(): not interactive, use stdio.

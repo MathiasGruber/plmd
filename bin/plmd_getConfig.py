@@ -20,7 +20,7 @@ try:
     config.set('inputFiles', 'ligandCount', '1')
     config.set('inputFiles', 'peptide', 'filenamePeptide.pdb')
     config.set('inputFiles', 'peptideCount', '1')
-    config.set('inputFiles', 'cases', '16')
+    config.set('inputFiles', 'cases', '10')
     
     config.add_section('simulationParameters')
     config.set('simulationParameters', 'forceField', 'leaprc.ff12SB')

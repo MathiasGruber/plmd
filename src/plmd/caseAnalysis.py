@@ -1,5 +1,7 @@
 #!/usr/bin/python
 import os
+import analyses
+import MDAnalysis
 
 class Analysis:
 
@@ -22,7 +24,12 @@ class Analysis:
         # Merge Trajectories
         if self.noMerge == False:
             self.mergeTrajectories( caseDir )
-        
+            
+        # Run analyses if trajectory file is present
+        if self.hasTrajectory( caseDir ):
+            
+            # Run block analysis
+            analyses.blockAnalysis( caseDir )
         
     # A function for merging all the trajectories in a case fodler
     def mergeTrajectories( self, caseDir ):
@@ -65,6 +72,10 @@ class Analysis:
         # Run the cpptraj utility
         os.system( "$AMBERHOME/bin/cpptraj -p "+path+"/peptide.prmtop -i "+caseDir+"/trajectoryMerge.ptraj" )
         
+    # A function for checking whether a binpos file exists
+    def hasTrajectory( self, caseDir ):
+        if os.path.isfile( caseDir+"/mergedResult.binpos" ):
+            return True
     
     # A function for printing the current stage of the process to the user
     def printStage( self,info ):
