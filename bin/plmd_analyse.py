@@ -9,12 +9,14 @@ try:
     # Argument parsing & help page
     parser = argparse.ArgumentParser(description=
     """PLMD (Peptide Ligand Molecular Dynamics) 
-    Scans through directories and analyses all MD case directories.
+    Scans through directories and analyses all production trajectories in case directories.
     """)
     
     # Only argument is the configFile
     parser.add_argument('configFile', help='Configuration file with details of the analysis')
-    parser.add_argument('scanDir', help='Directory to scan for MD cases to submit to queue')    
+    parser.add_argument('scanDir', help='Directory to scan for MD cases to submit to queue') 
+    parser.add_argument('-noMerge', dest='noMerge',action='store_const', const=True, default=False, help="Do not merge all found mdcrd files") 
+    parser.add_argument('-noStrip', dest='noStrip',action='store_const', const=True, default=False, help="Do not strip water molecules in trajectory files") 
     
     # Parse arguments
     args = parser.parse_args()  
@@ -24,7 +26,8 @@ try:
     config.read( args.configFile )
     
     # Use command-line input to set config data
-    
+    config.set('analysisParameters', 'noMerge', args.noMerge )
+    config.set('analysisParameters', 'noStrip', args.noStrip )
     
     # The object handling analyses
     analyser = plmd.caseAnalysis.Analysis( config )    
