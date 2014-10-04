@@ -20,7 +20,7 @@ try:
     parser.add_argument('-lCount', dest='ligandCount', help='Number of ligands to include.')
     parser.add_argument('-pPeptide', dest='peptide', help='3-letter notation string for automatic peptide generation with LEaP, e.g. "NSER GLY ALA GLY LYS CTHR"')
     parser.add_argument('-pCount', dest='peptideCount', help='Number of peptides to include. Only works for automatically LEaP generated peptides sequences.')
-    parser.add_argument('--quiet', dest='quiet',action='store_const', const=True, default=False, help="Don't show status messages during setup.")
+    parser.add_argument('--quiet', dest='quiet',action='store_const', const="true", default="false", help="Don't show status messages during setup.")
     
     # Parse arguments
     args = parser.parse_args()  
@@ -29,7 +29,7 @@ try:
     f = open( args.configFile )
     
     # Open & parse the config file
-    config = ConfigParser.RawConfigParser({'pLigand': None, 'pPeptide': None})
+    config = ConfigParser.RawConfigParser()
     config.read( args.configFile )
     
     # If a pLigand was specified, overwrite input file value

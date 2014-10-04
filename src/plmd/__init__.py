@@ -1,9 +1,21 @@
 import os,shutil
+import plmd.defaultConfig
 
 class PLMD_module:
     
-    def load_config(self, config):
-    
+    def load_config(self, configSettings):
+        
+        # First load default settings, then overwrite with parameter settings
+        config = plmd.defaultConfig.getDefaultConfig()
+        for section in config.sections():
+            for (key, value) in config.items(section):
+                if configSettings.has_option( section, key ):
+                    config.set( section, key, configSettings.get( section, key ) )
+                
+        for section in config.sections():
+            for (key, value) in config.items(section):    
+                print key, value
+                
         print"__INIT__ FILE LOADED"
         # Save config parameters
         self.ligand = config.get('inputFiles', 'ligand')
@@ -14,7 +26,7 @@ class PLMD_module:
         self.peptideCount = config.getint('inputFiles', 'peptideCount')
         self.cases = config.getint('inputFiles', 'cases')
         
-        self.quiet = config.getint('inputFiles', 'quiet')
+        self.quiet = config.getboolean('inputFiles', 'quiet')
         
         self.ff = config.get('simulationParameters', 'forceField')
         self.qmCharge = config.get('simulationParameters', 'qmCharge')
@@ -40,6 +52,11 @@ class PLMD_module:
         self.ligandResnames = []
         self.peptideResnames = []
         self.qmRegion = ""
+        
+        # Analysis configuration
+        self.email = config.get('analysisParameters', 'email')
+        self.noMerge = config.getboolean('analysisParameters', 'noMerge')
+        self.noStrip = config.getboolean('analysisParameters', 'noStrip')
         
         # Get environment vars for PLMD & Amber. Will raise exceptions if not found
         self.PLMDHOME = os.environ["PLMDHOME"]

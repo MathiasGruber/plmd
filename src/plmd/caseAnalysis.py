@@ -1,16 +1,14 @@
 #!/usr/bin/python
 import os
-import analyses
+import analyses, plmd
 import MDAnalysis
 
-class Analysis:
+class Analysis (plmd.PLMD_module):
 
     def __init__(self, config):
         
         # Save config parameters
-        self.email = config.get('analysisParameters', 'email')
-        self.noMerge = config.get('analysisParameters', 'noMerge')
-        self.noStrip = config.get('analysisParameters', 'noStrip')
+        self.load_config( config )  
         
         # Clear screen
         os.system("clear")        

@@ -1,16 +1,8 @@
 #!/usr/bin/python
+import ConfigParser
 
-# Start execution
-try:
-    
-    import ConfigParser, argparse
-    import traceback
-    
-    # Argument parsing & help page
-    parser = argparse.ArgumentParser(description=
-    """PLMD (Peptide Ligand Molecular Dynamics) 
-    Retrieves a default configuration file for use with PLMD
-    """)
+# Get a default config file
+def getDefaultConfig():
     
     # The default config options
     config = ConfigParser.RawConfigParser()
@@ -18,9 +10,12 @@ try:
     config.add_section('inputFiles')
     config.set('inputFiles', 'ligand', 'filenameLigand.mol2')
     config.set('inputFiles', 'ligandCount', '1')
+    config.set('inputFiles', 'pLigand', 'false')
     config.set('inputFiles', 'peptide', 'filenamePeptide.pdb')
     config.set('inputFiles', 'peptideCount', '1')
+    config.set('inputFiles', 'pPeptide', 'false')
     config.set('inputFiles', 'cases', '10')
+    config.set('inputFiles', 'quiet', 'false')
     
     config.add_section('simulationParameters')
     config.set('simulationParameters', 'forceField', 'leaprc.ff12SB')
@@ -39,21 +34,7 @@ try:
 
     config.add_section('analysisParameters')
     config.set('analysisParameters', 'email', 'nano.mathias@gmail.com')
-
-    # Writing our configuration file to 'example.cfg'
-    with open('defaultExample.cfg', 'wb') as configfile:
-        config.write(configfile)
+    config.set('analysisParameters', 'noMerge', 'false')
+    config.set('analysisParameters', 'noStrip', 'false')
     
-
-except Exception as e:
-    
-    # Get into
-    exc_type, exc_value, exc_traceback = sys.exc_info()
-    
-    # Show traceback
-    print "\n\n====================="
-    print "== ERROR TRACEBACK =="
-    print "====================="
-    for err in traceback.format_exception(exc_type, exc_value,exc_traceback):
-        print err
-    print "Script execution was stopped."
+    return config
