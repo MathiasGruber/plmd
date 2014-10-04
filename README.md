@@ -17,6 +17,11 @@ PLMD REQUIREMENTS
 * PLMD requires both Amber12 and AmberTools to be installed and set up properly in 
 environment.
 
+* The analysis module requires MDAnalysis to be installed, which can be acquired here (It is pre-installed on the DTU HPC):
+```
+https://code.google.com/p/mdanalysis/
+```
+
 * The scripts were specifically designed to run at the DTU HPC cluster: http://www.cc.dtu.dk, but may work elsewhere, with appropriate modifications, as well
 
 
