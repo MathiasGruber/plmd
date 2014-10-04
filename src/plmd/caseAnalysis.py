@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import os
+import os, shutil
 import analyses, plmd
 
 # This is the overall Analysis class which merges trajectories,
@@ -53,7 +53,7 @@ class Analysis (plmd.PLMD_module):
                 handler.energyAnalysis()
             
             # First compress the analysis/plots folder
-            self.zipDirectory( caseDir+"/analysis/plots" )
+            self.zipDirectory( caseDir+"/analysis/plots", caseDir+"/analysis/plots" )
             
             # Email the compressed file to the user
             self.emailFile( caseDir+"/analysis/plots.tar" )
@@ -112,8 +112,10 @@ class Analysis (plmd.PLMD_module):
             return True
             
     # Zip a given directory
-    def zipDirectory( self, caseDir ):
-        self.printStage("Compressing: "+caseDir)
+    def zipDirectory( self, archive, folder ):
+        self.printStage("Compressing: "+folder)
+        shutil.make_archive( archive, "gztar", folder )
+               
         
     # Email a given file to the user
     def emailFile( self, filepath ):
