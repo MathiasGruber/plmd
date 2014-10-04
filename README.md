@@ -22,6 +22,8 @@ environment.
 https://code.google.com/p/mdanalysis/
 ```
 
+* The module furthermore requires numpy, matplotlib, and pylab modules to be installed
+
 * The scripts were specifically designed to run at the DTU HPC cluster: http://www.cc.dtu.dk, but may work elsewhere, with appropriate modifications, as well
 
 
