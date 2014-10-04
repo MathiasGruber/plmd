@@ -1,11 +1,15 @@
 #!/usr/bin/python
 import os
 import analyses, plmd
-import MDAnalysis
 
+# This is the overall Analysis class which merges trajectories,
+# manages the analysis handler, and emails the final results
 class Analysis (plmd.PLMD_module):
 
     def __init__(self, config):
+        
+        # Store the configuration data
+        self.configuration = config        
         
         # Save config parameters
         self.load_config( config )  
@@ -17,7 +21,7 @@ class Analysis (plmd.PLMD_module):
     def analyseDir( self, caseDir ):
         
         # User information
-        self.printStage( "Now going to analyse: "+caseDir )
+        self.printStage( "Analysis of case directory: "+caseDir )
         
         # Merge Trajectories
         if self.noMerge == False:
@@ -26,8 +30,18 @@ class Analysis (plmd.PLMD_module):
         # Run analyses if trajectory file is present
         if self.hasTrajectory( caseDir ):
             
+            # Create the directory for all the postprocessing stuff
+            self.createFolder( caseDir+"/analysis" )
+            self.createFolder( caseDir+"/analysis/plots" )
+            self.createFolder( caseDir+"/analysis/data" )
+            
+            # Instantiate the handler for the analyses
+            self.printStage( "Setting up analysis handler for: "+caseDir )
+            handler = analyses.analysisHandler( caseDir , self.configuration )
+            
             # Run block analysis
-            analyses.blockAnalysis( caseDir )
+            self.printStage( "Running block analysis for: "+caseDir )
+            handler.blockAnalysis()
         
     # A function for merging all the trajectories in a case fodler
     def mergeTrajectories( self, caseDir ):
@@ -57,9 +71,13 @@ class Analysis (plmd.PLMD_module):
         if self.noStrip == False:
             buffer = buffer + "strip :WAT"
         
-        # Create output binpos file (~48% size of .mdcrd)
+        # Create output binpos file 
+        # Advantages of this format:
+        # 1. ~48% size of .mdcrd
+        # 2. ~same size as binpos, 
+        # 3. Compatibility with MDAnalysis module
         buffer = buffer + """
-        trajout """+caseDir+"""/mergedResult.binpos binpos nobox
+        trajout """+caseDir+"""/mergedResult.dcd charmm nobox
         go
         """
         
@@ -72,11 +90,6 @@ class Analysis (plmd.PLMD_module):
         
     # A function for checking whether a binpos file exists
     def hasTrajectory( self, caseDir ):
-        if os.path.isfile( caseDir+"/mergedResult.binpos" ):
+        if os.path.isfile( caseDir+"/mergedResult.dcd" ):
             return True
     
-    # A function for printing the current stage of the process to the user
-    def printStage( self,info ):
-        print "\n"+"="*len(info)
-        print info
-        print "="*len(info)+"\n"

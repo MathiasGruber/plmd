@@ -2,9 +2,8 @@
 
 try:
     
-    import argparse, ConfigParser, sys, os
+    import argparse, ConfigParser, sys, os, traceback
     import plmd.caseAnalysis
-    import traceback
     
     # Argument parsing & help page
     parser = argparse.ArgumentParser(description=

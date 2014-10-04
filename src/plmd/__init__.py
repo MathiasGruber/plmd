@@ -12,11 +12,6 @@ class PLMD_module:
                 if configSettings.has_option( section, key ):
                     config.set( section, key, configSettings.get( section, key ) )
                 
-        for section in config.sections():
-            for (key, value) in config.items(section):    
-                print key, value
-                
-        print"__INIT__ FILE LOADED"
         # Save config parameters
         self.ligand = config.get('inputFiles', 'ligand')
         self.ligandCount = config.getint('inputFiles', 'ligandCount')
@@ -34,7 +29,7 @@ class PLMD_module:
         self.qmTheory = config.get('simulationParameters', 'qmTheory')
         self.ntf = config.get('simulationParameters', 'ntf')
         self.ntc = config.get('simulationParameters', 'ntc')
-        self.timestepSize = config.get('simulationParameters', 'timestepSize')
+        self.timestepSize = config.getfloat('simulationParameters', 'timestepSize')
         self.timestepNumber = config.get('simulationParameters', 'timestepNumber')
         
         self.nodeControl = config.get('submissionParameters', 'nodeControl')
@@ -61,6 +56,7 @@ class PLMD_module:
         # Get environment vars for PLMD & Amber. Will raise exceptions if not found
         self.PLMDHOME = os.environ["PLMDHOME"]
         self.AMBERHOME = os.environ["AMBERHOME"] 
+        
         
         # Shows the user some text and prompts him to accept it to continue script
     def confirmProgress(self):

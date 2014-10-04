@@ -38,7 +38,7 @@ class Setup (plmd.PLMD_module):
         print "qmTheory: " + self.qmTheory
         print "ntf: " + self.ntf 
         print "ntc: " + self.ntc
-        print "timestepSize: " + self.timestepSize
+        print "timestepSize: " + str(self.timestepSize)
         print "timestepNumber: " + self.timestepNumber
 
         print "\n== Submission Parameters"
@@ -194,7 +194,7 @@ class Setup (plmd.PLMD_module):
                                   replace("[QMTHEORY]", self.qmTheory ). \
                                   replace("[QMREGION]", self.qmRegion ). \
                                   replace("[TIMESTEPS]", self.timestepNumber ). \
-                                  replace("[DT]", self.timestepSize ). \
+                                  replace("[DT]", str(self.timestepSize) ). \
                                   replace("[QMSHAKE]", self.qmShake )
             TEMPLATE.close()
                                            
