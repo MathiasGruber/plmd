@@ -33,10 +33,15 @@ def getDefaultConfig():
     config.set('submissionParameters', 'mdRuns', '50')
 
     config.add_section('analysisParameters')
-    config.set('analysisParameters', 'email', 'nano.mathias@gmail.com')
     config.set('analysisParameters', 'noMerge', 'false')
     config.set('analysisParameters', 'noStrip', 'false')
     config.set('analysisParameters', 'noBlock', 'false')
     config.set('analysisParameters', 'noEnergy', 'false')
+    
+    config.add_section('emailConfiguration')
+    config.set('emailConfiguration', 'toEmail', 'nano.mathias@gmail.com')
+    config.set('emailConfiguration', 'fromEmail', 'plmd.env@gmail.com')
+    config.set('emailConfiguration', 'smtp', 'smtp.gmail.com')
+    config.set('emailConfiguration', 'port', '587')
     
     return config

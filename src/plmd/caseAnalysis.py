@@ -2,6 +2,14 @@
 import os, shutil
 import analyses, plmd
 
+# Sending email modules
+import smtplib
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEBase import MIMEBase
+from email.MIMEText import MIMEText
+from email.Utils import COMMASPACE, formatdate
+from email import Encoders
+
 # This is the overall Analysis class which merges trajectories,
 # manages the analysis handler, and emails the final results
 class Analysis (plmd.PLMD_module):
@@ -15,7 +23,7 @@ class Analysis (plmd.PLMD_module):
         self.load_config( config )  
         
         # Clear screen
-        os.system("clear")        
+        os.system("clear")    
             
     # Main function handling analysis of a single case directory
     def analyseDir( self, caseDir ):
@@ -56,7 +64,8 @@ class Analysis (plmd.PLMD_module):
             self.zipDirectory( caseDir+"/analysis/plots", caseDir+"/analysis/plots" )
             
             # Email the compressed file to the user
-            self.emailFile( caseDir+"/analysis/plots.tar" )
+            if self.toEmail != None:
+                self.emailFile( caseDir+"/analysis/plots.tar.gz" , caseDir )
         
     # A function for merging all the trajectories in a case fodler
     def mergeTrajectories( self, caseDir ):
@@ -116,8 +125,41 @@ class Analysis (plmd.PLMD_module):
         self.printStage("Compressing: "+folder)
         shutil.make_archive( archive, "gztar", folder )
                
-        
     # Email a given file to the user
-    def emailFile( self, filepath ):
+    def emailFile( self, filepath, caseDir ):
         self.printStage("Emailing the file: "+filepath)
-    
+        
+        # Message to be sent
+        msg = MIMEMultipart()
+        msg['Subject'] = 'PLMD analysis results'
+        msg['From'] = self.fromEmail
+        msg['To'] = self.toEmail  
+        msg.attach( MIMEText("""
+Results are in for: 
+Case: """+caseDir+"""
+Ligand: """+self.ligand+"""
+Peptide: """+self.peptide+"""
+""") )        
+        
+        part = MIMEBase('application', "octet-stream")
+        part.set_payload( open(filepath,"rb").read() )
+        Encoders.encode_base64(part)
+        part.add_header('Content-Disposition', 'attachment; filename="%s"' % os.path.basename(filepath))
+        msg.attach(part)
+        
+        # Info to user
+        print "Sending email to: "+self.toEmail
+        print "Using smtp server:"+self.smtp
+        
+        # Connect to SMTP
+        server = smtplib.SMTP( self.smtp , self.port )
+        server.ehlo()
+        server.starttls()
+        server.login( self.fromEmail, self.password)
+        
+        # Ship off email
+        server.sendmail(self.fromEmail, [self.toEmail], msg.as_string() )
+        server.quit()
+        
+        # Done
+        print "Email sent"

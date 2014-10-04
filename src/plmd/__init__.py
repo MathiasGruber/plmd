@@ -7,10 +7,9 @@ class PLMD_module:
         
         # First load default settings, then overwrite with parameter settings
         config = plmd.defaultConfig.getDefaultConfig()
-        for section in config.sections():
-            for (key, value) in config.items(section):
-                if configSettings.has_option( section, key ):
-                    config.set( section, key, configSettings.get( section, key ) )
+        for section in configSettings.sections():
+            for (key, value) in configSettings.items(section):
+                config.set( section, key, configSettings.get( section, key ) )
                 
         # Save config parameters
         self.ligand = config.get('inputFiles', 'ligand')
@@ -49,11 +48,20 @@ class PLMD_module:
         self.qmRegion = ""
         
         # Analysis configuration
-        self.email = config.get('analysisParameters', 'email')
         self.noMerge = config.getboolean('analysisParameters', 'noMerge')
         self.noStrip = config.getboolean('analysisParameters', 'noStrip')
         self.noBlock = config.getboolean('analysisParameters', 'noBlock')
         self.noEnergy = config.getboolean('analysisParameters', 'noEnergy')
+        
+        # Email configuration
+        if config.has_option( "emailConfiguration", "emailPass" ):
+            self.toEmail = config.get('emailConfiguration', 'toEmail')
+            self.fromEmail = config.get('emailConfiguration', 'fromEmail')
+            self.password = config.get('emailConfiguration', 'emailPass')
+            self.smtp = config.get('emailConfiguration', 'smtp')
+            self.port = config.get('emailConfiguration', 'port')
+        else:
+            self.toEmail = None
         
         # Get environment vars for PLMD & Amber. Will raise exceptions if not found
         self.PLMDHOME = os.environ["PLMDHOME"]

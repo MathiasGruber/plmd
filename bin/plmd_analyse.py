@@ -32,6 +32,16 @@ try:
     config.set('analysisParameters', 'noBlock', args.noBlock )
     config.set('analysisParameters', 'noEnergy', args.noEnergy )
     
+    # Get email pass
+    var = raw_input("""
+Using the smtp server specified in the configuration file,
+this tool can email the results to your email account.
+Please enter the password for your email, so as to use the smtp server.
+The password is not saved in any files.
+Press 'n' to not use this feature\n""")
+    if var != 'n':
+        config.set('emailConfiguration', 'emailPass', var )
+        
     # The object handling analyses
     analyser = plmd.caseAnalysis.Analysis( config )    
 
