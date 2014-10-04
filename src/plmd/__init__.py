@@ -52,6 +52,8 @@ class PLMD_module:
         self.email = config.get('analysisParameters', 'email')
         self.noMerge = config.getboolean('analysisParameters', 'noMerge')
         self.noStrip = config.getboolean('analysisParameters', 'noStrip')
+        self.noBlock = config.getboolean('analysisParameters', 'noBlock')
+        self.noEnergy = config.getboolean('analysisParameters', 'noEnergy')
         
         # Get environment vars for PLMD & Amber. Will raise exceptions if not found
         self.PLMDHOME = os.environ["PLMDHOME"]
@@ -74,13 +76,14 @@ class PLMD_module:
         print "="*len(info)+"\n"
         
     # Function for creation of folders
-    def createFolder( self, folderDir ):
+    def createFolder( self, folderDir , silent = False ):
         
         # Check if the folder is already there
         if os.path.isdir( folderDir ) == True:
-            var = raw_input("This will delete any previous data in the "+folderDir+"/ folder. Confirm with any key press. Press 'n' to discontinue")
-            if var == 'n':
-                raise Exception('You opted not to delete the '+folderDir+'/ folder')
+            if silent == False:
+                var = raw_input("This will delete any previous data in the "+folderDir+"/ folder. Confirm with any key press. Press 'n' to discontinue")
+                if var == 'n':
+                    raise Exception('You opted not to delete the '+folderDir+'/ folder')
                 
             # Delete all in old folder
             shutil.rmtree( folderDir )

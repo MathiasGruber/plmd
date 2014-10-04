@@ -36,5 +36,7 @@ def getDefaultConfig():
     config.set('analysisParameters', 'email', 'nano.mathias@gmail.com')
     config.set('analysisParameters', 'noMerge', 'false')
     config.set('analysisParameters', 'noStrip', 'false')
+    config.set('analysisParameters', 'noBlock', 'false')
+    config.set('analysisParameters', 'noEnergy', 'false')
     
     return config

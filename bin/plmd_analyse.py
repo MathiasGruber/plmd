@@ -15,7 +15,9 @@ try:
     parser.add_argument('configFile', help='Configuration file with details of the analysis')
     parser.add_argument('scanDir', help='Directory to scan for MD cases to submit to queue') 
     parser.add_argument('-noMerge', dest='noMerge',action='store_const', const="true", default="false", help="Do not merge all found mdcrd files") 
-    parser.add_argument('-noStrip', dest='noStrip',action='store_const', const="true", default="false", help="Do not strip water molecules in trajectory files") 
+    parser.add_argument('-noStrip', dest='noStrip',action='store_const', const="true", default="false", help="Do not strip water molecules in trajectory files")
+    parser.add_argument('-noBlock', dest='noBlock',action='store_const', const="true", default="false", help="Do not run block averaging analysis")
+    parser.add_argument('-noEnergy', dest='noEnergy',action='store_const', const="true", default="false", help="Do not run energy analysis")
     
     # Parse arguments
     args = parser.parse_args()  
@@ -27,6 +29,8 @@ try:
     # Use command-line input to set config data
     config.set('analysisParameters', 'noMerge', args.noMerge )
     config.set('analysisParameters', 'noStrip', args.noStrip )
+    config.set('analysisParameters', 'noBlock', args.noBlock )
+    config.set('analysisParameters', 'noEnergy', args.noEnergy )
     
     # The object handling analyses
     analyser = plmd.caseAnalysis.Analysis( config )    

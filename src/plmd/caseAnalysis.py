@@ -23,6 +23,9 @@ class Analysis (plmd.PLMD_module):
         # User information
         self.printStage( "Analysis of case directory: "+caseDir )
         
+        # Get the number of files
+        self.num_files = self.getNumberOfFiles( caseDir+'/md-files/' ) 
+        
         # Merge Trajectories
         if self.noMerge == False:
             self.mergeTrajectories( caseDir )
@@ -31,25 +34,36 @@ class Analysis (plmd.PLMD_module):
         if self.hasTrajectory( caseDir ):
             
             # Create the directory for all the postprocessing stuff
-            self.createFolder( caseDir+"/analysis" )
-            self.createFolder( caseDir+"/analysis/plots" )
-            self.createFolder( caseDir+"/analysis/data" )
+            self.createFolder( caseDir+"/analysis" , True )
+            self.createFolder( caseDir+"/analysis/plots" , True )
+            self.createFolder( caseDir+"/analysis/data" , True )
             
             # Instantiate the handler for the analyses
             self.printStage( "Setting up analysis handler for: "+caseDir )
-            handler = analyses.analysisHandler( caseDir , self.configuration )
+            handler = analyses.analysisHandler( caseDir , self.configuration, self.num_files )
             
             # Run block analysis
-            self.printStage( "Running block analysis for: "+caseDir )
-            handler.blockAnalysis()
+            if self.noBlock == False:
+                self.printStage( "Running block analysis for: "+caseDir )
+                handler.blockAnalysis()
+                
+            # Plot Energies
+            if self.noEnergy == False:
+                self.printStage( "Plotting energies: "+caseDir )
+                handler.energyAnalysis()
+            
+            # First compress the analysis/plots folder
+            self.zipDirectory( caseDir+"/analysis/plots" )
+            
+            # Email the compressed file to the user
+            self.emailFile( caseDir+"/analysis/plots.tar" )
         
     # A function for merging all the trajectories in a case fodler
     def mergeTrajectories( self, caseDir ):
         
         # Count the number of trajectory files
         path = caseDir+'/md-files/'
-        num_files = len([f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f)) and ".mdcrd" in f and "equil" in f] ) 
-        print("Number of trajectory files found: "+str(num_files))
+        print("Number of trajectory files found: "+str(self.num_files))
 
         # Start creating ptraj script
         filename = caseDir+"/trajectoryMerge.ptraj";
@@ -57,7 +71,7 @@ class Analysis (plmd.PLMD_module):
         buffer = ""
         
         # Add all trajectory files to ptraj script
-        for i in range(1,num_files):
+        for i in range(1,self.num_files):
             buffer = buffer + """
             trajin """+path+"""equil""" + str(i)+ """.mdcrd"""
     
@@ -88,8 +102,20 @@ class Analysis (plmd.PLMD_module):
         # Run the cpptraj utility
         os.system( "$AMBERHOME/bin/cpptraj -p "+path+"/peptide.prmtop -i "+caseDir+"/trajectoryMerge.ptraj" )
         
+    # Get number of files
+    def getNumberOfFiles( self, path ):        
+        return len([f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f)) and ".mdcrd" in f and "equil" in f] ) 
+        
     # A function for checking whether a binpos file exists
     def hasTrajectory( self, caseDir ):
         if os.path.isfile( caseDir+"/mergedResult.dcd" ):
             return True
+            
+    # Zip a given directory
+    def zipDirectory( self, caseDir ):
+        self.printStage("Compressing: "+caseDir)
+        
+    # Email a given file to the user
+    def emailFile( self, filepath ):
+        self.printStage("Emailing the file: "+filepath)
     
