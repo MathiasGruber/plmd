@@ -11,6 +11,9 @@ class PLMD_module:
             for (key, value) in configSettings.items(section):
                 config.set( section, key, configSettings.get( section, key ) )
                 
+        # PLMD settings
+        self.name = config.get('plmd_settings', 'name')                
+                
         # Save config parameters
         self.ligand = config.get('inputFiles', 'ligand')
         self.ligandCount = config.getint('inputFiles', 'ligandCount')

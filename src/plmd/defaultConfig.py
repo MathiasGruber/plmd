@@ -7,6 +7,9 @@ def getDefaultConfig():
     # The default config options
     config = ConfigParser.RawConfigParser()
     
+    config.add_section('plmd_settings') 
+    config.set('plmd_settings', 'name', 'SimulationIdentifier')
+    
     config.add_section('inputFiles')
     config.set('inputFiles', 'ligand', 'filenameLigand.mol2')
     config.set('inputFiles', 'ligandCount', '1')

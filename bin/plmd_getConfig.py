@@ -4,7 +4,7 @@
 try:
     
     # Import needed modules
-    import argparse, traceback, sys, ConfigParser
+    import argparse, traceback, sys, ConfigParser, os
     import plmd.defaultConfig
     
     # Argument parsing & help page
@@ -15,6 +15,8 @@ try:
     
     # Get a default config file
     config = plmd.defaultConfig.getDefaultConfig()
+    dirName = os.getcwd().split(os.sep)[-1]
+    config.set('plmd_settings', 'name', dirName )
 
     # Writing our configuration file to 'example.cfg'
     with open('defaultExample.cfg', 'wb') as configfile:

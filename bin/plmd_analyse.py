@@ -4,6 +4,7 @@ try:
     
     import argparse, ConfigParser, sys, os, traceback
     import plmd.caseAnalysis
+    import getpass
     
     # Argument parsing & help page
     parser = argparse.ArgumentParser(description=
@@ -33,12 +34,13 @@ try:
     config.set('analysisParameters', 'noEnergy', args.noEnergy )
     
     # Get email pass
-    var = raw_input("""
+    var = getpass.getpass("""
 Using the smtp server specified in the configuration file,
-this tool can email the results to your email account.
+this tool can email the results to your email account. 
+Press 'n' to not use this feature\n
 Please enter the password for your email, so as to use the smtp server.
-The password is not saved in any files.
-Press 'n' to not use this feature\n""")
+The password is not saved in any local or external files.
+""")
     if var != 'n':
         config.set('emailConfiguration', 'emailPass', var )
         

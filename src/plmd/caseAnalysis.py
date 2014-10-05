@@ -136,9 +136,8 @@ class Analysis (plmd.PLMD_module):
         msg['To'] = self.toEmail  
         msg.attach( MIMEText("""
 Results are in for: 
-Case: """+caseDir+"""
-Ligand: """+self.ligand+"""
-Peptide: """+self.peptide+"""
+Simulation Name: """+self.name+"""
+Case Folder: """+caseDir+"""
 """) )        
         
         part = MIMEBase('application', "octet-stream")
