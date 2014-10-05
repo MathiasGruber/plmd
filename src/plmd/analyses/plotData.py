@@ -6,7 +6,7 @@ from matplotlib.backends.backend_pdf import PdfPages
 from matplotlib.ticker import MaxNLocator
 
 # Set plotting colors
-plt.rcParams['axes.color_cycle'] = ['darkred', 'orange','green', 'yellow', 'lightgreen',  'lightblue']
+# plt.rcParams['axes.color_cycle'] = ['darkred', 'orange','green', 'yellow', 'lightgreen',  'lightblue']
 
 # Plot graphs
 # Can plot multiple files
