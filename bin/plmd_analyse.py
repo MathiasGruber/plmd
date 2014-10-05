@@ -1,8 +1,8 @@
 #!/usr/bin/python
 
 try:
-    import sys,os
-    import argparse, ConfigParser, traceback
+    import sys,os,traceback
+    import argparse, ConfigParser
     import plmd.caseAnalysis
     import getpass
     
