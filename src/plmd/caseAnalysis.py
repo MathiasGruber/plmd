@@ -35,7 +35,6 @@ class Analysis (plmd.PLMD_module):
         # Python call on this dir
         sys.argv[0] = "plmd_analyse.py"
         sys.argv[2] = caseDir
-        sys.argv.append("-noQueue")
         pythonCall = " ".join(sys.argv)   
         print ("PYTHON CALL:" + pythonCall)
         
@@ -164,7 +163,7 @@ class Analysis (plmd.PLMD_module):
         
         # Message to be sent
         msg = MIMEMultipart()
-        msg['Subject'] = 'PLMD analysis results'
+        msg['Subject'] = 'PLMD: '+self.name+" : "+caseDir
         msg['From'] = self.fromEmail
         msg['To'] = self.toEmail  
         msg.attach( MIMEText("""

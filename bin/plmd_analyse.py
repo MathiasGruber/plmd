@@ -80,6 +80,7 @@ The password is not permanently saved in any local or external files.
                 else:
                     
                     # Submit to queue
+                    sys.argv.append("-noQueue")
                     analyser.submitForAnalysis( subdir )
     
 except Exception as e:
