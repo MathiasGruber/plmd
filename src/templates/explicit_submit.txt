@@ -1,5 +1,3 @@
-## Note: Created from runAll.py
-
 #!/bin/sh
 #
 #PBS -N [FOLDER]

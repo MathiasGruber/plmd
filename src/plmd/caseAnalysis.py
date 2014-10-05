@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import os, shutil
+import os, shutil, sys
 import analyses, plmd
 
 # Sending email modules
@@ -23,7 +23,32 @@ class Analysis (plmd.PLMD_module):
         self.load_config( config )  
         
         # Clear screen
-        os.system("clear")    
+        os.system("clear")   
+        
+    # A wrapper for submitting the analysis to the HPC queue
+    def submitForAnalysis( self, caseDir ):
+        
+        # User information
+        self.printStage( "Creating submission script for server queue for folder: "+caseDir )
+        
+        # Python call on this dir
+        sys.argv[0] = "plmd_analyse.py"
+        sys.argv[2] = caseDir
+        pythonCall = " ".join(sys.argv)    
+        
+        # Create new submission file
+        TEMPLATE = open( self.PLMDHOME+"/src/templates/analysis_submit.txt", 'r')
+        TEMP = TEMPLATE.read().replace("[FOLDER]", caseDir  ). \
+                              replace("[PYTHONCALL]", pythonCall )
+        TEMPLATE.close()
+                              
+        # Write the submission file
+        FILE = open(caseDir+"/submit_analysis.sh","w");        
+        FILE.write( TEMP );
+        FILE.close();
+
+        # Submit the run
+        os.system( "qsub "+caseDir+"/submit_analysis.sh" )
             
     # Main function handling analysis of a single case directory
     def analyseDir( self, caseDir ):

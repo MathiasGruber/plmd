@@ -15,6 +15,7 @@ try:
     # Only argument is the configFile
     parser.add_argument('configFile', help='Configuration file with details of the analysis')
     parser.add_argument('scanDir', help='Directory to scan for MD cases to submit to queue') 
+    parser.add_argument('-noQueue', dest='noQueue',action='store_const', const="true", default="false", help='Do not run post-processing on the cluster queue') 
     parser.add_argument('-noMerge', dest='noMerge',action='store_const', const="true", default="false", help="Do not merge all found mdcrd files") 
     parser.add_argument('-noStrip', dest='noStrip',action='store_const', const="true", default="false", help="Do not strip water molecules in trajectory files")
     parser.add_argument('-noBlock', dest='noBlock',action='store_const', const="true", default="false", help="Do not run block averaging analysis")
@@ -56,9 +57,15 @@ The password is not saved in any local or external files.
             # Identify case structures
             if "in_files" in dirs and "md-files" in dirs and "md-logs" in dirs and "pdb-files" in dirs and "submit_run.sh" in files:
                 
-                # Submit to HPC cluster
-                print "Identified case structure for directory: "+subdir+". Submitting for analysis."
-                analyser.analyseDir( subdir )    
+                # Run analysis on this directory. 
+                if args.noQueue == True:
+                    
+                    # Directly in terminal
+                    analyser.analyseDir( subdir )    
+                else:
+                    
+                    # Submit to queue
+                    analyser.submitForAnalysis( subdir )
     
 except Exception as e:
     
