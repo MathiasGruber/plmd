@@ -35,6 +35,7 @@ class Analysis (plmd.PLMD_module):
         # Python call on this dir
         sys.argv[0] = "plmd_analyse.py"
         sys.argv[2] = caseDir
+        sys.argv.append("-noQueue")
         pythonCall = " ".join(sys.argv)   
         print ("PYTHON CALL:" + pythonCall)
         
