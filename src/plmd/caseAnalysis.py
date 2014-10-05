@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import os, shutil, sys
+import tarfile
 import analyses, plmd
 
 # Sending email modules
@@ -90,7 +91,7 @@ class Analysis (plmd.PLMD_module):
             
             # Email the compressed file to the user
             if self.toEmail != None:
-                self.emailFile( caseDir+"/analysis/plots.tar.gz" , caseDir )
+                self.emailFile( caseDir+"/analysis/plots.tar" , caseDir )
         
     # A function for merging all the trajectories in a case fodler
     def mergeTrajectories( self, caseDir ):
@@ -148,7 +149,9 @@ class Analysis (plmd.PLMD_module):
     # Zip a given directory
     def zipDirectory( self, archive, folder ):
         self.printStage("Compressing: "+folder)
-        shutil.make_archive( archive, "gztar", folder )
+        tfile = tarfile.open(archive+".tar", "w:gz")
+        tfile.add(folder)
+        tfile.close()
                
     # Email a given file to the user
     def emailFile( self, filepath, caseDir ):

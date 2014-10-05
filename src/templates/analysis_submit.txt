@@ -13,4 +13,4 @@ amber=$AMBERHOME/bin/sander.MPI
 module load mpi/gcc-4.7.2-openmpi-1.6.3
 
 # Run the analysis library
-[PYTHONCALL]
+[PYTHONCALL] >[FOLDER]/analysis.log 2>&1  
