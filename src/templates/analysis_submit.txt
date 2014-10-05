@@ -2,15 +2,12 @@
 #
 #PBS -N [FOLDER]
 #PBS -l nodes=1:ppn=1
-#PBS -l walltime=72:00:00
+#PBS -l walltime=10:00:00
 
 cd $PBS_O_WORKDIR
 
 # Set absolute path to amber
 amber=$AMBERHOME/bin/sander.MPI
-
-# Load mpi
-module load mpi/gcc-4.7.2-openmpi-1.6.3
 
 # Run the analysis library
 [PYTHONCALL] >[FOLDER]/analysis.log 2>&1  
