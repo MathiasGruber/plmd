@@ -60,7 +60,7 @@ The password is not saved in any local or external files.
             if "in_files" in dirs and "md-files" in dirs and "md-logs" in dirs and "pdb-files" in dirs and "submit_run.sh" in files:
                 
                 # Run analysis on this directory. 
-                if args.noQueue == True:
+                if args.noQueue == "true":
                     
                     # Directly in terminal
                     analyser.analyseDir( subdir )    
