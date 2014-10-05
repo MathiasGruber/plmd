@@ -3,6 +3,10 @@
 import sys,os,traceback
 import argparse, ConfigParser
 
+# Disable use of display backend for matplotlib
+import matplotlib
+matplotlib.use('Agg')
+
 try:
     
     import plmd.caseAnalysis
