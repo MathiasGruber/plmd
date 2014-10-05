@@ -55,6 +55,7 @@ class PLMD_module:
         self.noStrip = config.getboolean('analysisParameters', 'noStrip')
         self.noBlock = config.getboolean('analysisParameters', 'noBlock')
         self.noEnergy = config.getboolean('analysisParameters', 'noEnergy')
+        self.noEmail = config.getboolean('analysisParameters', 'noEmail')
         
         # Email configuration
         if config.has_option( "emailConfiguration", "emailPass" ):
@@ -64,7 +65,7 @@ class PLMD_module:
             self.smtp = config.get('emailConfiguration', 'smtp')
             self.port = config.get('emailConfiguration', 'port')
         else:
-            self.toEmail = None
+            self.noEmail = True
         
         # Get environment vars for PLMD & Amber. Will raise exceptions if not found
         self.PLMDHOME = os.environ["PLMDHOME"]

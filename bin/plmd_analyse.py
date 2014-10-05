@@ -26,6 +26,8 @@ try:
     parser.add_argument('-noStrip', dest='noStrip',action='store_const', const="true", default="false", help="Do not strip water molecules in trajectory files")
     parser.add_argument('-noBlock', dest='noBlock',action='store_const', const="true", default="false", help="Do not run block averaging analysis")
     parser.add_argument('-noEnergy', dest='noEnergy',action='store_const', const="true", default="false", help="Do not run energy analysis")
+    parser.add_argument('-noEmail', dest='noEmail',action='store_const', const="true", default="false", help="Do not attempt to send email")
+    parser.add_argument('-emailPass', dest='emailPass',nargs="?", default="false", help="Email password to send results to")
     
     # Parse arguments
     args = parser.parse_args()  
@@ -39,17 +41,24 @@ try:
     config.set('analysisParameters', 'noStrip', args.noStrip )
     config.set('analysisParameters', 'noBlock', args.noBlock )
     config.set('analysisParameters', 'noEnergy', args.noEnergy )
+    config.set('analysisParameters', 'noEmail', args.noEmail )
     
     # Get email pass
-    var = getpass.getpass("""
+    if args.noEmail == "false":
+        if args.emailPass == "false":
+            var = getpass.getpass("""
 Using the smtp server specified in the configuration file,
 this tool can email the results to your email account. 
 Press 'n' to not use this feature\n
 Please enter the password for your email, so as to use the smtp server.
-The password is not saved in any local or external files.
+The password is not permanently saved in any local or external files.
 """)
-    if var != 'n':
-        config.set('emailConfiguration', 'emailPass', var )
+            if var != 'n':
+                config.set('emailConfiguration', 'emailPass', var )
+                sys.argv.append( "-emailPass" )
+                sys.argv.append( '"'+var+'"' )
+        else:
+            config.set('emailConfiguration', 'emailPass', args.emailPass )
         
     # The object handling analyses
     analyser = plmd.caseAnalysis.Analysis( config )    

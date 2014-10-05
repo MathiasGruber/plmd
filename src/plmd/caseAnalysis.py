@@ -35,7 +35,8 @@ class Analysis (plmd.PLMD_module):
         # Python call on this dir
         sys.argv[0] = "plmd_analyse.py"
         sys.argv[2] = caseDir
-        pythonCall = " ".join(sys.argv)    
+        pythonCall = " ".join(sys.argv)   
+        print ("PYTHON CALL:" + pythonCall)
         
         # Create new submission file
         TEMPLATE = open( self.PLMDHOME+"/src/templates/analysis_submit.txt", 'r')
@@ -50,6 +51,9 @@ class Analysis (plmd.PLMD_module):
 
         # Submit the run
         os.system( "qsub "+caseDir+"/submit_analysis.sh" )
+        
+        # Remove submission file immidiately afterwards
+        os.remove( caseDir+"/submit_analysis.sh" )
             
     # Main function handling analysis of a single case directory
     def analyseDir( self, caseDir ):
@@ -90,7 +94,7 @@ class Analysis (plmd.PLMD_module):
             self.zipDirectory( caseDir+"/analysis/plots", caseDir+"/analysis/plots" )
             
             # Email the compressed file to the user
-            if self.toEmail != None:
+            if self.noEmail == False:
                 self.emailFile( caseDir+"/analysis/plots.tar" , caseDir )
         
     # A function for merging all the trajectories in a case fodler
