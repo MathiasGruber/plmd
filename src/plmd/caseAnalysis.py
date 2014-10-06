@@ -75,10 +75,19 @@ class Analysis (plmd.PLMD_module):
             self.createFolder( caseDir+"/analysis" , True )
             self.createFolder( caseDir+"/analysis/plots" , True )
             self.createFolder( caseDir+"/analysis/data" , True )
+            self.createFolder( caseDir+"/analysis/structures" , True )
             
             # Instantiate the handler for the analyses
             self.printStage( "Setting up analysis handler for: "+caseDir )
             handler = analyses.analysisHandler( caseDir , self.configuration, self.num_files )
+            
+            ## Run Analyses using MDAnalaysis module            
+            ########################################
+            
+            # Block averaging analysis
+            if self.noBlock == False:
+                self.printStage( "Running block analysis for: "+caseDir )
+                handler.blockAnalysis()            
             
             ## Run analyses using cpptraj
             #############################
@@ -103,15 +112,7 @@ class Analysis (plmd.PLMD_module):
             
             # RMSd map
             handler.rmsMapAnalysis()
-                        
             
-            ## Run Analyses using MDAnalaysis module            
-            ########################################
-            
-            # Block averaging analysis
-            if self.noBlock == False:
-                self.printStage( "Running block analysis for: "+caseDir )
-                handler.blockAnalysis()
 
             ## Run analyses using MD log data            
             #################################

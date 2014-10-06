@@ -1,6 +1,6 @@
-import os,sys, math
+import os, math
 import MDAnalysis
-import block, energy, bFactor, dihedral, timeCorr, endToEnd,CaToCaMap, RMSdMap
+import block, energy, bFactor, dihedral, timeCorr, endToEnd,CaToCaMap, RMSdMap, hbond
 import plmd
 
 # The analysis handler provides the interface to all the analysis modules
@@ -26,8 +26,8 @@ class analysisHandler (plmd.PLMD_module):
         if self.simFrames > 500:
             self.framesToSkip = math.floor( self.simFrames / 500. )
             
-        # Calculate factor for time-axis in ptraj analyses
-        self.ptrajFactor = int(self.framesToSkip * self.timestepPerFrame * self.timestepSize)
+        
+        
                 
         # Print information about the trajectory for the user to see
         print "Number of frames in trajectory: "+str(self.mdTrajectory.trajectory.numframes)
@@ -47,6 +47,9 @@ class analysisHandler (plmd.PLMD_module):
 
     # Create and run ptraj file
     def runPtrajAnalysis( self , caseDir ):
+        
+        # Calculate factor for time-axis in ptraj analyses
+        self.ptrajFactor = int(self.framesToSkip * self.timestepPerFrame * self.timestepSize)
         
         # Do the dihedral angle specifications
         numOfResidues = self.backbone.numberOfResidues()
@@ -79,7 +82,11 @@ class analysisHandler (plmd.PLMD_module):
     def blockAnalysis( self ):
         block.runAnalysis( self.directory, self.mdTrajectory, self.timestepSize );
         
-    # Run a block analysis
+    # Run a hydrogen bond analysis
+    def hbondAnalysis( self ):
+        hbond.runAnalysis( self.directory, self.mdTrajectory );
+        
+    # Energy analysis
     def energyAnalysis( self ):
         energy.runAnalysis( self.directory );
         

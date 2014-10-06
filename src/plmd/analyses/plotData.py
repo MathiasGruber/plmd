@@ -3,7 +3,7 @@ import matplotlib
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
-from matplotlib.ticker import MaxNLocator
+from matplotlib.ticker import LinearLocator
 
 # Set plotting colors
 # plt.rcParams['axes.color_cycle'] = ['darkred', 'orange','green', 'yellow', 'lightgreen',  'lightblue']
@@ -120,8 +120,8 @@ def plotDataMap( caseDir , title , file , xUnit , yUnit , xColumn=0 , yColumn=0 
         ax.set_xticklabels(xColumn, minor=False)
         ax.set_yticklabels(yColumn, minor=False)
     else:
-        ax.xaxis.set_major_locator(MaxNLocator(8))
-        ax.yaxis.set_major_locator(MaxNLocator(8))
+        ax.xaxis.set_major_locator(LinearLocator(numticks=len(labels)))
+        ax.yaxis.set_major_locator(LinearLocator(numticks=len(labels)))
 
     # Set title
     ax.set_xlabel(xUnit, fontsize=12)
