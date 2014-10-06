@@ -1,13 +1,14 @@
 #!/usr/bin/python
 
-import sys,os,traceback
-import argparse, ConfigParser
-
-# Disable use of display backend for matplotlib
-import matplotlib
-matplotlib.use('Agg')
-
 try:
+    
+    # Standard libs
+    import sys,os,traceback
+    import argparse, ConfigParser
+    
+    # Disable use of display backend for matplotlib
+    import matplotlib
+    matplotlib.use('Agg')
     
     import plmd.caseAnalysis
     import getpass
@@ -82,7 +83,8 @@ The password is not permanently saved in any local or external files.
                     # Submit to queue
                     sys.argv.append("-noQueue")
                     analyser.submitForAnalysis( subdir )
-    
+except ImportError as e:
+    print e
 except Exception as e:
     
     # Get into

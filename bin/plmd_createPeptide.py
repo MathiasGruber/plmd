@@ -26,8 +26,8 @@ try:
     peptideCreator.createPeptide( args.i, int(args.peptideCount), args.o )
     
     
-except IOError as e:
-    print 'Cannot open file: ',e
+except ImportError as e:
+    print e
 except Exception as e:
     
     # Get into

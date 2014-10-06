@@ -30,6 +30,10 @@ try:
                 print "Identified case structure for directory: "+subdir+". Now submitting to HPC queue."
                 os.system( "qsub "+subdir+"/submit_run.sh" )
     
+except ImportError as e:
+    print e
+except ImportError as e:
+    print e
 except Exception as e:
     
     # Get into

@@ -22,6 +22,8 @@ try:
     with open('defaultExample.cfg', 'wb') as configfile:
         config.write(configfile)
     
+except ImportError as e:
+    print e
 except Exception as e:
     
     # Get into

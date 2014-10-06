@@ -25,7 +25,9 @@ try:
                 if re.search(check, filename) != None:
                     os.remove( subdir+"/"+filename )    
                     print "Deleting file: "+subdir+"/"+filename
-                    
+    
+except ImportError as e:
+    print e                
 except Exception as e:
     
     # Get into
