@@ -1,6 +1,6 @@
-import os
+import os,sys
 import MDAnalysis
-import block, energy, bFactor
+import block, energy, bFactor, dihedral
 import plmd
 
 # The analysis handler provides the interface to all the analysis modules
@@ -15,12 +15,15 @@ class analysisHandler (plmd.PLMD_module):
         self.directory = caseDir
 
         # Load Trajectory with MDAnalysis
-        self.mdTrajectory = MDAnalysis.Universe( caseDir+"/md-files/peptide_nowat.prmtop", caseDir+"/mergedResult.dcd")            
+        self.mdTrajectory = MDAnalysis.Universe( caseDir+"/md-files/peptide_nowat.prmtop", caseDir+"/mergedResult.dcd") 
+        self.backbone = self.mdTrajectory.selectAtoms('protein and backbone')         
         self.simFrames = self.mdTrajectory.trajectory.numframes     
-        self.simTime = self.mdTrajectory.trajectory.numframes * self.timestepSize
+        self.simTime = self.mdTrajectory.trajectory.numframes * self.timestepSize * self.timestepPerFrame * 0.001
         
         # Print information about the trajectory for the user to see
         print "Number of frames in trajectory: "+str(self.mdTrajectory.trajectory.numframes)
+        print "Number of timesteps per frame: "+str(self.timestepPerFrame)
+        print "Timestep size: "+str(self.timestepSize)+"ps"
         print "Total Simulation time: "+str( self.simTime )+"ns"
         
         # Run perl script from AMBER to get data from log files
@@ -36,9 +39,21 @@ class analysisHandler (plmd.PLMD_module):
     # Create and run ptraj file
     def runPtrajAnalysis( self , caseDir ):
         
+        # Do the dihedral angle specifications
+        numOfResidues = self.backbone.numberOfResidues()
+        dihedralTxt = ""
+        if numOfResidues > 1:
+            for i in range(1,numOfResidues):
+                dihedralTxt += "\ndihedral phi_"+str(i)+" :"+str(i)+"@C  :"+str(i+1)+"@N  :"+str(i+1)+"@CA :"+str(i+1)+"@C out "+caseDir+"/analysis/data/phi_"+str(i)
+                dihedralTxt += "\ndihedral psi_"+str(i)+" :"+str(i)+"@N  :"+str(i)+"@CA :"+str(i)+"@C  :"+str(i+1)+"@N out "+caseDir+"/analysis/data/psi_"+str(i)
+                dihedralTxt += "\ndihedral omega_"+str(i)+" :"+str(i)+"@CA :"+str(i)+"@C  :"+str(i+1)+"@N  :"+str(i+1)+"@CA out "+caseDir+"/analysis/data/omega_"+str(i)
+        
         # Create new submission file
         TEMPLATE = open( self.PLMDHOME+"/src/templates/cpptraj_analysis.txt", 'r')
-        TEMP = TEMPLATE.read().replace("[FOLDER]", caseDir  )
+        TEMP = TEMPLATE.read().replace("[FOLDER]", caseDir  ). \
+                               replace("[DIHEDRALS]", dihedralTxt ). \
+                               replace("[FIRSTRESI]", ":1" ). \
+                               replace("[LASTRESI]", ":"+str(numOfResidues) )
         TEMPLATE.close()
                               
         # Write the submission file
@@ -58,6 +73,10 @@ class analysisHandler (plmd.PLMD_module):
     def energyAnalysis( self ):
         energy.runAnalysis( self.directory );
         
-        # Run a block analysis
+    # Run a block analysis
     def bFactorAnalysis( self ):
         bFactor.runAnalysis( self.directory );
+        
+    # Run a block analysis
+    def dihedralAnalysis( self ):
+        dihedral.runAnalysis( self.directory, self.backbone );

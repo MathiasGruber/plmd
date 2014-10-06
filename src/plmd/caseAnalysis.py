@@ -88,6 +88,9 @@ class Analysis (plmd.PLMD_module):
             
             # Plot the B factor
             handler.bFactorAnalysis()
+            
+            # Plot angles
+            handler.dihedralAnalysis()
                         
             
             ## Run Analyses using MDAnalaysis module            
