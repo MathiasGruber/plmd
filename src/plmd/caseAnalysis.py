@@ -91,6 +91,9 @@ class Analysis (plmd.PLMD_module):
             
             # Plot angles
             handler.dihedralAnalysis()
+            
+            # Time correlation
+            handler.timeCorrelationAnalysis()
                         
             
             ## Run Analyses using MDAnalaysis module            

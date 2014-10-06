@@ -20,7 +20,7 @@ distance end_to_end [FIRSTRESI] [LASTRESI] out [FOLDER]/analysis/data/dist_end_t
 distance end_to_end2  [FIRSTRESI]@CA [LASTRESI]@CA out [FOLDER]/analysis/data/ca_end_to_end.list
 
 # Time correlation for end to end distance
-vector v0  [FIRSTRESI]@CA ired [LASTRESI]@CA
+vector v0 [FIRSTRESI]@CA ired [LASTRESI]@CA
 
 # Analyze Time correlation
 analyze timecorr vec1 v0 out [FOLDER]/analysis/data/timeCorr.out

@@ -1,6 +1,6 @@
 import os,sys
 import MDAnalysis
-import block, energy, bFactor, dihedral
+import block, energy, bFactor, dihedral, timeCorr
 import plmd
 
 # The analysis handler provides the interface to all the analysis modules
@@ -80,3 +80,7 @@ class analysisHandler (plmd.PLMD_module):
     # Run a block analysis
     def dihedralAnalysis( self ):
         dihedral.runAnalysis( self.directory, self.backbone );
+        
+    # Time correlation
+    def timeCorrelationAnalysis(self):
+        timeCorr.runAnalysis( self.directory )
