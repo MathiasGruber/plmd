@@ -80,17 +80,36 @@ class Analysis (plmd.PLMD_module):
             self.printStage( "Setting up analysis handler for: "+caseDir )
             handler = analyses.analysisHandler( caseDir , self.configuration, self.num_files )
             
-            # Run block analysis
+            ## Run analyses using cpptraj
+            #############################
+            
+            # Run the ptraj script
+            handler.runPtrajAnalysis( caseDir )
+            
+            # Plot the B factor
+            handler.bFactorAnalysis()
+                        
+            
+            ## Run Analyses using MDAnalaysis module            
+            ########################################
+            
+            # Block averaging analysis
             if self.noBlock == False:
                 self.printStage( "Running block analysis for: "+caseDir )
                 handler.blockAnalysis()
+
+            ## Run analyses using MD log data            
+            #################################
                 
             # Plot Energies
             if self.noEnergy == False:
                 self.printStage( "Plotting energies: "+caseDir )
                 handler.energyAnalysis()
             
-            # First compress the analysis/plots folder
+            ## Finish up by sneding to user 
+            ###############################            
+            
+            # Compress the analysis/plots folder
             self.zipDirectory( caseDir+"/analysis/plots", caseDir+"/analysis/plots" )
             
             # Email the compressed file to the user

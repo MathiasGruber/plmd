@@ -1,0 +1,10 @@
+# Load the trajectory
+trajin [FOLDER]/mergedResult.dcd
+
+# B Factor
+atomicfluct out [FOLDER]/analysis/data/bFactor.all @C,CA,N byatom bfactor
+atomicfluct out [FOLDER]/analysis/data/bFactor.n @N byatom bfactor
+atomicfluct out [FOLDER]/analysis/data/bFactor.c @C byatom bfactor
+atomicfluct out [FOLDER]/analysis/data/bFactor.ca @CA byatom bfactor
+
+# Dihedral angles

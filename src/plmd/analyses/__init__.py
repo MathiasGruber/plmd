@@ -1,6 +1,6 @@
 import os
 import MDAnalysis
-import block, energy
+import block, energy, bFactor
 import plmd
 
 # The analysis handler provides the interface to all the analysis modules
@@ -33,6 +33,23 @@ class analysisHandler (plmd.PLMD_module):
         # Move all summary files to analysis/data folder
         os.system("mv summary* "+caseDir+"/analysis/data")
 
+    # Create and run ptraj file
+    def runPtrajAnalysis( self , caseDir ):
+        
+        # Create new submission file
+        TEMPLATE = open( self.PLMDHOME+"/src/templates/cpptraj_analysis.txt", 'r')
+        TEMP = TEMPLATE.read().replace("[FOLDER]", caseDir  )
+        TEMPLATE.close()
+                              
+        # Write the submission file
+        FILE = open(caseDir+"/ccptraj_analysis.ptraj","w");        
+        FILE.write( TEMP );
+        FILE.close();
+        
+        # Run the cpptraj utility
+        os.system( "$AMBERHOME/bin/cpptraj -p "+caseDir+"/md-files/peptide_nowat.prmtop -i "+caseDir+"/ccptraj_analysis.ptraj" )
+        
+
     # Run a block analysis
     def blockAnalysis( self ):
         block.runAnalysis( self.directory, self.mdTrajectory, self.timestepSize );
@@ -40,3 +57,7 @@ class analysisHandler (plmd.PLMD_module):
     # Run a block analysis
     def energyAnalysis( self ):
         energy.runAnalysis( self.directory );
+        
+        # Run a block analysis
+    def bFactorAnalysis( self ):
+        bFactor.runAnalysis( self.directory );
