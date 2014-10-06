@@ -195,7 +195,8 @@ class Setup (plmd.PLMD_module):
                                   replace("[QMREGION]", self.qmRegion ). \
                                   replace("[TIMESTEPS]", self.timestepNumber ). \
                                   replace("[DT]", str(self.timestepSize) ). \
-                                  replace("[QMSHAKE]", self.qmShake )
+                                  replace("[QMSHAKE]", self.qmShake ). \
+                                  replace("[TIMESTEPPERFRAME]", str(self.timestepPerFrame) )
             TEMPLATE.close()
                                            
             # Save the input file with same name, but change extension to .in
@@ -259,7 +260,8 @@ class Setup (plmd.PLMD_module):
             structureString += "\nligand"+str(i)+" = loadmol2 "+self.ligand
             
             # Translate to correct position
-            structureString += "\ntranslate ligand"+str(i)+" {"+str(self.ligandsForLEaP[i][0])+" "+str(self.ligandsForLEaP[i][1])+" "+str(self.ligandsForLEaP[i][2])+" }"
+            if self.noTranslate == False:
+                structureString += "\ntranslate ligand"+str(i)+" {"+str(self.ligandsForLEaP[i][0])+" "+str(self.ligandsForLEaP[i][1])+" "+str(self.ligandsForLEaP[i][2])+" }"
             
             # Combine with previous structure
             structureString += "\ncompound = combine { compound ligand"+str(i)+" }"

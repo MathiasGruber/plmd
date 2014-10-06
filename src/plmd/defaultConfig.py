@@ -19,6 +19,7 @@ def getDefaultConfig():
     config.set('inputFiles', 'pPeptide', 'false')
     config.set('inputFiles', 'cases', '10')
     config.set('inputFiles', 'quiet', 'false')
+    config.set('inputFiles', 'noTranslate', 'false')
     
     config.add_section('simulationParameters')
     config.set('simulationParameters', 'forceField', 'leaprc.ff12SB')
@@ -27,6 +28,7 @@ def getDefaultConfig():
     config.set('simulationParameters', 'qmTheory', 'PM6-D')
     config.set('simulationParameters', 'ntf', '2')
     config.set('simulationParameters', 'ntc', '2')
+    config.set('simulationParameters', 'timestepPerFrame', '100')
     config.set('simulationParameters', 'timestepSize', '0.002')
     config.set('simulationParameters', 'timestepNumber', '1000000')
 
@@ -40,6 +42,7 @@ def getDefaultConfig():
     config.set('analysisParameters', 'noStrip', 'false')
     config.set('analysisParameters', 'noBlock', 'false')
     config.set('analysisParameters', 'noEnergy', 'false')
+    config.set('analysisParameters', 'noEmail', 'false')
     
     config.add_section('emailConfiguration')
     config.set('emailConfiguration', 'toEmail', 'nano.mathias@gmail.com')

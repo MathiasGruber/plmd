@@ -20,7 +20,8 @@ try:
     parser.add_argument('-lCount', dest='ligandCount', help='Number of ligands to include.')
     parser.add_argument('-pPeptide', dest='peptide', help='3-letter notation string for automatic peptide generation with LEaP, e.g. "NSER GLY ALA GLY LYS CTHR"')
     parser.add_argument('-pCount', dest='peptideCount', help='Number of peptides to include. Only works for automatically LEaP generated peptides sequences.')
-    parser.add_argument('--quiet', dest='quiet',action='store_const', const="true", default="false", help="Don't show status messages during setup.")
+    parser.add_argument('-quiet', dest='quiet',action='store_const', const="true", default="false", help="Don't show status messages during setup.")
+    parser.add_argument('-noTranslate', dest='noTranslate',action='store_const', const="true", default="false", help="Don't translate structures randomly.")
     
     # Parse arguments
     args = parser.parse_args()  
@@ -55,6 +56,7 @@ try:
     
     # If quiet option was requested, then update the config var
     config.set('inputFiles', 'quiet', args.quiet )
+    config.set('inputFiles', 'noTranslate', args.noTranslate )
     
     # Instantiate PLMD and pass the configuration file
     plmd = plmd.caseSetup.Setup( config )

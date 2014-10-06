@@ -22,6 +22,7 @@ class PLMD_module:
         self.pPeptide = config.get('inputFiles', 'pPeptide')
         self.peptideCount = config.getint('inputFiles', 'peptideCount')
         self.cases = config.getint('inputFiles', 'cases')
+        self.noTranslate = config.getboolean('inputFiles', 'noTranslate')
         
         self.quiet = config.getboolean('inputFiles', 'quiet')
         
@@ -31,6 +32,7 @@ class PLMD_module:
         self.qmTheory = config.get('simulationParameters', 'qmTheory')
         self.ntf = config.get('simulationParameters', 'ntf')
         self.ntc = config.get('simulationParameters', 'ntc')
+        self.timestepPerFrame = config.getint('simulationParameters', 'timestepPerFrame')
         self.timestepSize = config.getfloat('simulationParameters', 'timestepSize')
         self.timestepNumber = config.get('simulationParameters', 'timestepNumber')
         

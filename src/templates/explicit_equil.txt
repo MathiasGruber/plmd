@@ -17,8 +17,8 @@ Peptides: Equilibration
   gamma_ln = 1.0,
   nstlim = [TIMESTEPS], 
   dt = [DT],
-  ntpr = 100, 
-  ntwx = 100, 
+  ntpr = [TIMESTEPPERFRAME], 
+  ntwx = [TIMESTEPPERFRAME], 
   ntwr = 1000,
   ifqnt=1
  /
