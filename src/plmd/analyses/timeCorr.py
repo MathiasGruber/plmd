@@ -5,7 +5,7 @@ import plotData as myPlot
 # ==============================================
 
 # Function for running the actual analysis
-def runAnalysis( caseDir ):
+def runAnalysis( caseDir , timeFactor ):
     
     # User info
     print "Creating plot of time correlation for end-to-end distance"    
@@ -17,4 +17,5 @@ def runAnalysis( caseDir ):
         ["$ \tau $"], 
         ["timeCorr.out"] , 
         "Autocorrelation", 
-        skipLines=4)
+        skipLines=4,
+        xFactor = timeFactor )

@@ -1,5 +1,5 @@
 # Load the trajectory
-trajin [FOLDER]/mergedResult.dcd 1 last 10
+trajin [FOLDER]/mergedResult.dcd 1 last [FRAMESKIP]
 
 # B Factor
 atomicfluct out [FOLDER]/analysis/data/bFactor.all @C,CA,N byatom bfactor
@@ -24,6 +24,9 @@ vector v0 [FIRSTRESI]@CA ired [LASTRESI]@CA
 
 # Analyze Time correlation
 analyze timecorr vec1 v0 out [FOLDER]/analysis/data/timeCorr.out
+
+# RMS analysis
+2drms @CA,C,N rmsout [FOLDER]/analysis/data/RMS.ps
 
 # Run analysis
 go

@@ -7,7 +7,8 @@ import plotData as myPlot
 # Function for running the actual analysis
 def runAnalysis( caseDir ):
 
-    # Plotting a Ca-to-Ca data map
+    # User info
+    print "Plotting a Ca-to-Ca data map"
 
     # CA distance map
     myPlot.plotDataMap( 

@@ -6,7 +6,7 @@ import plotData as myPlot
 # ==============================================
 
 # Function for running the actual analysis
-def runAnalysis( caseDir , backbone ):
+def runAnalysis( caseDir , backbone , timeFactor ):
 
     # Retrieve info on the peptide
     resNames = backbone.resnames()
@@ -23,5 +23,6 @@ def runAnalysis( caseDir , backbone ):
         "Dihedral Angles. Res ID: "+str(i)+", Residue name: "+str(resNames[i]), 
         ["$\Psi_"+str(i)+"$","$\Phi_"+str(i)+"$"],
         ["psi_"+str(i),"phi_"+str(i)] , 
-        "Angle (Degrees)")
+        "Angle (Degrees)", 
+        xFactor = timeFactor )
  

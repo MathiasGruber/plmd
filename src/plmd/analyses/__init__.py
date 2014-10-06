@@ -1,6 +1,6 @@
-import os,sys
+import os,sys, math
 import MDAnalysis
-import block, energy, bFactor, dihedral, timeCorr, endToEnd,CaToCaMap
+import block, energy, bFactor, dihedral, timeCorr, endToEnd,CaToCaMap, RMSdMap
 import plmd
 
 # The analysis handler provides the interface to all the analysis modules
@@ -20,6 +20,15 @@ class analysisHandler (plmd.PLMD_module):
         self.simFrames = self.mdTrajectory.trajectory.numframes     
         self.simTime = self.mdTrajectory.trajectory.numframes * self.timestepSize * self.timestepPerFrame * 0.001
         
+        # Set how many frames to skip in analysis
+        # Ideally we'd want a maximum of 500 points/frames
+        self.framesToSkip = 1
+        if self.simFrames > 500:
+            self.framesToSkip = math.floor( self.simFrames / 500. )
+            
+        # Calculate factor for time-axis in ptraj analyses
+        self.ptrajFactor = int(self.framesToSkip * self.timestepPerFrame * self.timestepSize)
+                
         # Print information about the trajectory for the user to see
         print "Number of frames in trajectory: "+str(self.mdTrajectory.trajectory.numframes)
         print "Number of timesteps per frame: "+str(self.timestepPerFrame)
@@ -53,7 +62,8 @@ class analysisHandler (plmd.PLMD_module):
         TEMP = TEMPLATE.read().replace("[FOLDER]", caseDir  ). \
                                replace("[DIHEDRALS]", dihedralTxt ). \
                                replace("[FIRSTRESI]", ":1" ). \
-                               replace("[LASTRESI]", ":"+str(numOfResidues) )
+                               replace("[LASTRESI]", ":"+str(numOfResidues) ). \
+                               replace("[FRAMESKIP]", str(int(self.framesToSkip)) )
         TEMPLATE.close()
                               
         # Write the submission file
@@ -79,16 +89,20 @@ class analysisHandler (plmd.PLMD_module):
         
     # Run a block analysis
     def dihedralAnalysis( self ):
-        dihedral.runAnalysis( self.directory, self.backbone );
+        dihedral.runAnalysis( self.directory, self.backbone , self.ptrajFactor);
         
     # Time correlation
     def timeCorrelationAnalysis(self):
-        timeCorr.runAnalysis( self.directory )
+        timeCorr.runAnalysis( self.directory , self.ptrajFactor)
     
     # End to end distance
     def endtoendAnalysis(self):
-        endToEnd.runAnalysis( self.directory )
+        endToEnd.runAnalysis( self.directory , self.ptrajFactor)
     
     # Ca map
     def caMapAnalysis(self):
-        CaToCaMap.runAnalysis(self.directory)
+        CaToCaMap.runAnalysis(self.directory )
+        
+    # RMSd
+    def rmsMapAnalysis(self):
+        RMSdMap.runAnalysis(self.directory, self.ptrajFactor)

@@ -5,7 +5,7 @@ import plotData as myPlot
 # ==============================================
 
 # Function for running the actual analysis
-def runAnalysis( caseDir ):
+def runAnalysis( caseDir , timeFactor ):
 
      # User info
     print "Creating plot of end-to-end distance"    
@@ -16,4 +16,5 @@ def runAnalysis( caseDir ):
         "End to End Residue Distance", 
         ["End to End"], 
         ["dist_end_to_end.list"] , 
-        "Distance ($\AA$)")
+        "Distance ($\AA$)", 
+        xFactor = timeFactor )

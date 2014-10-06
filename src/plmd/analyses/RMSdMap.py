@@ -5,6 +5,20 @@ import plotData as myPlot
 # ==============================================
 
 # Function for running the actual analysis
-def runAnalysis( caseDir ):
+def runAnalysis( caseDir , timeFactor ):
 
-    
+    # User info
+    print "Plotting a RMSd map"
+
+    # CA distance map
+    myPlot.plotDataMap( 
+        caseDir, 
+        "RMSd of backbone atoms: C, CA and N", 
+        "RMS.ps", 
+        "Time (ns)" , 
+        "Time (ns)", 
+        skipColumn = 1, 
+        skipRow = 1, 
+        xFactor=timeFactor, 
+        yFactor=timeFactor
+    )

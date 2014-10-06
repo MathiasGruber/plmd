@@ -100,6 +100,9 @@ class Analysis (plmd.PLMD_module):
             
             # C-alpha map
             handler.caMapAnalysis()
+            
+            # RMSd map
+            handler.rmsMapAnalysis()
                         
             
             ## Run Analyses using MDAnalaysis module            

@@ -10,7 +10,7 @@ from matplotlib.ticker import MaxNLocator
 
 # Plot graphs
 # Can plot multiple files
-def plotData( caseDir , title, labels , files , unit , xUnit = "Time (ps)", types=None, skipLines = 0 ):
+def plotData( caseDir , title, labels , files , unit , xUnit = "Time (ps)", types=None, skipLines = 0, xFactor = 1 ):
     
     # Output file name and location
     dataDir = caseDir+"/analysis/data/"
@@ -31,7 +31,7 @@ def plotData( caseDir , title, labels , files , unit , xUnit = "Time (ps)", type
         for aline in qbfile:
             if n > skipLines:
                 values = aline.split()
-                xData.append(values[0])
+                xData.append(float(values[0])*xFactor)
                 yData.append(values[1])
             n = n + 1
 
@@ -93,7 +93,7 @@ def plotDataMap( caseDir , title , file , xUnit , yUnit , xColumn=0 , yColumn=0 
     data = np.array(data)
 
     # Create heatmap in blue
-    heatmap = ax.pcolor(data, cmap=plt.cm.Blues)
+    heatmap = ax.pcolor(data, cmap=plt.cm.Blues , rasterized=True)
 
     # Factor x axis
     labels = ax.get_xticks().tolist()
