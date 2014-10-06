@@ -7,4 +7,13 @@ import plotData as myPlot
 # Function for running the actual analysis
 def runAnalysis( caseDir ):
 
-    
+     # User info
+    print "Creating plot of end-to-end distance"    
+
+    # B factor plot
+    myPlot.plotData( 
+        caseDir , 
+        "End to End Residue Distance", 
+        ["End to End"], 
+        ["dist_end_to_end.list"] , 
+        "Distance ($\AA$)")

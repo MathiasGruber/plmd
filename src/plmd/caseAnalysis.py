@@ -94,6 +94,9 @@ class Analysis (plmd.PLMD_module):
             
             # Time correlation
             handler.timeCorrelationAnalysis()
+            
+            # Time correlation
+            handler.endtoendAnalysis()
                         
             
             ## Run Analyses using MDAnalaysis module            

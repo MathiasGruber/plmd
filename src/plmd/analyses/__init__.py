@@ -1,6 +1,6 @@
 import os,sys
 import MDAnalysis
-import block, energy, bFactor, dihedral, timeCorr
+import block, energy, bFactor, dihedral, timeCorr, endToEnd
 import plmd
 
 # The analysis handler provides the interface to all the analysis modules
@@ -84,3 +84,9 @@ class analysisHandler (plmd.PLMD_module):
     # Time correlation
     def timeCorrelationAnalysis(self):
         timeCorr.runAnalysis( self.directory )
+    
+    # End to end distance
+    def endtoendAnalysis(self):
+        endToEnd.runAnalysis( self.directory )
+    
+    
