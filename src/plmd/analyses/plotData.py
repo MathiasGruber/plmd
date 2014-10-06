@@ -66,21 +66,20 @@ def plotData( caseDir , title, labels , files , unit , xUnit = "Time (ps)", type
     pp.close()
 
 # Do 2d plots
-def plotDataMap( dataDir , title , file , xUnit , yUnit , xColumn=0 , yColumn=0 , skipRow = 0, skipColumn = 0 ,xFactor=1, yFactor=1, outDir = ""):
+def plotDataMap( caseDir , title , file , xUnit , yUnit , xColumn=0 , yColumn=0 , skipRow = 0, skipColumn = 0 ,xFactor=1, yFactor=1):
 
     # Output file name and location
-    outFile = ""
-    if outDir != "":
-        outFile = outDir+title
-    else:
-        outFile = dataDir+title
+    dataDir = caseDir+"/analysis/data/"
+    plotDir = caseDir+"/analysis/plots/"
     
-    pp = PdfPages( outFile+".pdf" )
+    # plot using pdf files
+    pp = PdfPages( plotDir+title+".pdf" )
+    
+    # Create figure
     fig, ax = plt.subplots()
-
-    data = []
-    print( "Now going through the file: "+file )
     
+    # Load data
+    data = []
     qbfile = open(dataDir+file,"r")
     n = 0
     for aline in qbfile:
@@ -91,9 +90,9 @@ def plotDataMap( dataDir , title , file , xUnit , yUnit , xColumn=0 , yColumn=0 
             numbers = map(float, strings)
             data.append( numbers )
         n = n + 1
-    
     data = np.array(data)
 
+    # Create heatmap in blue
     heatmap = ax.pcolor(data, cmap=plt.cm.Blues)
 
     # Factor x axis
@@ -124,17 +123,12 @@ def plotDataMap( dataDir , title , file , xUnit , yUnit , xColumn=0 , yColumn=0 
         ax.xaxis.set_major_locator(MaxNLocator(8))
         ax.yaxis.set_major_locator(MaxNLocator(8))
 
-
-
     # Set title
     ax.set_xlabel(xUnit, fontsize=12)
     ax.set_ylabel(yUnit, fontsize=12)
-
-
     myBar = plt.colorbar(heatmap)
     myBar.set_label("Distance ($\AA$)")
     plt.title( title )
-    
     
     # Set the plotting font and default size
     font = {'family' : 'Arial',
@@ -143,11 +137,7 @@ def plotDataMap( dataDir , title , file , xUnit , yUnit , xColumn=0 , yColumn=0 
     plt.rc('font', **font)
 
     # Save figure
-    plt.savefig(pp, format="pdf")
-
-    # Save in png
-    matplotlib.use('Png')
-    plt.savefig(outFile+title)
+    plt.savefig(pp, format="pdf",dpi=300)
 
     # Close the figure
     pp.close()

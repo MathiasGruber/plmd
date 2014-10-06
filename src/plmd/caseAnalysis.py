@@ -97,6 +97,9 @@ class Analysis (plmd.PLMD_module):
             
             # Time correlation
             handler.endtoendAnalysis()
+            
+            # C-alpha map
+            handler.caMapAnalysis()
                         
             
             ## Run Analyses using MDAnalaysis module            

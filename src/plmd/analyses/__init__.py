@@ -1,6 +1,6 @@
 import os,sys
 import MDAnalysis
-import block, energy, bFactor, dihedral, timeCorr, endToEnd
+import block, energy, bFactor, dihedral, timeCorr, endToEnd,CaToCaMap
 import plmd
 
 # The analysis handler provides the interface to all the analysis modules
@@ -89,4 +89,6 @@ class analysisHandler (plmd.PLMD_module):
     def endtoendAnalysis(self):
         endToEnd.runAnalysis( self.directory )
     
-    
+    # Ca map
+    def caMapAnalysis(self):
+        CaToCaMap.runAnalysis(self.directory)
