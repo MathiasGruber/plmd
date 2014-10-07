@@ -84,7 +84,7 @@ class analysisHandler (plmd.PLMD_module):
         
     # Run a hydrogen bond analysis
     def hbondAnalysis( self ):
-        hbond.runAnalysis( self.directory, self.mdTrajectory );
+        hbond.runAnalysis( self.directory );
         
     # Energy analysis
     def energyAnalysis( self ):

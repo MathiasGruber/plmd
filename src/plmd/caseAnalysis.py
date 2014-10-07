@@ -95,6 +95,9 @@ class Analysis (plmd.PLMD_module):
             # Run the ptraj script
             handler.runPtrajAnalysis( caseDir )
             
+            # H-bond plotting
+            handler.hbondAnalysis()             
+            
             # Plot the B factor
             handler.bFactorAnalysis()
             
@@ -113,7 +116,6 @@ class Analysis (plmd.PLMD_module):
             # RMSd map
             handler.rmsMapAnalysis()
             
-
             ## Run analyses using MD log data            
             #################################
                 
