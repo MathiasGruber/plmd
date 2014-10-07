@@ -66,7 +66,9 @@ class analysisHandler (plmd.PLMD_module):
                                replace("[DIHEDRALS]", dihedralTxt ). \
                                replace("[FIRSTRESI]", ":1" ). \
                                replace("[LASTRESI]", ":"+str(numOfResidues) ). \
-                               replace("[FRAMESKIP]", str(int(self.framesToSkip)) )
+                               replace("[FRAMESKIP]", str(int(self.framesToSkip)) ). \
+                               replace("[ACCEPTORMASK]", self.acceptorMask ). \
+                               replace("[DONORMASK]", self.donorMask )
         TEMPLATE.close()
                               
         # Write the submission file

@@ -43,6 +43,8 @@ def getDefaultConfig():
     config.set('analysisParameters', 'noBlock', 'false')
     config.set('analysisParameters', 'noEnergy', 'false')
     config.set('analysisParameters', 'noEmail', 'false')
+    config.set('analysisParameters', 'ligandAcceptorMask', '')
+    config.set('analysisParameters', 'ligandDonorMask', '')
     
     config.add_section('emailConfiguration')
     config.set('emailConfiguration', 'toEmail', 'nano.mathias@gmail.com')

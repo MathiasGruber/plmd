@@ -29,6 +29,7 @@ analyze timecorr vec1 v0 out [FOLDER]/analysis/data/timeCorr.out
 2drms @CA,C,N rmsout [FOLDER]/analysis/data/RMS.ps
 
 # Hydrogen Bon analysis
+#######################
 
 #-- Donors from standard amino acids
 donor mask :GLN@OE1
@@ -45,6 +46,8 @@ donor mask :THR@OG1
 donor mask :HIS@ND1
 donor mask :HIE@ND1
 donor mask :HID@NE2
+donor mask @O
+[DONORMASK]
 
 #-- Acceptors from standard amino acids
 acceptor mask  :ASN@ND2 :ASN@HD21
@@ -67,7 +70,18 @@ acceptor mask  :HIS@NE2 :HIS@HE2
 acceptor mask  :HIE@NE2 :HIE@HE2
 acceptor mask  :HID@ND1 :HID@HD1
 acceptor mask  :HIP@ND1,NE2 :HIP@HE2,HD1
+acceptor WAT O H1 
+acceptor WAT O H2 
+[ACCEPTORMASK]
 
+#Terminal residues have different atom names
+donor mask @OXT
+acceptor mask :1@N :1@H1
+acceptor mask :1@N :1@H2
+acceptor mask :1@N :1@H3]
+
+# Run the analysis
+hbond print .05 series hbond avgout [FOLDER]/analysis/data/hbond.avg out [FOLDER]/analysis/data/hbond.out
 
 # Run analysis
 go

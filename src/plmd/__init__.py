@@ -58,6 +58,8 @@ class PLMD_module:
         self.noBlock = config.getboolean('analysisParameters', 'noBlock')
         self.noEnergy = config.getboolean('analysisParameters', 'noEnergy')
         self.noEmail = config.getboolean('analysisParameters', 'noEmail')
+        self.acceptorMask = config.get('analysisParameters', 'ligandAcceptorMask')
+        self.donorMask = config.get('analysisParameters', 'ligandDonorMask')
         
         # Email configuration
         if config.has_option( "emailConfiguration", "emailPass" ):
