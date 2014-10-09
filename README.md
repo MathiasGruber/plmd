@@ -66,7 +66,15 @@ git reset --hard origin/master
 
 ## Installing MDAnalysis
 
-The module requires 
+The module requires MDAnalysis to be installed. This can be installed (on your local machine, or the HPC) by using the following commands:
+
+```
+git clone https://code.google.com/p/mdanalysis
+cd mdanalysis
+python setup.py build
+python setup.py install --user
+```
+Please note that if you are installing it on the DTU HPC, you need to login on the backend, and use `module load python/2.7.3` first!
 
 How To: Setting up a set of cases
 =============================
