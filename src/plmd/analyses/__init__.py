@@ -44,10 +44,7 @@ class analysisHandler (plmd.PLMD_module):
 
     # Create and run ptraj file
     def runPtrajAnalysis( self ):
-        
-        # Calculate factor for time-axis in ptraj analyses
-        self.ptrajFactor = int(self.framesToSkip * self.timestepPerFrame * self.timestepSize)
-        
+
         # Do the dihedral angle specifications
         numOfResidues = self.backbone.numberOfResidues()
         dihedralTxt = ""
@@ -57,22 +54,29 @@ class analysisHandler (plmd.PLMD_module):
                 dihedralTxt += "\ndihedral psi_"+str(i)+" :"+str(i)+"@N  :"+str(i)+"@CA :"+str(i)+"@C  :"+str(i+1)+"@N out "+self.directory+"/analysis/data/psi_"+str(i)
                 dihedralTxt += "\ndihedral omega_"+str(i)+" :"+str(i)+"@CA :"+str(i)+"@C  :"+str(i+1)+"@N  :"+str(i+1)+"@CA out "+self.directory+"/analysis/data/omega_"+str(i)
         
-        # Create new submission file
-        TEMPLATE = open( self.PLMDHOME+"/src/templates/cpptraj_analysis.txt", 'r')
-        TEMP = TEMPLATE.read().replace("[FOLDER]", self.directory  ). \
-                               replace("[DIHEDRALS]", dihedralTxt ). \
-                               replace("[FIRSTRESI]", ":1" ). \
-                               replace("[LASTRESI]", ":"+str(numOfResidues) ). \
-                               replace("[FRAMESKIP]", str(int(self.framesToSkip)) )
-        TEMPLATE.close()
-                              
-        # Write the submission file
-        FILE = open(self.directory+"/ccptraj_analysis.ptraj","w");        
-        FILE.write( TEMP );
-        FILE.close();
+        # We run ptraj twice, once going through all frames (for analyses requiring that)
+        # and once limited the trajectory to just enough points for a good plot
+        for ptrajType in ["full", "short"]:        
         
-        # Run the cpptraj utility
-        os.system( "$AMBERHOME/bin/cpptraj -p "+self.directory+"/md-files/peptide_nowat.prmtop -i "+self.directory+"/ccptraj_analysis.ptraj" )
+            # Calculate factor for time-axis in ptraj analyses
+            self.ptrajFactor = int(self.framesToSkip * self.timestepPerFrame * self.timestepSize)
+            
+            # Create new submission file
+            TEMPLATE = open( self.PLMDHOME+"/src/templates/cpptraj_analysis_"+ptrajType+".txt", 'r')
+            TEMP = TEMPLATE.read().replace("[FOLDER]", self.directory  ). \
+                                   replace("[DIHEDRALS]", dihedralTxt ). \
+                                   replace("[FIRSTRESI]", ":1" ). \
+                                   replace("[LASTRESI]", ":"+str(numOfResidues) ). \
+                                   replace("[FRAMESKIP]", str(int(self.framesToSkip)) )
+            TEMPLATE.close()
+                                  
+            # Write the submission file
+            FILE = open(self.directory+"/ccptraj_analysis_"+ptrajType+".ptraj","w");        
+            FILE.write( TEMP );
+            FILE.close();
+            
+            # Run the cpptraj utility
+            os.system( "$AMBERHOME/bin/cpptraj -p "+self.directory+"/md-files/peptide_nowat.prmtop -i "+self.directory+"/ccptraj_analysis_"+ptrajType+".ptraj" )
         
     # Run all the analyses modules
     def runAll( self ):

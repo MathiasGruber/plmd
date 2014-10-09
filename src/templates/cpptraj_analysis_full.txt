@@ -1,32 +1,5 @@
 # Load the trajectory
-trajin [FOLDER]/mergedResult.dcd 1 last [FRAMESKIP]
-
-# B Factor
-atomicfluct out [FOLDER]/analysis/data/bFactor.all @C,CA,N byatom bfactor
-atomicfluct out [FOLDER]/analysis/data/bFactor.n @N byatom bfactor
-atomicfluct out [FOLDER]/analysis/data/bFactor.c @C byatom bfactor
-atomicfluct out [FOLDER]/analysis/data/bFactor.ca @CA byatom bfactor
-
-# Dihedral angles
-[DIHEDRALS]
-
-# CA distance matrix
-matrix dist @CA out [FOLDER]/analysis/data/CAdistmat.dat
-
-# End to End distance of center of mass of first and last residue
-distance end_to_end [FIRSTRESI] [LASTRESI] out [FOLDER]/analysis/data/dist_end_to_end.list
-
-# End to End distance of CA of first and last residue
-distance end_to_end2  [FIRSTRESI]@CA [LASTRESI]@CA out [FOLDER]/analysis/data/ca_end_to_end.list
-
-# Time correlation for end to end distance
-vector v0 [FIRSTRESI]@CA ired [LASTRESI]@CA
-
-# Analyze Time correlation
-analyze timecorr vec1 v0 out [FOLDER]/analysis/data/timeCorr.out
-
-# RMS analysis
-2drms @CA,C,N rmsout [FOLDER]/analysis/data/RMS.ps
+trajin [FOLDER]/mergedResult.dcd 1 last 1
 
 # Hydrogen Bon analysis
 #######################
@@ -105,7 +78,7 @@ acceptor mask :1@N :1@H3]
 hbond print .05 series hbond avgout [FOLDER]/analysis/data/hbond.avg out [FOLDER]/analysis/data/hbond.out
 
 # Run PCA analysis
-#=================
+##################
 
 # Create reference
 reference [FOLDER]/md-files/peptide_nowat.inpcrd
