@@ -17,15 +17,21 @@ PLMD REQUIREMENTS
 * PLMD requires both Amber12 and AmberTools to be installed and set up properly in 
 environment.
 
-* The analysis module requires `MDAnalysis` to be installed (It is pre-installed on the DTU HPC):
+* The analysis module requires `MDAnalysis` to be installed:
 ```
 https://code.google.com/p/mdanalysis/
 ```
+See below on how to install this locally on the DTU HPC
 
 * The module furthermore requires numpy, matplotlib, and pylab modules to be installed
 
 * The scripts were specifically designed to run at the DTU HPC cluster: http://www.cc.dtu.dk, but may work elsewhere, with appropriate modifications, as well
 
+* The module also requires python 2.7. On the DTU HPC, python 2.7 can be loaded by typing the following:
+```
+module load python/2.7.3
+```
+This line can be added to your `.bashrc` file, so that you won't have to run it during every session. 
 
 Installation
 ============================
@@ -57,6 +63,10 @@ This module is still under constant development. To update to the latest version
 git fetch --all
 git reset --hard origin/master
 ``` 
+
+## Installing MDAnalysis
+
+The module requires 
 
 How To: Setting up a set of cases
 =============================
