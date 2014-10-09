@@ -80,9 +80,21 @@ hbond print .05 series hbond avgout [FOLDER]/analysis/data/hbond.avg out [FOLDER
 # Run PCA analysis
 ##################
 
+# Average the trajectory
+rms first :1-4&!@H=
+average [FOLDER]/analysis/data/averageStructure.rst restart
+
+# Save coordinates in memory
+createcrd crd1
+
+# Run for further processing
+run
+
 # Create reference
-reference [FOLDER]/md-files/peptide_nowat.inpcrd
-rms reference mass @CA,C,N out [FOLDER]/analysis/data/RMSD.out
+reference [FOLDER]/analysis/data/averageStructure.rst.1 [avg]
+
+# RMS-fit coordinates in crd1 to average
+rms ref [avg] mass :1-4&!@H= out [FOLDER]/analysis/data/RMSD.out
 
 # Create covariance matrix for all heavy atoms
 matrix covar name matrixdat @CA,C,N out [FOLDER]/analysis/data/covmat-ca.dat
