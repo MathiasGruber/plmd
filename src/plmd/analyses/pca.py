@@ -21,6 +21,20 @@ def runAnalysis( caseDir ):
     pc3 = []
     pc4 = []
 
+    # Go through analysis file and get eigenvalues
+    eigenValues = []
+    eigenValueTotal = 0
+    with open(dataDir+"evecs-ca.dat","r") as f:
+        lookForVec = 1
+        for line in f:
+            temp = line.split()
+            if len(temp) == 2 and temp[0] == str(lookForVec):
+                lookForVec += 1
+                eigenValueTotal += float(temp[1])
+                eigenValues.append(float(temp[1]))
+    eigenValues = (np.array(eigenValues) / eigenValueTotal) * 100               
+                
+
     # Get the file with all the data
     pcaFile = open(dataDir+"pca12-ca","r")
     n = 0
@@ -57,7 +71,6 @@ def runAnalysis( caseDir ):
         # Normalize the data DeltaG = -kb T * [ ln( P(v1,v2) ) - ln Pmax ]
         boltzman = 0.0019872041
         temperature = 300
-        tempWeight = -1 * np.ones(len( np_arrays[0] )) * boltzman * temperature
         
         # Create figure
         fig, ax = plt.subplots()        
@@ -75,8 +88,8 @@ def runAnalysis( caseDir ):
         # Set title, labels etc
         plt.legend()
         ax = fig.gca()
-        ax.set_xlabel("PC1", fontsize=12)
-        ax.set_ylabel("PC"+str(component+1), fontsize=12)
+        ax.set_xlabel("PC1 ({0:.2f}%)".format(eigenValues[0]), fontsize=12)
+        ax.set_ylabel("PC"+str(component+1)+" ({0:.2f}%)".format(eigenValues[component]), fontsize=12)
         plt.title( "PCA Analysis" )
         plt.rc('font', **font)   
     
