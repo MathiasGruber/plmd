@@ -1,6 +1,6 @@
 import os, math
 import MDAnalysis
-import block, energy, bFactor, dihedral, timeCorr, endToEnd,CaToCaMap, RMSdMap, hbond
+import block, energy, bFactor, dihedral, timeCorr, endToEnd,CaToCaMap, RMSdMap, hbond, pca
 import plmd
 
 # The analysis handler provides the interface to all the analysis modules
@@ -91,6 +91,9 @@ class analysisHandler (plmd.PLMD_module):
         
         ## Run analyses using cpptraj
         #############################
+        
+        # Run the PCA analysis
+        pca.runAnalysis( self.directory )        
         
         # H-bond plotting
         hbond.runAnalysis( self.directory );            

@@ -99,7 +99,7 @@ analyze modes displ out [FOLDER]/analysis/data/analyzemodesdis.dat stack [FOLDER
 run 
 
 # Project the modes
-projection modes [FOLDER]/analysis/data/evecs-ca.dat out [FOLDER]/analysis/data/pca12-ca beg 1 end 3 @CA,C,N
+projection modes [FOLDER]/analysis/data/evecs-ca.dat out [FOLDER]/analysis/data/pca12-ca beg 1 end 4 @CA,C,N
 
 # Run analysis
 go

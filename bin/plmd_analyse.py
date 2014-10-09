@@ -6,9 +6,19 @@ try:
     import sys,os,traceback
     import argparse, ConfigParser
     
+    # Require python 2.7 or higher
+    if sys.version_info[0] != 2 or sys.version_info[1] < 7:
+        print("This script requires Python version 2.7")
+        sys.exit(1)    
+    
     # Disable use of display backend for matplotlib
     import matplotlib
     matplotlib.use('Agg')
+    matplotlibVersion = matplotlib.__version__.split(".")
+    if int(matplotlibVersion[0]) < 0 or int(matplotlibVersion[1]) < 4:
+        print "This script requires matplotlib 1.4.0"
+        print "MatPlotLIb version: ",matplotlib.__version__, matplotlib.__file__   
+        sys.exit(1)    
     
     import plmd.caseAnalysis
     import getpass
