@@ -46,7 +46,6 @@ def runAnalysis( saveDir, mdTrajectory , timePerFrame ):
         r = numpy.array(results)
 
     # Print block analysis
-    matplotlib.use('agg')  # no interactive plotting, only save figures
     have_matplotlib = True
     if have_matplotlib:
         
