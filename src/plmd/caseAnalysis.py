@@ -81,51 +81,11 @@ class Analysis (plmd.PLMD_module):
             self.printStage( "Setting up analysis handler for: "+caseDir )
             handler = analyses.analysisHandler( caseDir , self.configuration, self.num_files )
             
-            ## Run Analyses using MDAnalaysis module            
-            ########################################
+            # Run all ptraj analyses
+            handler.runPtrajAnalysis()  
             
-            # Block averaging analysis
-            if self.noBlock == False:
-                self.printStage( "Running block analysis for: "+caseDir )
-                handler.blockAnalysis()            
-            
-            ## Run analyses using cpptraj
-            #############################
-            
-            # Run the ptraj script
-            handler.runPtrajAnalysis( caseDir )
-            
-            # H-bond plotting
-            handler.hbondAnalysis()             
-            
-            # Plot the B factor
-            handler.bFactorAnalysis()
-            
-            # Plot angles
-            handler.dihedralAnalysis()
-            
-            # Time correlation
-            handler.timeCorrelationAnalysis()
-            
-            # Time correlation
-            handler.endtoendAnalysis()
-            
-            # C-alpha map
-            handler.caMapAnalysis()
-            
-            # RMSd map
-            handler.rmsMapAnalysis()
-            
-            ## Run analyses using MD log data            
-            #################################
-                
-            # Plot Energies
-            if self.noEnergy == False:
-                self.printStage( "Plotting energies: "+caseDir )
-                handler.energyAnalysis()
-            
-            ## Finish up by sneding to user 
-            ###############################            
+            # Run all the analyses present in the handler
+            handler.runAll()
             
             # Compress the analysis/plots folder
             self.zipDirectory( caseDir+"/analysis/plots", caseDir+"/analysis/plots" )

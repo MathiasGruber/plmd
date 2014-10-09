@@ -104,5 +104,29 @@ acceptor mask :1@N :1@H3]
 # Run the analysis
 hbond print .05 series hbond avgout [FOLDER]/analysis/data/hbond.avg out [FOLDER]/analysis/data/hbond.out
 
+# Run PCA analysis
+#=================
+
+# Create reference
+reference [FOLDER]/md-files/peptide_nowat.inpcrd
+rms reference mass @CA,C,N out [FOLDER]/analysis/data/RMSD.out
+
+# Create covariance matrix for all heavy atoms
+matrix covar name matrixdat @CA,C,N out [FOLDER]/analysis/data/covmat-ca.dat
+
+# Diagonalize matrix and do PCA
+analyze matrix matrixdat out [FOLDER]/analysis/data/evecs-ca.dat vecs 100
+analyze matrix matrixdat name [FOLDER]/analysis/data/evecs-ca vecs 100
+
+# Analyze fluctuation and displacements
+analyze modes fluct out [FOLDER]/analysis/data/analyzemodesflu.dat stack [FOLDER]/analysis/data/evecs-ca beg 1 end 100
+analyze modes displ out [FOLDER]/analysis/data/analyzemodesdis.dat stack [FOLDER]/analysis/data/evecs-ca beg 1 end 100
+
+# Run the matrix stuff. Otherwise they will not be initialized for the upcoming projection
+run 
+
+# Project the modes
+projection modes [FOLDER]/analysis/data/evecs-ca.dat out [FOLDER]/analysis/data/pca12-ca beg 1 end 3 @CA,C,N
+
 # Run analysis
 go

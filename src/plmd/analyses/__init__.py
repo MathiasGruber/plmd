@@ -25,9 +25,6 @@ class analysisHandler (plmd.PLMD_module):
         self.framesToSkip = 1
         if self.simFrames > 500:
             self.framesToSkip = math.floor( self.simFrames / 500. )
-            
-        
-        
                 
         # Print information about the trajectory for the user to see
         print "Number of frames in trajectory: "+str(self.mdTrajectory.trajectory.numframes)
@@ -46,7 +43,7 @@ class analysisHandler (plmd.PLMD_module):
         os.system("mv summary* "+caseDir+"/analysis/data")
 
     # Create and run ptraj file
-    def runPtrajAnalysis( self , caseDir ):
+    def runPtrajAnalysis( self ):
         
         # Calculate factor for time-axis in ptraj analyses
         self.ptrajFactor = int(self.framesToSkip * self.timestepPerFrame * self.timestepSize)
@@ -56,13 +53,13 @@ class analysisHandler (plmd.PLMD_module):
         dihedralTxt = ""
         if numOfResidues > 1:
             for i in range(1,numOfResidues):
-                dihedralTxt += "\ndihedral phi_"+str(i)+" :"+str(i)+"@C  :"+str(i+1)+"@N  :"+str(i+1)+"@CA :"+str(i+1)+"@C out "+caseDir+"/analysis/data/phi_"+str(i)
-                dihedralTxt += "\ndihedral psi_"+str(i)+" :"+str(i)+"@N  :"+str(i)+"@CA :"+str(i)+"@C  :"+str(i+1)+"@N out "+caseDir+"/analysis/data/psi_"+str(i)
-                dihedralTxt += "\ndihedral omega_"+str(i)+" :"+str(i)+"@CA :"+str(i)+"@C  :"+str(i+1)+"@N  :"+str(i+1)+"@CA out "+caseDir+"/analysis/data/omega_"+str(i)
+                dihedralTxt += "\ndihedral phi_"+str(i)+" :"+str(i)+"@C  :"+str(i+1)+"@N  :"+str(i+1)+"@CA :"+str(i+1)+"@C out "+self.directory+"/analysis/data/phi_"+str(i)
+                dihedralTxt += "\ndihedral psi_"+str(i)+" :"+str(i)+"@N  :"+str(i)+"@CA :"+str(i)+"@C  :"+str(i+1)+"@N out "+self.directory+"/analysis/data/psi_"+str(i)
+                dihedralTxt += "\ndihedral omega_"+str(i)+" :"+str(i)+"@CA :"+str(i)+"@C  :"+str(i+1)+"@N  :"+str(i+1)+"@CA out "+self.directory+"/analysis/data/omega_"+str(i)
         
         # Create new submission file
         TEMPLATE = open( self.PLMDHOME+"/src/templates/cpptraj_analysis.txt", 'r')
-        TEMP = TEMPLATE.read().replace("[FOLDER]", caseDir  ). \
+        TEMP = TEMPLATE.read().replace("[FOLDER]", self.directory  ). \
                                replace("[DIHEDRALS]", dihedralTxt ). \
                                replace("[FIRSTRESI]", ":1" ). \
                                replace("[LASTRESI]", ":"+str(numOfResidues) ). \
@@ -70,46 +67,54 @@ class analysisHandler (plmd.PLMD_module):
         TEMPLATE.close()
                               
         # Write the submission file
-        FILE = open(caseDir+"/ccptraj_analysis.ptraj","w");        
+        FILE = open(self.directory+"/ccptraj_analysis.ptraj","w");        
         FILE.write( TEMP );
         FILE.close();
         
         # Run the cpptraj utility
-        os.system( "$AMBERHOME/bin/cpptraj -p "+caseDir+"/md-files/peptide_nowat.prmtop -i "+caseDir+"/ccptraj_analysis.ptraj" )
+        os.system( "$AMBERHOME/bin/cpptraj -p "+self.directory+"/md-files/peptide_nowat.prmtop -i "+self.directory+"/ccptraj_analysis.ptraj" )
         
-
-    # Run a block analysis
-    def blockAnalysis( self ):
-        block.runAnalysis( self.directory, self.mdTrajectory, self.timestepSize );
+    # Run all the analyses modules
+    def runAll( self ):
+    
+        ## Run Analyses using MDAnalaysis module            
+        ########################################
         
-    # Run a hydrogen bond analysis
-    def hbondAnalysis( self ):
-        hbond.runAnalysis( self.directory );
+        # Block averaging analysis
+        if self.noBlock == False:
+            self.printStage( "Running block analysis for: "+self.directory )
+            block.runAnalysis( self.directory, self.mdTrajectory, self.timestepSize );           
         
-    # Energy analysis
-    def energyAnalysis( self ):
-        energy.runAnalysis( self.directory );
+        ## Run analyses using cpptraj
+        #############################
         
-    # Run a block analysis
-    def bFactorAnalysis( self ):
+        # H-bond plotting
+        hbond.runAnalysis( self.directory );            
+        
+        # Plot the B factor
         bFactor.runAnalysis( self.directory );
         
-    # Run a block analysis
-    def dihedralAnalysis( self ):
+        # Plot angles
         dihedral.runAnalysis( self.directory, self.backbone , self.ptrajFactor);
         
-    # Time correlation
-    def timeCorrelationAnalysis(self):
+        # Time correlation
         timeCorr.runAnalysis( self.directory , self.ptrajFactor)
-    
-    # End to end distance
-    def endtoendAnalysis(self):
+        
+        # Time correlation
         endToEnd.runAnalysis( self.directory , self.ptrajFactor)
-    
-    # Ca map
-    def caMapAnalysis(self):
+        
+        # C-alpha map
         CaToCaMap.runAnalysis(self.directory )
         
-    # RMSd
-    def rmsMapAnalysis(self):
+        # RMSd map
         RMSdMap.runAnalysis(self.directory, self.ptrajFactor)
+        
+        ## Run analyses using MD log data            
+        #################################
+            
+        # Plot Energies
+        if self.noEnergy == False:
+            self.printStage( "Plotting energies: "+self.directory )
+            energy.runAnalysis( self.directory );
+
+     
