@@ -117,5 +117,5 @@ Cpptraj is run through twice during the script;
 - First time only 500 frames from the trajectory are included (which is enough for plotting of data). If you want to add your analysis to this run, add it to `src/templates/cpptraj_analysis_short.txt`
 - Second time the entire trajectory is read (which is suitable for H-bond analysis, cluster analysis, PCA and so forth. If you want to add your analysis to this run, add it to `src/templates/cpptraj_analysis_full.txt`
 
-## Adding MDAnalyses
+## Adding MDAnalysis analyses
 In the `src/plmd/analyses/__init__`-file, in the constructor, the trajectory of the simulation is loaded and some basic MDAnalysis parameters are set up. These can be passed to your analysis module, so that this retrieval of data only has to happen once. See e.g. the `src/plmd/analyses/block.py` analysis module for how this is set up.
