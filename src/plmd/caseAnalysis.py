@@ -76,6 +76,9 @@ class Analysis (plmd.PLMD_module):
             self.createFolder( caseDir+"/analysis/plots" , True )
             self.createFolder( caseDir+"/analysis/data" , True )
             self.createFolder( caseDir+"/analysis/structures" , True )
+            self.createFolder( caseDir+"/analysis/structures/pca2" , True )
+            self.createFolder( caseDir+"/analysis/structures/pca3" , True )
+            self.createFolder( caseDir+"/analysis/structures/pca4" , True )
             
             # Instantiate the handler for the analyses
             self.printStage( "Setting up analysis handler for: "+caseDir )

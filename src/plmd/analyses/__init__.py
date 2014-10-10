@@ -93,7 +93,7 @@ class analysisHandler (plmd.PLMD_module):
         #############################
         
         # Run the PCA analysis
-        pca.runAnalysis( self.directory )        
+        pca.runAnalysis( self.directory , self.mdTrajectory )        
         
         # H-bond plotting
         hbond.runAnalysis( self.directory );            
