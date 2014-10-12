@@ -62,7 +62,7 @@ class Setup (plmd.PLMD_module):
         self.createFolder ( "predefinedInput" )       
                
         # Check if a peptide should be made
-        if self.pPeptide != None:
+        if self.pPeptide != None and self.pPeptide != "false":
 
             # User info
             print "Now creating peptide with LEaP"
@@ -75,7 +75,7 @@ class Setup (plmd.PLMD_module):
             self.peptide = "predefinedInput/peptides.pdb"
               
         # Check if we should use predefined ion from package
-        if self.pLigand != None:
+        if self.pLigand != None and self.pLigand != "false":
             
             # User info
             print "Now importing the predefined ion to be user to library."
@@ -137,34 +137,6 @@ class Setup (plmd.PLMD_module):
             
             # Create input files for amber run
             self.amberCreateInput( str(i) )
-            
-            # Create files for HPC submission
-            self.hpcCreateSubmission( str(i) )
-    
-    # Create submission file for submitting case to HPC queue
-    def hpcCreateSubmission( self, caseName ):
-        
-        # User information
-        self.printStage( "Stage 7, Case: "+caseName+". Creating HPC submission files" )          
-        
-         # Create new submission file
-        TEMPLATE = open( self.PLMDHOME+"/src/templates/explicit_submit.txt", 'r')
-        TEMP = TEMPLATE.read().replace("[FOLDER]", "cases/"+caseName  ). \
-                              replace("[CPUCONTROL]", self.nodeControl ). \
-                              replace("[WALLCLOCK]", self.wallClock ). \
-                              replace("[MDRUNS]", self.mdRuns )
-        TEMPLATE.close()
-                              
-        # Write the submission file
-        FILE = open("cases/"+caseName+"/submit_run.sh","w");        
-        FILE.write( TEMP );
-        FILE.close();
-
-        # Show the file
-        print TEMP
-        
-        # Let user review results
-        self.confirmProgress()
         
     # Create all the amber input files for a case
     def amberCreateInput( self, caseName ):

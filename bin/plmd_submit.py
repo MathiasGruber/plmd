@@ -3,7 +3,8 @@
 try:
     
     import argparse, os, sys
-    import traceback
+    import traceback, ConfigParser
+    import plmd.caseSubmit
     
     # Argument parsing & help page
     parser = argparse.ArgumentParser(description=
@@ -12,6 +13,7 @@ try:
     """)
     
     # Only argument is the configFile
+    parser.add_argument('configFile', help='a configuration file with details of the simulation')
     parser.add_argument('scanDir', help='Directory to scan for MD cases to submit to queue')    
     
     # Parse arguments
@@ -20,15 +22,32 @@ try:
     # Check that a directory was supplied
     if os.path.isdir( args.scanDir ):
         
+        # Check file can be opened
+        f = open( args.configFile )
+
+        # Get configuration
+        config = ConfigParser.RawConfigParser()
+        config.read( args.configFile )        
+        
+        # Instantiate PLMD and pass the configuration file
+        plmd = plmd.caseSubmit.Setup( config )
+        
         # Go through the directories
         for subdir,dirs,files in os.walk( args.scanDir ):
 
             # Identify case structures
-            if "in_files" in dirs and "md-files" in dirs and "md-logs" in dirs and "pdb-files" in dirs and "submit_run.sh" in files:
+            if "in_files" in dirs and "md-files" in dirs and "md-logs" in dirs and "pdb-files" in dirs:
                 
-                # Submit to HPC cluster
-                print "Identified case structure for directory: "+subdir+". Now submitting to HPC queue."
-                os.system( "qsub "+subdir+"/submit_run.sh" )
+                # Create submission file
+                plmd.hpcCreateSubmission( subdir )
+                
+                # Create submission file
+                plmd.hpcSubmission( subdir )
+
+                
+    else:
+        raise Exception("The specified scanDir is not a directory")           
+                
     
 except ImportError as e:
     print e

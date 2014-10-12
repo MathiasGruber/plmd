@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-#PBS -N [FOLDER]
+#PBS -N [NAME]
 #PBS -l [CPUCONTROL]
 #PBS -l walltime=[WALLCLOCK]
 
