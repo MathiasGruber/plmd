@@ -6,3 +6,5 @@
 cases/
 
 *.pyc
+
+non_treated/
