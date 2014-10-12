@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import matplotlib
+import matplotlib, math
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
@@ -34,7 +34,14 @@ def plotData( caseDir , title, labels , files , unit , xUnit = "Time (ps)", type
                 xData.append(float(values[0])*xFactor)
                 yData.append(values[1])
             n = n + 1
-
+            
+        # Limit data to 500 data points
+        if n > 500:
+            timesOver = int(math.floor( n / 500. ))
+            if timesOver > 2:
+                xData = xData[::timesOver]
+                yData = yData[::timesOver]
+        
         # Set linetype for the plot
         lineType = '-'
         if types != None:
