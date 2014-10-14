@@ -1,15 +1,10 @@
 Improvements
 ==
 
-* Implement quiet mode for setup. No user confirmation dialogs :+1:
 * More control parameters; explicit water box size
-
-Bug Fixes
-==
-
-* Ensure that ligands are not placed on top of each other :+1:
+* Configuration object to be passed around, instead of reading the config file in each module.
 
 Features
 == 
 
-* Analysis module
+* Clustering analysis. Potentially see "Going beyond Clustering in MD Trajectory Analysis: An Application to Villin Headpiece Folding".. more litterature research required
