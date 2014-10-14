@@ -39,6 +39,7 @@ try:
     parser.add_argument('-noEnergy', dest='noEnergy',action='store_const', const="true", default="false", help="Do not run energy analysis")
     parser.add_argument('-noEmail', dest='noEmail',action='store_const', const="true", default="false", help="Do not attempt to send email")
     parser.add_argument('-emailPass', dest='emailPass',nargs="?", default="false", help="Email password to send results to")
+    parser.add_argument('-doGlobal', dest='doGlobal',action='store_const', const="true", default="false", help='Perform global analyses of selected cases. This assumes that all local analyses have already been performed, and uses that data') 
     
     # Parse arguments
     args = parser.parse_args()  
@@ -74,25 +75,36 @@ The password is not permanently saved in any local or external files.
     # The object handling analyses
     analyser = plmd.caseAnalysis.Analysis( config )    
 
+
+    
     # Check that a directory was supplied
     if os.path.isdir( args.scanDir ):
         
-        # Go through the directories
-        for subdir,dirs,files in os.walk( args.scanDir ):
-
-            # Identify case structures
-            if "in_files" in dirs and "md-files" in dirs and "md-logs" in dirs and "pdb-files" in dirs and "submit_run.sh" in files:
-                
-                # Run analysis on this directory. 
-                if args.noQueue == "true":
+        # Check if global
+        if args.doGlobal == "true":
+            
+            # Run analysis on this directory. 
+            if args.noQueue == "true":
+                analyser.analyseGlobal( args.scanDir )    
+            else:
+                sys.argv.append("-noQueue")
+                analyser.submitForAnalysis( args.scanDir )
+            
+        else:        
+        
+            # Go through the directories
+            for subdir,dirs,files in os.walk( args.scanDir ):
+    
+                # Identify case structures
+                if "in_files" in dirs and "md-files" in dirs and "md-logs" in dirs and "pdb-files" in dirs and "submit_run.sh" in files:
                     
-                    # Directly in terminal
-                    analyser.analyseDir( subdir )    
-                else:
-                    
-                    # Submit to queue
-                    sys.argv.append("-noQueue")
-                    analyser.submitForAnalysis( subdir )
+                    # Run in terminal, or submit to server queue
+                    if args.noQueue == "true":
+                        analyser.analyseDir( subdir )    
+                    else:
+                        sys.argv.append("-noQueue")
+                        analyser.submitForAnalysis( subdir )
+                        
 except ImportError as e:
     print e
 except Exception as e:
