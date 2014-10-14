@@ -48,6 +48,7 @@ class Setup (plmd.PLMD_module):
         FILE.close();
         
         print "Create submission file: "+caseName+"/submit_run.sh"
+        
     # Submit to HPC cluster
     def hpcSubmission( self, caseName ):
         

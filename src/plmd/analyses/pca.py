@@ -83,10 +83,10 @@ def runAnalysis( caseDir, mdTrajectory ):
     font = {'family' : 'Arial',
             'weight' : 'normal',
             'size'   : 10}
-    
+            
     # Do a plot for each PCA
     for component in range( 1, len(np_arrays) ):
-
+        
         # User Info        
         print "Plotting component 1 vs. "+str(component)
     
@@ -180,11 +180,6 @@ def runAnalysis( caseDir, mdTrajectory ):
                             # Use MDAnalysis to pring PDB
                             filename = structDir+"pca"+str(component+1)+"/PC1_"+str(bin1)+"_PC"+str(component+1)+"_"+str(bin2)+"_Frame_"+values[0]+".pdb"
                             
-                            # Print stuff
-                            print "Looking at frame: ", values[0]
-                            print "Writing to file: ", filename
-                            print "Current timestep: ", mdTrajectory.trajectory[ int(values[0]) ]
-                                
                             # Write the PDB file
                             W = MDAnalysis.Writer( filename, remarks='Have a nice day', )
                             W.write(selection)
