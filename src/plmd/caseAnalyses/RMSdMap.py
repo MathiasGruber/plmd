@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import plotData as myPlot
+import plmd.plotData as myPlot
 
 # == Takes energy data from MD logs and plots it
 # ==============================================
@@ -12,9 +12,9 @@ def runAnalysis( caseDir , timeFactor ):
 
     # CA distance map
     myPlot.plotDataMap( 
-        caseDir, 
+        caseDir+"/analysis/plots" , 
         "RMSd of backbone atoms: C, CA and N", 
-        "RMS.ps", 
+        caseDir+"/analysis/data/RMS.ps", 
         "Time (ps)" , 
         "Time (ps)", 
         skipColumn = 1, 

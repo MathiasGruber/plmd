@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import plotData as myPlot
+import plmd.plotData as myPlot
 
 # == Takes energy data from MD logs and plots it
 # ==============================================
@@ -12,10 +12,10 @@ def runAnalysis( caseDir , timeFactor ):
 
     # B factor plot
     myPlot.plotData( 
-        caseDir , 
+        caseDir+"/analysis/plots" , 
         "End-To-End Time Correlation", 
         ["$ \tau $"], 
-        ["timeCorr.out"] , 
+        [caseDir+"/analysis/data/timeCorr.out"] , 
         "Autocorrelation", 
         skipLines=4,
         xFactor = timeFactor )

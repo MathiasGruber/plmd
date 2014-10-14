@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import os, shutil, sys
 import tarfile
-import analyses, plmd
+import caseAnalyses, globalAnalyses, plmd
 import plmd.caseEmail
 
 # Sending email modules
@@ -55,9 +55,56 @@ class Analysis (plmd.PLMD_module):
         
         # Remove submission file immidiately afterwards
         os.remove( caseDir+"/submit_analysis.sh" )
-            
+          
     # Main function handling analysis of a single case directory
-    def analyseDir( self, caseDir ):
+    def analyseGlobal( self, searchDir ):
+        
+        # User information
+        self.printStage( "Probing searchDir directory "+searchDir+" for data" )
+    
+        # Store data in this array
+        dataArray = {}
+        
+        # Go through the directories
+        for caseDir,dirs,files in os.walk( searchDir ):
+
+            # Identify case structures
+            if "in_files" in dirs and "md-files" in dirs and "md-logs" in dirs and "pdb-files" in dirs and "submit_run.sh" in files:
+        
+                # Only possible if it has a trajectory file
+                if self.hasTrajectory( caseDir ):
+                    
+                    # Check if a data directory is present
+                    if os.path.isdir( caseDir+"/analysis/data" ):
+                        
+                        # Go through the datafiles, add paths
+                        for filename in os.listdir(  caseDir+"/analysis/data" ):
+                            if filename not in dataArray:
+                                dataArray[ filename ] = {'filepaths':[], 'caseLabels':[], 'filename':filename }
+                            dataArray[ filename ]['filepaths'].append( caseDir+"/analysis/data/"+filename )
+                            dataArray[ filename ]['caseLabels'].append( caseDir.split("/")[-1] )
+        
+        # Check that any data was found
+        if len( dataArray ) > 0:
+            
+            # Create directory for the global analyses
+            self.createFolder( "globalAnalyses" , True )            
+            
+            # Instantiate the handler for the analyses
+            self.printStage( "Setting up analysis handler for: "+caseDir )
+            handler = globalAnalyses.analysisHandler( self.configuration, dataArray )
+            
+            # Run all the analyses present in the handler
+            handler.runAll()
+            
+            
+        else:
+            raise Exception("Not enough data was found to run global analysis")
+        
+                 
+        
+    # Main function handling analysis of a single case directory
+    def analyseCase( self, caseDir ):
         
         # User information
         self.printStage( "Analysis of case directory: "+caseDir )
@@ -83,7 +130,7 @@ class Analysis (plmd.PLMD_module):
             
             # Instantiate the handler for the analyses
             self.printStage( "Setting up analysis handler for: "+caseDir )
-            handler = analyses.analysisHandler( caseDir , self.configuration, self.num_files )
+            handler = caseAnalyses.analysisHandler( caseDir , self.configuration, self.num_files )
             
             # Run all ptraj analyses
             handler.runPtrajAnalysis()  

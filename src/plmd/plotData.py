@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import matplotlib, math
+import math
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
@@ -10,23 +10,19 @@ from matplotlib.ticker import LinearLocator
 
 # Plot graphs
 # Can plot multiple files
-def plotData( caseDir , title, labels , files , unit , xUnit = "Time (ps)", types=None, skipLines = 0, xFactor = 1 ):
+def plotData( outputDir , title, labels , inputFiles , unit , xUnit = "Time (ps)", types=None, skipLines = 0, xFactor = 1 ):
     
-    # Output file name and location
-    dataDir = caseDir+"/analysis/data/"
-    plotDir = caseDir+"/analysis/plots/"
-    
-    # plot using pdf files
-    pp = PdfPages( plotDir+title+".pdf" )
+    # plot using pdf 
+    pp = PdfPages( outputDir+"/"+title+".pdf" )
     
     # Set figure size
     fig = plt.figure(figsize=(8,6))
     
-    # Go through the files to plot
+    # Go through the to plot
     i = 0
-    for filename in files:
+    for filename in inputFiles:
         xData, yData = [],[]
-        qbfile = open(dataDir+filename,"r")
+        qbfile = open(filename,"r")
         n = 0
         for aline in qbfile:
             if n > skipLines:
@@ -73,21 +69,17 @@ def plotData( caseDir , title, labels , files , unit , xUnit = "Time (ps)", type
     pp.close()
 
 # Do 2d plots
-def plotDataMap( caseDir , title , file , xUnit , yUnit , xColumn=0 , yColumn=0 , skipRow = 0, skipColumn = 0 ,xFactor=1, yFactor=1):
+def plotDataMap( outputDir , title , inputFile , xUnit , yUnit , xColumn=0 , yColumn=0 , skipRow = 0, skipColumn = 0 ,xFactor=1, yFactor=1):
 
-    # Output file name and location
-    dataDir = caseDir+"/analysis/data/"
-    plotDir = caseDir+"/analysis/plots/"
-    
     # plot using pdf files
-    pp = PdfPages( plotDir+title+".pdf" )
+    pp = PdfPages( outputDir+title+".pdf" )
     
     # Create figure
     fig, ax = plt.subplots()
     
     # Load data
     data = []
-    qbfile = open(dataDir+file,"r")
+    qbfile = open(inputFile,"r")
     n = 0
     for aline in qbfile:
         if n != (skipRow-1):

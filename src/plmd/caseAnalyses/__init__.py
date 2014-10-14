@@ -98,11 +98,11 @@ class analysisHandler (plmd.PLMD_module):
         # H-bond plotting
         hbond.runAnalysis( self.directory );            
         
-        # Plot the B factor
-        bFactor.runAnalysis( self.directory );
-        
         # Plot angles
         dihedral.runAnalysis( self.directory, self.backbone , self.ptrajFactor);
+        
+        # Plot the B factor
+        bFactor.runAnalysis( self.directory );
         
         # Time correlation
         timeCorr.runAnalysis( self.directory , self.ptrajFactor)

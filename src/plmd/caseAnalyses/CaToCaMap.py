@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import plotData as myPlot
+import plmd.plotData as myPlot
 
 # == Takes energy data from MD logs and plots it
 # ==============================================
@@ -12,9 +12,9 @@ def runAnalysis( caseDir ):
 
     # CA distance map
     myPlot.plotDataMap( 
-        caseDir, 
+        caseDir+"/analysis/plots" , 
         "CA Distance Map", 
-        "CAdistmat.dat", 
+        caseDir+"/analysis/data/CAdistmat.dat", 
         "Residue ID" , 
         "Residue ID", 
         xColumn=list('SGAGKT'),

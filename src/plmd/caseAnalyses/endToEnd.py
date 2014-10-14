@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import plotData as myPlot
+import plmd.plotData as myPlot
 
 # == Takes energy data from MD logs and plots it
 # ==============================================
@@ -12,9 +12,9 @@ def runAnalysis( caseDir , timeFactor ):
 
     # B factor plot
     myPlot.plotData( 
-        caseDir , 
+        caseDir+"/analysis/plots" , 
         "End to End Residue Distance", 
         ["End to End"], 
-        ["dist_end_to_end.list"] , 
+        [caseDir+"/analysis/data/dist_end_to_end.list"] , 
         "Distance ($\AA$)", 
         xFactor = timeFactor )

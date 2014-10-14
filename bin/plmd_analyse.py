@@ -100,7 +100,7 @@ The password is not permanently saved in any local or external files.
                     
                     # Run in terminal, or submit to server queue
                     if args.noQueue == "true":
-                        analyser.analyseDir( subdir )    
+                        analyser.analyseCase( subdir )    
                     else:
                         sys.argv.append("-noQueue")
                         analyser.submitForAnalysis( subdir )

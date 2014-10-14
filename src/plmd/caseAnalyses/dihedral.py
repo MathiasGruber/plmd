@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import MDAnalysis
-import plotData as myPlot
+import plmd.plotData as myPlot
 
 # == Takes energy data from MD logs and plots it
 # ==============================================
@@ -19,10 +19,10 @@ def runAnalysis( caseDir , backbone , timeFactor ):
         
         # Plot command
         myPlot.plotData( 
-        caseDir , 
+        caseDir+"/analysis/plots" , 
         "Dihedral Angles. Res ID: "+str(i)+", Residue name: "+str(resNames[i]), 
         ["$\Psi_"+str(i)+"$","$\Phi_"+str(i)+"$"],
-        ["psi_"+str(i),"phi_"+str(i)] , 
+        [caseDir+"/analysis/data/psi_"+str(i),caseDir+"/analysis/data/phi_"+str(i)] , 
         "Angle (Degrees)", 
         xFactor = timeFactor )
  
