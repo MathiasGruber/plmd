@@ -22,9 +22,8 @@ def runAnalysis( dataFiles, backbone ):
     for k,v in dataFiles.items():
         if ("psi" in k or "phi" in k) and "timeCorrected" in k:
             resi = int(re.findall(r'\d+', k )[0])
-            eTitle = "Res ID: "+str(resi)+", Residue name: "+str(resNames[resi])
-            doDihedralPlot( "Psi Angles" + eTitle, dataFiles[ k ] )
-            doDihedralPlot( "Phi Angles" + eTitle, dataFiles[ k ] )    
+            eTitle = ". Res ID: "+str(resi)+", Residue name: "+str(resNames[resi])
+            doDihedralPlot( k.split()[-1]+" Angles" + eTitle, dataFiles[ k ] )   
     
     
  

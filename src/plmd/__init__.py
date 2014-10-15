@@ -57,17 +57,15 @@ class PLMD_module:
         self.noStrip = config.getboolean('analysisParameters', 'noStrip')
         self.noBlock = config.getboolean('analysisParameters', 'noBlock')
         self.noEnergy = config.getboolean('analysisParameters', 'noEnergy')
-        self.noEmail = config.getboolean('analysisParameters', 'noEmail')
+        self.noFTP = config.getboolean('analysisParameters', 'noFTP')
         
-        # Email configuration
-        if config.has_option( "emailConfiguration", "emailPass" ):
-            self.toEmail = config.get('emailConfiguration', 'toEmail')
-            self.fromEmail = config.get('emailConfiguration', 'fromEmail')
-            self.password = config.get('emailConfiguration', 'emailPass')
-            self.smtp = config.get('emailConfiguration', 'smtp')
-            self.port = config.get('emailConfiguration', 'port')
+        # FTP configuration
+        if config.has_option( "ftpConfiguration", "ftpPass" ):
+            self.server = config.get('ftpConfiguration', 'server')
+            self.ftpUser = config.get('ftpConfiguration', 'ftpUser')
+            self.password = config.get('ftpConfiguration', 'ftpPass')
         else:
-            self.noEmail = True
+            self.noFTP = True
         
         # Get environment vars for PLMD & Amber. Will raise exceptions if not found
         self.PLMDHOME = os.environ["PLMDHOME"]

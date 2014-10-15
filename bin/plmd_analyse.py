@@ -37,8 +37,8 @@ try:
     parser.add_argument('-noStrip', dest='noStrip',action='store_const', const="true", default="false", help="Do not strip water molecules in trajectory files")
     parser.add_argument('-noBlock', dest='noBlock',action='store_const', const="true", default="false", help="Do not run block averaging analysis")
     parser.add_argument('-noEnergy', dest='noEnergy',action='store_const', const="true", default="false", help="Do not run energy analysis")
-    parser.add_argument('-noEmail', dest='noEmail',action='store_const', const="true", default="false", help="Do not attempt to send email")
-    parser.add_argument('-emailPass', dest='emailPass',nargs="?", default="false", help="Email password to send results to")
+    parser.add_argument('-noFTP', dest='noFTP',action='store_const', const="true", default="false", help="Do not attempt to send results to FTP")
+    parser.add_argument('-ftpPass', dest='ftpPass',nargs="?", default="false", help="FTP password to send results to")
     parser.add_argument('-doGlobal', dest='doGlobal',action='store_const', const="true", default="false", help='Perform global analyses of selected cases. This assumes that all local analyses have already been performed, and uses that data') 
     
     # Parse arguments
@@ -53,24 +53,24 @@ try:
     config.set('analysisParameters', 'noStrip', args.noStrip )
     config.set('analysisParameters', 'noBlock', args.noBlock )
     config.set('analysisParameters', 'noEnergy', args.noEnergy )
-    config.set('analysisParameters', 'noEmail', args.noEmail )
+    config.set('analysisParameters', 'noFTP', args.noFTP )
     
-    # Get email pass
-    if args.noEmail == "false":
-        if args.emailPass == "false":
+    # Get ftp pass
+    if args.noFTP == "false":
+        if args.ftpPass == "false":
             var = getpass.getpass("""
-Using the smtp server specified in the configuration file,
-this tool can email the results to your email account. 
+Using the ftp server specified in the configuration file,
+this tool can send the results to that ftp account. 
 Press 'n' to not use this feature\n
-Please enter the password for your email, so as to use the smtp server.
+Please enter the password for your account, so as to use the ftp server.
 The password is not permanently saved in any local or external files.
 """)
             if var != 'n':
-                config.set('emailConfiguration', 'emailPass', var )
-                sys.argv.append( "-emailPass" )
+                config.set('ftpConfiguration', 'ftpPass', var )
+                sys.argv.append( "-ftpPass" )
                 sys.argv.append( '"'+var+'"' )
         else:
-            config.set('emailConfiguration', 'emailPass', args.emailPass )
+            config.set('ftpConfiguration', 'ftpPass', args.ftpPass )
         
     # The object handling analyses
     analyser = plmd.caseAnalysis.Analysis( config )    

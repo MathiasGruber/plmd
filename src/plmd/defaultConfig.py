@@ -44,10 +44,8 @@ def getDefaultConfig():
     config.set('analysisParameters', 'noEnergy', 'false')
     config.set('analysisParameters', 'noEmail', 'false')
     
-    config.add_section('emailConfiguration')
-    config.set('emailConfiguration', 'toEmail', 'nano.mathias@gmail.com')
-    config.set('emailConfiguration', 'fromEmail', 'plmd.env@gmail.com')
-    config.set('emailConfiguration', 'smtp', 'smtp.gmail.com')
-    config.set('emailConfiguration', 'port', '587')
+    config.add_section('ftpConfiguration')
+    config.set('ftpConfiguration', 'server', 'ftp.nanomathias.com')
+    config.set('ftpConfiguration', 'ftpUser', 'plmd')
     
     return config

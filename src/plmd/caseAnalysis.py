@@ -1,16 +1,7 @@
 #!/usr/bin/python
-import os, shutil, sys
-import tarfile
+import os, sys
 import caseAnalyses, globalAnalyses, plmd
-import plmd.caseEmail
-
-# Sending email modules
-import smtplib
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEBase import MIMEBase
-from email.MIMEText import MIMEText
-from email.Utils import COMMASPACE, formatdate
-from email import Encoders
+import plmd.caseFTP
 
 # This is the overall Analysis class which merges trajectories,
 # manages the analysis handler, and emails the final results
@@ -100,17 +91,20 @@ class Analysis (plmd.PLMD_module):
             # Run all the analyses present in the handler
             handler.runAll()
             
-            # Create emailer
-            emailObject = plmd.caseEmail.Setup( self.configuration )
-            
-            # Compress the analysis/plots folder
-            folderToCompres = "globalAnalyses"
-            archieveName = self.name + "globalAnalysis"
-            emailObject.zipDirectory( archieveName , folderToCompres )
-            
             # Email the compressed file to the user
-            if self.noEmail == False:
-                emailObject.emailFile( archieveName+".tar" , "Global Analysis" )
+            if self.noFTP == False:
+                
+                # Create ftp object
+                ftpObject = plmd.caseFTP.Setup( self.configuration )
+            
+                # Compress the analysis/plots folder
+                folderToCompres = "globalAnalyses"
+                archieveName = self.name + "globalAnalysis"
+                ftpObject.zipDirectory( archieveName , folderToCompres )
+                
+                # Send it
+                ftpObject.shipFile( archieveName+".tar" , "globalAnalyses" )
+                ftpObject.shipDir( folderToCompres )
             
         else:
             raise Exception("Not enough data was found to run global analysis")
@@ -152,17 +146,18 @@ class Analysis (plmd.PLMD_module):
             # Run all the analyses present in the handler
             handler.runAll()
             
-            # Create emailer
-            emailObject = plmd.caseEmail.Setup( self.configuration )
-            
-            # Compress the analysis/plots folder
-            folderToCompres = caseDir+"/analysis/plots"
-            archieveName = caseDir+"/analysis/"+self.name+"-"+caseDir.split("/")[-1]
-            emailObject.zipDirectory( archieveName , folderToCompres )
-            
             # Email the compressed file to the user
-            if self.noEmail == False:
-                emailObject.emailFile( archieveName+".tar" , caseDir )
+            if self.noFTP == False:
+                
+                # Create emailer
+                ftpObject = plmd.caseFTP.Setup( self.configuration )
+                
+                # Compress the analysis/plots folder
+                folderToCompres = caseDir+"/analysis/plots"
+                archieveName = caseDir+"/analysis/"+self.name+"-"+caseDir.split("/")[-1]
+                ftpObject.zipDirectory( archieveName , folderToCompres )
+                
+                ftpObject.shipFile( archieveName+".tar" , caseDir )
         
     # A function for merging all the trajectories in a case fodler
     def mergeTrajectories( self, caseDir ):
