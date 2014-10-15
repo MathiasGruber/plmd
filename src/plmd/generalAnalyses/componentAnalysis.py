@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import os
+import os, math
 import numpy as np
 import MDAnalysis
 from matplotlib.colors import LogNorm
@@ -9,31 +9,83 @@ from matplotlib.backends.backend_pdf import PdfPages
 class PCA():
     
     # Constructor
-    def __init__( self , outputFile ):
+    def __init__( self , outputFile, subplotRows = 1, subplotColums = 1 ):
         
         # File for plotting
         self.pp = PdfPages( outputFile )
         
+        # Save the rows and columns
+        self.rows, self.columns = int(subplotRows), int(subplotColums)
+        self.spots = self.rows*self.columns   
+        print self.rows, self.columns
+        
         # The main data array. Used also for saving structures
         self.np_arrays =  []
+        
+        # Counter for the amount of figures plotted
+        self.subPlots = 0
+        
+    # Get active ax.
+    def getActiveAx( self ):
+        if self.rows == 1 or self.columns == 1:
+            return self.axarr[ self.subPlots ]
+        else:
+            # Determine row and column of this plot
+            pickedRow = math.floor( self.subPlots / self.columns )
+            pickedColumn = self.subPlots - pickedRow*self.columns
+            return self.axarr[ pickedRow ][ pickedColumn ]
     
     # Close the figure
     def savePlot( self ):
-        self.pp.close()
 
+        # Save any hanging plots
+        if self.subPlots > 0:
+            self.savePdfPage()      
+        
+        # The end
+        self.pp.close()
+        
+    # Create subplot page
+    def createPdfPage( self ):
+        print "Creating a new subplot grid"
+        self.fig, self.axarr = plt.subplots( nrows=self.rows, ncols=self.columns )
+        
+    # Save current plot
+    def savePdfPage( self ):
+
+        # Delete any unused subplots        
+        if self.subPlots < self.spots:
+            print self.axarr
+            for i in range( self.subPlots, self.spots ):
+                print "Deleting subplot with id: ",i
+                self.fig.delaxes( self.getActiveAx() )
+                self.subPlots += 1
+        
+        # Ensure tight layout so everything is visible
+        plt.tight_layout()
+        
+        # Do the save
+        print "Saving pdf page"
+        self.pp.savefig( self.fig, dpi=100 )
+        
 
     # Function for running the actual analysis
-    def plotPCA( self, dataDir, eigenValueFile, eigenVectorFile , plotDistibution = True ):
+    def plotPCA( self, plotTitleIdentifier, dataDir, eigenValueFile, eigenVectorFile , eigenVectorCount = 4, plotDistibution = True ):
+    
+        # If this is the first plot, create grid
+        if self.subPlots == 0:
+            self.createPdfPage()
     
         # User info
         print "Doing principal component analysis"
     
         # Do the four principal vectors
         frames = []
-        pc1 = []
-        pc2 = []
-        pc3 = []
-        pc4 = []
+
+        # Principal components
+        pcs = []
+        for i in range( 0, eigenVectorCount ):
+            pcs.append([])
     
         # Go through analysis file and get eigenvalues
         eigenValues = []
@@ -54,21 +106,23 @@ class PCA():
         for aline in pcaFile:
             if n > 1 and aline:
                 values = aline.split()
+                
+                # Add frames
                 frames.append( int(values[0]) )
-                pc1.append( float(values[1]) )
-                pc2.append( float(values[2]) )
-                pc3.append( float(values[3]) )
-                pc4.append( float(values[4]) )
+                
+                # If requesting more vectors than present
+                if eigenVectorCount > len(values):
+                    raise Exception("CPPTRAJ has not projected "+str(eigenVectorCount)+" vectors")
+                
+                # Add to vectors
+                for i in range( 0, eigenVectorCount ):
+                    pcs[i].append( float(values[i+1]) )
             n = n + 1
     
         # Create numpy arrays
         frames = np.array( frames )
-        self.np_arrays = []
-        self.np_arrays.append( np.array( pc1 ) )
-        self.np_arrays.append( np.array( pc2 ) )
-        self.np_arrays.append( np.array( pc3 ) )
-        self.np_arrays.append( np.array( pc4 ) )
-            
+        self.np_arrays = [ np.array( pc ) for pc in pcs ]
+        
         # Set the plotting font and default size
         font = {'family' : 'Arial',
                 'weight' : 'normal',
@@ -85,10 +139,13 @@ class PCA():
             temperature = 300
             
             # Plot both distribution & Energy Landscape
-            for plotType in [ "energy", "distribution" ]:        
+            for plotType in [ "energy", "distribution" ] if plotDistibution else [ "energy" ]:        
             
-                # Create figure
-                fig, ax = plt.subplots()                
+                # New subplot
+                ax = self.getActiveAx()
+                
+                # Increase subplot counter
+                self.subPlots += 1
     
                 # Do the plotting
                 if plotType == "energy":
@@ -99,27 +156,29 @@ class PCA():
                     H = -1 * boltzman * temperature * (np.log( H_normalized )-np.log(np.max(H_normalized)))
                     
                     # Now plot the 2d histogram
-                    plt.imshow(H,  interpolation='nearest', origin='lower',extent=[yedges[0], yedges[-1],xedges[0], xedges[-1]])
-                    colorbar = plt.colorbar()
+                    img = ax.imshow(H,  interpolation='nearest', origin='lower',extent=[yedges[0], yedges[-1],xedges[0], xedges[-1]])
+                    colorbar = plt.colorbar(img, ax=ax)
                     colorbar.set_label("Kcal / mol")
                     
-                elif plotType == "distribution" and plotDistibution == True:
+                elif plotType == "distribution":
             
                     # Directly do the 2d histogram of matplotlib        
-                    hist2d(self.np_arrays[0], self.np_arrays[component], bins=100)
+                    ax.hist2d(self.np_arrays[0], self.np_arrays[component], bins=100)
                     colorbar = plt.colorbar()
                     colorbar.set_label("Occurances")
             
                 # Set title, labels etc
                 plt.legend()
-                ax = fig.gca()
                 ax.set_xlabel("PC1 ({0:.2f}%)".format(eigenValues[0]), fontsize=12)
                 ax.set_ylabel("PC"+str(component+1)+" ({0:.2f}%)".format(eigenValues[component]), fontsize=12)
-                plt.title( "PCA Analysis" )
-                plt.rc('font', **font)   
+                ax.set_title( "PCA Analysis. "+plotTitleIdentifier )
+                #ax.rc('font', **font)   
         
-                # Save figure in pdf and png
-                plt.savefig( self.pp, format="pdf",dpi=30)
+                # Save pdf page if it's filled
+                if self.subPlots >= (self.rows*self.columns):
+                    print "Now saving to PDF. Number of plots: ",self.subPlots
+                    self.savePdfPage()
+                    self.subPlots = 0
         
         
     # Go through the vectors X, and for vector1, vectorX,
