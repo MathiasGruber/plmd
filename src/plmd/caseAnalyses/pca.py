@@ -5,7 +5,9 @@ import plmd.generalAnalyses.componentAnalysis as pcaFuncs
 def runAnalysis( caseDir, mdTrajectory ):
 
     # Do the plotting
-    pcaHandler = pcaFuncs.PCA( caseDir+"/analysis/plots/PCA_analysis.pdf" )
+    pcaHandler = pcaFuncs.PCA( 
+        caseDir+"/analysis/plots/PCA_analysis.pdf"
+    )
 
     # Do the plots of energy landscapes & distributions
     pcaHandler.plotPCA( 

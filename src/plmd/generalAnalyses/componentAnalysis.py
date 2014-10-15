@@ -1,8 +1,7 @@
 #!/usr/bin/python
-import os, math
+import math
 import numpy as np
 import MDAnalysis
-from matplotlib.colors import LogNorm
 from pylab import plt,hist2d
 from matplotlib.backends.backend_pdf import PdfPages
 
@@ -17,7 +16,6 @@ class PCA():
         # Save the rows and columns
         self.rows, self.columns = int(subplotRows), int(subplotColums)
         self.spots = self.rows*self.columns   
-        print self.rows, self.columns
         
         # The main data array. Used also for saving structures
         self.np_arrays =  []
@@ -25,9 +23,14 @@ class PCA():
         # Counter for the amount of figures plotted
         self.subPlots = 0
         
+        # Array for storing the colobars of the plots (these need to be removed)
+        self.colorBars = []
+        
     # Get active ax.
     def getActiveAx( self ):
-        if self.rows == 1 or self.columns == 1:
+        if self.rows == 1 and self.columns == 1:
+            return self.axarr
+        elif self.rows == 1 or self.columns == 1:
             return self.axarr[ self.subPlots ]
         else:
             # Determine row and column of this plot
@@ -67,6 +70,18 @@ class PCA():
         # Do the save
         print "Saving pdf page"
         self.pp.savefig( self.fig, dpi=100 )
+        
+        # Clear figures
+        plt.cla()
+        
+        # We have to explicitly clear color bars due to the way they are added
+        self.clearColorbars()
+    
+    def clearColorbars(self):
+        if len(self.colorBars) > 0:
+            for bar in self.colorBars:
+                bar.remove()
+            self.colorBars = []
         
 
     # Function for running the actual analysis
@@ -159,13 +174,15 @@ class PCA():
                     img = ax.imshow(H,  interpolation='nearest', origin='lower',extent=[yedges[0], yedges[-1],xedges[0], xedges[-1]])
                     colorbar = plt.colorbar(img, ax=ax)
                     colorbar.set_label("Kcal / mol")
+                    self.colorBars.append(colorbar)
                     
                 elif plotType == "distribution":
             
                     # Directly do the 2d histogram of matplotlib        
-                    ax.hist2d(self.np_arrays[0], self.np_arrays[component], bins=100)
-                    colorbar = plt.colorbar()
+                    _, _, _, img = ax.hist2d(self.np_arrays[0], self.np_arrays[component], bins=100)
+                    colorbar = plt.colorbar(img, ax=ax)
                     colorbar.set_label("Occurances")
+                    self.colorBars.append(colorbar)
             
                 # Set title, labels etc
                 plt.legend()
