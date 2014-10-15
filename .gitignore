@@ -8,3 +8,5 @@ cases/
 *.pyc
 
 non_treated/
+
+globalAnalyses/
