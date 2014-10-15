@@ -63,7 +63,7 @@ class Analysis (plmd.PLMD_module):
         self.printStage( "Probing searchDir directory "+searchDir+" for data" )
     
         # Store data in this array
-        dataArray = {}
+        dataArray = { "caseDirs": [] }
         
         # Go through the directories
         for caseDir,dirs,files in os.walk( searchDir ):
@@ -76,6 +76,9 @@ class Analysis (plmd.PLMD_module):
                     
                     # Check if a data directory is present
                     if os.path.isdir( caseDir+"/analysis/data" ):
+                        
+                        # Add case directory 
+                        dataArray[ 'caseDirs' ].append( caseDir )
                         
                         # Go through the datafiles, add paths
                         for filename in os.listdir(  caseDir+"/analysis/data" ):
@@ -96,7 +99,6 @@ class Analysis (plmd.PLMD_module):
             
             # Run all the analyses present in the handler
             handler.runAll()
-            
             
         else:
             raise Exception("Not enough data was found to run global analysis")

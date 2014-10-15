@@ -1,7 +1,7 @@
-import os, math
+import os, math, re
 import MDAnalysis
 import plmd
-import energy
+import energy, dihedral
 
 # The analysis handler provides the interface to all the analysis modules
 class analysisHandler (plmd.PLMD_module):
@@ -14,12 +14,9 @@ class analysisHandler (plmd.PLMD_module):
         # The directory we're working in 
         self.dataFiles = dataFiles
 
-        # Set how many frames to skip in analysis
-        # Ideally we'd want a maximum of 500 points/frames
-        #self.framesToSkip = 1
-        #if self.simFrames > 500:
-        #    self.framesToSkip = math.floor( self.simFrames / 500. )
-        #self.ptrajFactor = int(self.framesToSkip * self.timestepPerFrame * self.timestepSize)
+        # Load Trajectory of first case only. Just to get backbone structure
+        self.mdTrajectory = MDAnalysis.Universe( self.dataFiles[ 'caseDirs' ][0]+"/md-files/peptide_nowat.prmtop", self.dataFiles[ 'caseDirs' ][0]+"/mergedResult.dcd") 
+        self.backbone = self.mdTrajectory.selectAtoms('protein and backbone')    
         
     # Run all the analyses modules
     def runAll( self ):
@@ -30,5 +27,8 @@ class analysisHandler (plmd.PLMD_module):
             energy.runAnalysis( "Kinetic Energies", self.dataFiles[ "summary.EKTOT" ] );
             energy.runAnalysis( "Potential Energies", self.dataFiles[ "summary.EPTOT" ] );
             energy.runAnalysis( "Total Energies", self.dataFiles[ "summary.ETOT" ] );
-
+            
+        # Get dihedral angles
+        dihedral.runAnalysis( self.dataFiles, self.backbone )          
+        
      

@@ -72,7 +72,7 @@ def plotData( outputDir , title, labels , inputFiles , unit , xUnit = "Time (ps)
 def plotDataMap( outputDir , title , inputFile , xUnit , yUnit , xColumn=0 , yColumn=0 , skipRow = 0, skipColumn = 0 ,xFactor=1, yFactor=1):
 
     # plot using pdf files
-    pp = PdfPages( outputDir+title+".pdf" )
+    pp = PdfPages( outputDir+"/"+title+".pdf" )
     
     # Create figure
     fig, ax = plt.subplots()

@@ -8,5 +8,12 @@ import plmd.plotData as myPlot
 def runAnalysis( plotTitle, datafiles ):
 
     print "Creating plot of: "+plotTitle
-    myPlot.plotData( "globalAnalyses" , plotTitle, datafiles['caseLabels'], datafiles['filepaths'] , "E (kcal/mol)" )
+
+    myPlot.plotData( 
+        "globalAnalyses" , 
+        plotTitle, 
+        datafiles['caseLabels'], 
+        datafiles['filepaths'] , 
+        "E (kcal/mol)" 
+    )
     

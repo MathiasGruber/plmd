@@ -17,12 +17,30 @@ def runAnalysis( caseDir , backbone , timeFactor ):
         # User info
         print "Plotting dihedrals for residue: "+str(i)
         
+        # Paths for the two files
+        psiPath = caseDir+"/analysis/data/psi_"+str(i)  
+        phiPath = caseDir+"/analysis/data/phi_"+str(i)
+        
+        # Print time corrected files for later plotting
+        for timeCorrection in [ psiPath, phiPath ]:
+            with open( timeCorrection , "r" ) as fl:
+                lines = fl.readlines()
+            with open( timeCorrection+"_timeCorrected" , "w") as fo:
+                n = 0
+                for line in lines:
+                    if n > 0:
+                        temp = line.split()
+                        fo.write( str(float(temp[0])*timeFactor) + "\t" + temp[1] +"\n")
+                    else:
+                        fo.write( line )
+                    n += 1
+        
         # Plot command
         myPlot.plotData( 
         caseDir+"/analysis/plots" , 
         "Dihedral Angles. Res ID: "+str(i)+", Residue name: "+str(resNames[i]), 
         ["$\Psi_"+str(i)+"$","$\Phi_"+str(i)+"$"],
-        [caseDir+"/analysis/data/psi_"+str(i),caseDir+"/analysis/data/phi_"+str(i)] , 
+        [ psiPath , phiPath ] , 
         "Angle (Degrees)", 
         xFactor = timeFactor )
  
