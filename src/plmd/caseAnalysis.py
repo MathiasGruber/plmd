@@ -100,6 +100,18 @@ class Analysis (plmd.PLMD_module):
             # Run all the analyses present in the handler
             handler.runAll()
             
+            # Create emailer
+            emailObject = plmd.caseEmail.Setup( self.configuration )
+            
+            # Compress the analysis/plots folder
+            folderToCompres = "globalAnalyses"
+            archieveName = self.name + "globalAnalysis"
+            emailObject.zipDirectory( archieveName , folderToCompres )
+            
+            # Email the compressed file to the user
+            if self.noEmail == False:
+                emailObject.emailFile( archieveName+".tar" , "Global Analysis" )
+            
         else:
             raise Exception("Not enough data was found to run global analysis")
         
