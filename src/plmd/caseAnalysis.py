@@ -53,10 +53,8 @@ class Analysis (plmd.PLMD_module):
         # User information
         self.printStage( "Probing searchDir directory "+searchDir+" for data" )
     
-        # Store data in this array
+        # Go through the directories & load data array 
         dataArray = { "caseDirs": [] }
-        
-        # Go through the directories
         for caseDir,dirs,files in os.walk( searchDir ):
 
             # Identify case structures
@@ -157,7 +155,9 @@ class Analysis (plmd.PLMD_module):
                 archieveName = caseDir+"/analysis/"+self.name+"-"+caseDir.split("/")[-1]
                 ftpObject.zipDirectory( archieveName , folderToCompres )
                 
+                # Send it
                 ftpObject.shipFile( archieveName+".tar" , caseDir )
+                ftpObject.shipDir( folderToCompres )
         
     # A function for merging all the trajectories in a case fodler
     def mergeTrajectories( self, caseDir ):

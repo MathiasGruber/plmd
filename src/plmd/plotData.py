@@ -63,7 +63,7 @@ def plotData( outputDir , title, labels , inputFiles , unit , xUnit = "Time (ps)
     plt.rc('font', **font)        
     
     # Save figure in pdf and png
-    plt.savefig(pp, format="pdf",dpi=300)
+    plt.savefig(pp, format="pdf",dpi=30)
     
     # Close the figure
     pp.close()
@@ -136,7 +136,7 @@ def plotDataMap( outputDir , title , inputFile , xUnit , yUnit , xColumn=0 , yCo
     plt.rc('font', **font)
 
     # Save figure
-    plt.savefig(pp, format="pdf",dpi=300)
+    plt.savefig(pp, format="pdf",dpi=30)
 
     # Close the figure
     pp.close()
