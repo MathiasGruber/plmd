@@ -15,8 +15,8 @@ try:
     import matplotlib
     matplotlib.use('Agg')
     matplotlibVersion = matplotlib.__version__.split(".")
-    if int(matplotlibVersion[0]) < 0 or int(matplotlibVersion[1]) < 2:
-        print "This script requires matplotlib 1.2.0"
+    if int(matplotlibVersion[0]) < 0 or int(matplotlibVersion[1]) < 4:
+        print "This script requires matplotlib 1.4.0"
         print "MatPlotLIb version: ",matplotlib.__version__, matplotlib.__file__   
         sys.exit(1)    
     
