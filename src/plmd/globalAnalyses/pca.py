@@ -14,7 +14,7 @@ def runAnalysis( caseDirs ):
 
     # Do the plotting
     pcaHandler = pcaFuncs.PCA( 
-        "globalAnalyses/PCA_analysis.pdf",
+        "globalAnalysesPlots/PCA_analysis.pdf",
         subplotColums = columns,
         subplotRows = rows
     )

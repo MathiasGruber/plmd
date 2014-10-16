@@ -6,7 +6,7 @@ def runAnalysis( datafiles ):
     print "Creating plot of end-to-end distance"    
 
     myPlot.plotData( 
-        "globalAnalyses" , 
+        "globalAnalysesPlots" , 
         "End to End Residue Distance", 
         datafiles['caseLabels'] , 
         datafiles['filepaths'] , 

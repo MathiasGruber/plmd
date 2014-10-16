@@ -77,7 +77,7 @@ class Analysis (plmd.PLMD_module):
         if len( dataArray ) > 0:
             
             # Create directory for the global analyses
-            self.createFolder( "globalAnalyses" , True )            
+            self.createFolder( "globalAnalysesPlots" , True )            
             
             # Instantiate the handler for the analyses
             self.printStage( "Setting up analysis handler for: "+caseDir )
@@ -93,13 +93,13 @@ class Analysis (plmd.PLMD_module):
                 ftpObject = plmd.caseFTP.Setup( self.config )
             
                 # Compress the analysis/plots folder
-                folderToCompres = "globalAnalyses"
-                archieveName = self.name + "globalAnalysis"
+                folderToCompres = "globalAnalysesPlots"
+                archieveName = self.name + "globalAnalysesPlots"
                 ftpObject.zipDirectory( archieveName , folderToCompres )
                 
                 # Send it
-                ftpObject.shipFile( archieveName+".tar" , "globalAnalyses" )
-                ftpObject.shipDir( folderToCompres , "globalAnalyses" )
+                ftpObject.shipFile( archieveName+".tar" , "globalAnalysesPlots" )
+                ftpObject.shipDir( folderToCompres , "globalAnalysesPlots" )
             
         else:
             raise Exception("Not enough data was found to run global analysis")

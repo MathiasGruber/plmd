@@ -10,7 +10,7 @@ def runAnalysis( plotTitle, datafiles ):
     print "Creating plot of: "+plotTitle
 
     myPlot.plotData( 
-        "globalAnalyses" , 
+        "globalAnalysesPlots" , 
         plotTitle, 
         datafiles['caseLabels'], 
         datafiles['filepaths'] , 
