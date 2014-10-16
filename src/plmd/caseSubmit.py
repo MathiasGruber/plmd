@@ -7,20 +7,20 @@ class Setup (plmd.PLMD_module):
     def __init__(self, config):
         
         # Load the config file
-        self.load_config( config )        
+        self.config = plmd.PLMD_Config( config ) 
         
         # Confirm with user
         self.printStage("Step 1: Starting up PLMD. Submission file parameters:")
 
         print "\n== Submission Parameters"
         print "========================"
-        print "submissionName: " + self.name
-        print "nodeControl: " + self.nodeControl
-        print "wallClock: " + self.wallClock
-        print "mdRuns: " + self.mdRuns
+        print "submissionName: " + self.config.name
+        print "nodeControl: " + self.config.nodeControl
+        print "wallClock: " + self.config.wallClock
+        print "mdRuns: " + self.config.mdRuns
 
         # Confirmation from user
-        if self.quiet == False:
+        if self.config.quiet == False:
             var = raw_input("\nPlease confirm these submission parameters with any key press. Press 'n' to discontinue")
             if var == 'n':
                 raise Exception('Submission was not confirmed')
@@ -34,12 +34,12 @@ class Setup (plmd.PLMD_module):
         caseID = caseName.split("/")[-1] 
         
          # Create new submission file
-        TEMPLATE = open( self.PLMDHOME+"/src/templates/explicit_submit.txt", 'r')
+        TEMPLATE = open( self.config.PLMDHOME+"/src/templates/explicit_submit.txt", 'r')
         TEMP = TEMPLATE.read().replace("[FOLDER]", caseName  ). \
-                              replace("[NAME]", self.name+"_"+caseID  ). \
-                              replace("[CPUCONTROL]", self.nodeControl ). \
-                              replace("[WALLCLOCK]", self.wallClock ). \
-                              replace("[MDRUNS]", self.mdRuns )
+                              replace("[NAME]", self.config.name+"_"+caseID  ). \
+                              replace("[CPUCONTROL]", self.config.nodeControl ). \
+                              replace("[WALLCLOCK]", self.config.wallClock ). \
+                              replace("[MDRUNS]", self.config.mdRuns )
         TEMPLATE.close()
                               
         # Write the submission file

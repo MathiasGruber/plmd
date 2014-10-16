@@ -4,7 +4,6 @@ import tarfile
 import plmd
 import ftplib
 
-
 # This is the overall Analysis class which merges trajectories,
 # manages the analysis handler, and emails the final results
 class Setup (plmd.PLMD_module):
@@ -12,7 +11,7 @@ class Setup (plmd.PLMD_module):
     def __init__(self, config):
         
         # Save config parameters
-        self.load_config( config )  
+        self.config = config 
     
     # Change directories
     def chdir(self, ftp, dir): 
@@ -31,7 +30,7 @@ class Setup (plmd.PLMD_module):
         
     # Zip a given directory
     def zipDirectory( self, archive, folder ):
-        self.printStage("Compressing: "+folder)
+        self.printStage("Compressing "+folder + " to "+ archive + ".tar")
         tfile = tarfile.open(archive+".tar", "w:gz")
         tfile.add(folder)
         tfile.close()
@@ -40,11 +39,11 @@ class Setup (plmd.PLMD_module):
     def shipFile( self, filepath, caseDir ):
         
         # User info
-        serverFile = self.name+'_'+caseDir+".tar"
+        serverFile = self.config.name+'_'+caseDir.split("/")[-1]+".tar"
         self.printStage("Sending file to FTP: "+filepath + " to " + serverFile)
         
         # Upload file
-        session = ftplib.FTP( self.server , self.ftpUser , self.password )
+        session = ftplib.FTP( self.config.server , self.config.ftpUser , self.config.password )
         file = open(filepath,'r')                  
         session.storbinary( 'STOR ' + serverFile , file)    
         file.close()                                   
@@ -54,16 +53,17 @@ class Setup (plmd.PLMD_module):
         print "File Uploaded"
 
     # Send a directory to the user ftp
-    def shipDir( self, shipDir ):
+    def shipDir( self, shipDir , identifier = ""):
         
         # User info
-        self.printStage("Sending directory to FTP: "+shipDir)
+        serverPath = self.config.name+'_'+identifier
+        self.printStage("Sending directory to FTP: " + shipDir + " to " + serverPath)
         
         # Upload file
-        session = ftplib.FTP( self.server , self.ftpUser , self.password )
+        session = ftplib.FTP( self.config.server , self.config.ftpUser , self.config.password )
 
         # Change the directory
-        self.chdir( session, self.name+'_'+shipDir )
+        self.chdir( session, serverPath )
         
         # Go through the directories
         for subdir,dirs,files in os.walk( shipDir ):

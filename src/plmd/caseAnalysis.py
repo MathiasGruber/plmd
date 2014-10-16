@@ -9,12 +9,9 @@ class Analysis (plmd.PLMD_module):
 
     def __init__(self, config):
         
-        # Store the configuration data
-        self.configuration = config        
-        
-        # Save config parameters
-        self.load_config( config )  
-        
+        # Load the config file
+        self.config = plmd.PLMD_Config( config ) 
+                
         # Clear screen
         os.system("clear")   
         
@@ -31,7 +28,7 @@ class Analysis (plmd.PLMD_module):
         print ("PYTHON CALL:" + pythonCall)
         
         # Create new submission file
-        TEMPLATE = open( self.PLMDHOME+"/src/templates/analysis_submit.txt", 'r')
+        TEMPLATE = open( self.config.PLMDHOME+"/src/templates/analysis_submit.txt", 'r')
         TEMP = TEMPLATE.read().replace("[FOLDER]", caseDir  ). \
                               replace("[PYTHONCALL]", pythonCall )
         TEMPLATE.close()
@@ -84,16 +81,16 @@ class Analysis (plmd.PLMD_module):
             
             # Instantiate the handler for the analyses
             self.printStage( "Setting up analysis handler for: "+caseDir )
-            handler = globalAnalyses.analysisHandler( self.configuration, dataArray )
+            handler = globalAnalyses.analysisHandler( self.config, dataArray )
             
             # Run all the analyses present in the handler
             handler.runAll()
             
             # Email the compressed file to the user
-            if self.noFTP == False:
+            if self.config.noFTP == False:
                 
                 # Create ftp object
-                ftpObject = plmd.caseFTP.Setup( self.configuration )
+                ftpObject = plmd.caseFTP.Setup( self.config )
             
                 # Compress the analysis/plots folder
                 folderToCompres = "globalAnalyses"
@@ -102,7 +99,7 @@ class Analysis (plmd.PLMD_module):
                 
                 # Send it
                 ftpObject.shipFile( archieveName+".tar" , "globalAnalyses" )
-                ftpObject.shipDir( folderToCompres )
+                ftpObject.shipDir( folderToCompres , "globalAnalyses" )
             
         else:
             raise Exception("Not enough data was found to run global analysis")
@@ -119,7 +116,7 @@ class Analysis (plmd.PLMD_module):
         self.num_files = self.getNumberOfFiles( caseDir+'/md-files/' ) 
         
         # Merge Trajectories
-        if self.noMerge == False:
+        if self.config.noMerge == False:
             self.mergeTrajectories( caseDir )
             
         # Run analyses if trajectory file is present
@@ -136,7 +133,7 @@ class Analysis (plmd.PLMD_module):
             
             # Instantiate the handler for the analyses
             self.printStage( "Setting up analysis handler for: "+caseDir )
-            handler = caseAnalyses.analysisHandler( caseDir , self.configuration, self.num_files )
+            handler = caseAnalyses.analysisHandler( caseDir , self.config, self.num_files )
             
             # Run all ptraj analyses
             handler.runPtrajAnalysis()  
@@ -145,19 +142,22 @@ class Analysis (plmd.PLMD_module):
             handler.runAll()
             
             # Email the compressed file to the user
-            if self.noFTP == False:
+            if self.config.noFTP == False:
+                
+                # Number of case
+                caseNumber = caseDir.split("/")[-1]               
                 
                 # Create emailer
-                ftpObject = plmd.caseFTP.Setup( self.configuration )
+                ftpObject = plmd.caseFTP.Setup( self.config )
                 
                 # Compress the analysis/plots folder
                 folderToCompres = caseDir+"/analysis/plots"
-                archieveName = caseDir+"/analysis/"+self.name+"-"+caseDir.split("/")[-1]
+                archieveName = caseDir+"/analysis/"+self.config.name+"-"+caseNumber
                 ftpObject.zipDirectory( archieveName , folderToCompres )
                 
                 # Send it
                 ftpObject.shipFile( archieveName+".tar" , caseDir )
-                ftpObject.shipDir( folderToCompres )
+                ftpObject.shipDir( folderToCompres , caseNumber )
         
     # A function for merging all the trajectories in a case fodler
     def mergeTrajectories( self, caseDir ):
@@ -183,7 +183,7 @@ class Analysis (plmd.PLMD_module):
         """
         
         # Strip water molecules
-        if self.noStrip == False:
+        if self.config.noStrip == False:
             buffer = buffer + "strip :WAT"
         
         # Create output binpos file 

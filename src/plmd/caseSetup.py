@@ -8,46 +8,55 @@ class Setup (plmd.PLMD_module):
     def __init__(self, config):
         
         # Load the config file
-        self.load_config( config )        
+        self.config = plmd.PLMD_Config( config )     
         
-        # Clear screen
-        os.system("clear")        
+        # Variables for storing initial data about the components
+        self.peptideCoordinates = []
+        self.peptideCenterOfMass = []
+        self.ligandCoordinates = []
+        self.ligandCenterOfMass = []
+        
+        # Variables used during case setup
+        self.ligandsForLEaP = []
+        self.ligandResnames = []
+        self.peptideResnames = []
+        self.qmRegion = ""
         
         # Ensure integrity of input files
         self.setupInputFiles()
         
         # Setup quick links to tools in amber
-        self.xLEaP = self.AMBERHOME+"/bin/tleap -f "
+        self.xLEaP = self.config.AMBERHOME+"/bin/tleap -f "
 
         # Confirm with user
         self.printStage("Step 1: Starting up PLMD. Configuration file:")
 
         print "\n== Input Files"
         print "=============="
-        print "ligand: " + self.ligand
-        print "ligand count: " + str(self.ligandCount)
-        print "peptide: " + self.peptide
-        print "peptide count: " + str(self.peptideCount)
-        print "cases: " + str(self.cases)
+        print "ligand: " + self.config.ligand
+        print "ligand count: " + str(self.config.ligandCount)
+        print "peptide: " + self.config.peptide
+        print "peptide count: " + str(self.config.peptideCount)
+        print "cases: " + str(self.config.cases)
 
         print "\n== Simulation Parameters"
         print "========================"
-        print "Forcefield: " + self.ff
-        print "qmCharge: " + self.qmCharge 
-        print "qmShake: " + self.qmShake
-        print "qmTheory: " + self.qmTheory
-        print "ntf: " + self.ntf 
-        print "ntc: " + self.ntc
-        print "timestepSize: " + str(self.timestepSize)
-        print "timestepNumber: " + self.timestepNumber
+        print "Forcefield: " + self.config.ff
+        print "qmCharge: " + self.config.qmCharge 
+        print "qmShake: " + self.config.qmShake
+        print "qmTheory: " + self.config.qmTheory
+        print "ntf: " + self.config.ntf 
+        print "ntc: " + self.config.ntc
+        print "timestepSize: " + str(self.config.timestepSize)
+        print "timestepNumber: " + self.config.timestepNumber
 
         print "\n== Submission Parameters"
         print "========================"
-        print "nodeControl: " + self.nodeControl
-        print "wallClock: " + self.wallClock
-        print "mdRuns: " + self.mdRuns
-
-        if self.quiet == False:
+        print "nodeControl: " + self.config.nodeControl
+        print "wallClock: " + self.config.wallClock
+        print "mdRuns: " + self.config.mdRuns
+        
+        if self.config.quiet == False:
             var = raw_input("Please confirm this submission with any key press. Press 'n' to discontinue")
             if var == 'n':
                 raise Exception('Configuration file was not confirmed')
@@ -62,30 +71,30 @@ class Setup (plmd.PLMD_module):
         self.createFolder ( "predefinedInput" )       
                
         # Check if a peptide should be made
-        if self.pPeptide != None and self.pPeptide != "false":
+        if self.config.pPeptide != None and self.config.pPeptide != "false":
 
             # User info
             print "Now creating peptide with LEaP"
             
             # Create & save the peptide
             peptideCreator = peptideConstructor.Creator()
-            peptideCreator.createPeptide( self.pPeptide, self.peptideCount, "predefinedInput/peptides.pdb" )
+            peptideCreator.createPeptide( self.config.pPeptide, self.config.peptideCount, "predefinedInput/peptides.pdb" )
             
             # Overwrite default configs
-            self.peptide = "predefinedInput/peptides.pdb"
+            self.config.peptide = "predefinedInput/peptides.pdb"
               
         # Check if we should use predefined ion from package
-        if self.pLigand != None and self.pLigand != "false":
+        if self.config.pLigand != None and self.config.pLigand != "false":
             
             # User info
             print "Now importing the predefined ion to be user to library."
             
             # Check that the file exists in pre-defined library
-            if os.path.isfile( self.PLMDHOME+"/src/ligands/"+self.pLigand+".mol2" ):
+            if os.path.isfile( self.config.PLMDHOME+"/src/ligands/"+self.config.pLigand+".mol2" ):
                 
                 # Copy and set
-                shutil.copy( self.PLMDHOME+"/src/ligands/"+self.pLigand+".mol2", "predefinedInput/"+self.pLigand+".mol2" )
-                self.ligand = "predefinedInput/"+self.pLigand+".mol2"
+                shutil.copy( self.config.PLMDHOME+"/src/ligands/"+self.config.pLigand+".mol2", "predefinedInput/"+self.config.pLigand+".mol2" )
+                self.config.ligand = "predefinedInput/"+self.config.pLigand+".mol2"
                 
             else:
                 
@@ -96,8 +105,8 @@ class Setup (plmd.PLMD_module):
     def setupCases(self):
         
         # Get the coordinates & resnames of peptide & ligand. Passed by reference.
-        structureManipulation.processStructureFile( self.peptide , "pdb", self.peptideCoordinates, self.peptideResnames )
-        structureManipulation.processStructureFile( self.ligand , "mol2", self.ligandCoordinates, self.ligandResnames )
+        structureManipulation.processStructureFile( self.config.peptide , "pdb", self.peptideCoordinates, self.peptideResnames )
+        structureManipulation.processStructureFile( self.config.ligand , "mol2", self.ligandCoordinates, self.ligandResnames )
         
         # Get center of masses
         self.peptideCenterOfMass = structureManipulation.centerOfMass( self.peptideCoordinates )
@@ -107,7 +116,7 @@ class Setup (plmd.PLMD_module):
         self.createMainFolder()        
         
         # Go through all the cases to setup
-        for i in range(0,self.cases):
+        for i in range(0,self.config.cases):
             
             # Create folder structure
             self.creatCaseFolder( str(i) )            
@@ -118,7 +127,7 @@ class Setup (plmd.PLMD_module):
             # Calculate a random translation for the ligand (pass by value)
             # LEaP performs the translation using this vector
             self.ligandsForLEaP[:] = []
-            for x in range(0, self.ligandCount):
+            for x in range(0, self.config.ligandCount):
                 self.ligandsForLEaP.append( 
                     structureManipulation.calcIonPosition( 
                         deepcopy(self.peptideCenterOfMass), 
@@ -146,9 +155,9 @@ class Setup (plmd.PLMD_module):
 
         # The template files for the amber imput files
         templateFiles = [
-            self.PLMDHOME+"/src/templates/explicit_min.txt",
-            self.PLMDHOME+"/src/templates/explicit_heat.txt",
-            self.PLMDHOME+"/src/templates/explicit_equil.txt"
+            self.config.PLMDHOME+"/src/templates/explicit_min.txt",
+            self.config.PLMDHOME+"/src/templates/explicit_heat.txt",
+            self.config.PLMDHOME+"/src/templates/explicit_equil.txt"
         ]
         
         
@@ -160,15 +169,15 @@ class Setup (plmd.PLMD_module):
 
             # Load templates, change variables, and save in case folder
             TEMPLATE = open(templateFile, 'r')
-            TEMP = TEMPLATE.read().replace("[NTC]", self.ntc ). \
-                                  replace("[NTF]", self.ntf ). \
-                                  replace("[QMCHARGE]", self.qmCharge ). \
-                                  replace("[QMTHEORY]", self.qmTheory ). \
+            TEMP = TEMPLATE.read().replace("[NTC]", self.config.ntc ). \
+                                  replace("[NTF]", self.config.ntf ). \
+                                  replace("[QMCHARGE]", self.config.qmCharge ). \
+                                  replace("[QMTHEORY]", self.config.qmTheory ). \
                                   replace("[QMREGION]", self.qmRegion ). \
-                                  replace("[TIMESTEPS]", self.timestepNumber ). \
-                                  replace("[DT]", str(self.timestepSize) ). \
-                                  replace("[QMSHAKE]", self.qmShake ). \
-                                  replace("[TIMESTEPPERFRAME]", str(self.timestepPerFrame) )
+                                  replace("[TIMESTEPS]", self.config.timestepNumber ). \
+                                  replace("[DT]", str(self.config.timestepSize) ). \
+                                  replace("[QMSHAKE]", self.config.qmShake ). \
+                                  replace("[TIMESTEPPERFRAME]", str(self.config.timestepPerFrame) )
             TEMPLATE.close()
                                            
             # Save the input file with same name, but change extension to .in
@@ -181,7 +190,8 @@ class Setup (plmd.PLMD_module):
             print "\n"+TEMP+"\n"
             
             # Let user review results
-            self.confirmProgress()
+            if self.config.quiet == False:
+                self.confirmProgress()
             
 
      # Function which analyses a final pdb file and figures out the QM region (ligand region)
@@ -218,28 +228,28 @@ class Setup (plmd.PLMD_module):
         self.printStage( "Stage 5, Case: "+caseName+". Creating input file for LEaP" )        
         
         # Forcefield loading
-        ffString = "source "+self.AMBERHOME+"/dat/leap/cmd/"+self.ff 
-        ffString += "\nsource "+self.AMBERHOME+"/dat/leap/cmd/leaprc.gaff"
+        ffString = "source "+self.config.AMBERHOME+"/dat/leap/cmd/"+self.config.ff 
+        ffString += "\nsource "+self.config.AMBERHOME+"/dat/leap/cmd/leaprc.gaff"
         #ffString += "\nsource "+self.AMBERHOME+"/dat/leap/parm/frcmod.ionsjc_spce"
 
         # Structures Loading. Start with peptide
-        structureString = "compound = loadpdb "+self.peptide
+        structureString = "compound = loadpdb "+self.config.peptide
         
         # Go through the ligands
         for i in range(0,len(self.ligandsForLEaP)):
             
             # Import ligand
-            structureString += "\nligand"+str(i)+" = loadmol2 "+self.ligand
+            structureString += "\nligand"+str(i)+" = loadmol2 "+self.config.ligand
             
             # Translate to correct position
-            if self.noTranslate == False:
+            if self.config.noTranslate == False:
                 structureString += "\ntranslate ligand"+str(i)+" {"+str(self.ligandsForLEaP[i][0])+" "+str(self.ligandsForLEaP[i][1])+" "+str(self.ligandsForLEaP[i][2])+" }"
             
             # Combine with previous structure
             structureString += "\ncompound = combine { compound ligand"+str(i)+" }"
         
         # Explicit solvent case: Equilibration
-        TEMPLATE = open( self.PLMDHOME+"/src/templates/LEaP_submit.txt", 'r')
+        TEMPLATE = open( self.config.PLMDHOME+"/src/templates/LEaP_submit.txt", 'r')
         TEMP = TEMPLATE.read().replace("[FORCEFIELDS]", ffString ). \
                               replace("[STRUCTURES_IMPORT]", structureString ). \
                               replace("[FOLDER]", "cases/"+caseName )
@@ -252,7 +262,8 @@ class Setup (plmd.PLMD_module):
         print TEMP
         
         # Let user review results
-        self.confirmProgress()
+        if self.config.quiet == False:
+            self.confirmProgress()
         
          
     # Run leap input for case
@@ -267,7 +278,8 @@ class Setup (plmd.PLMD_module):
             print fin.read()
         
         # Let user review results
-        self.confirmProgress()
+        if self.config.quiet == False:
+            self.confirmProgress()
 
     # Create main folder for the cases
     def createMainFolder( self ):
@@ -292,6 +304,6 @@ class Setup (plmd.PLMD_module):
         self.createFolder( "cases/"+folderString+"/pdb-files" )            
         
         # Let the user keep up
-        if self.quiet == False:
+        if self.config.quiet == False:
             raw_input("Press any key to continue")            
             

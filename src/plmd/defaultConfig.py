@@ -42,7 +42,7 @@ def getDefaultConfig():
     config.set('analysisParameters', 'noStrip', 'false')
     config.set('analysisParameters', 'noBlock', 'false')
     config.set('analysisParameters', 'noEnergy', 'false')
-    config.set('analysisParameters', 'noEmail', 'false')
+    config.set('analysisParameters', 'noFTP', 'false')
     
     config.add_section('ftpConfiguration')
     config.set('ftpConfiguration', 'server', 'ftp.nanomathias.com')

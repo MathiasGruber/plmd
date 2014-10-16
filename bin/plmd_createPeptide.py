@@ -17,14 +17,12 @@ try:
     parser.add_argument('o', help='where to output the pdb file')
     parser.add_argument('-n', dest='peptideCount', help='Number of peptides to include in .pdb-file (default: 1)', default=1)
     
-    
     # Parse arguments
     args = parser.parse_args()  
 
     # Call the peptidce creator class    
     peptideCreator = pepConstruct.Creator()
     peptideCreator.createPeptide( args.i, int(args.peptideCount), args.o )
-    
     
 except ImportError as e:
     print e

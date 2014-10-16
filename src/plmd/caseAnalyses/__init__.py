@@ -9,7 +9,7 @@ class analysisHandler (plmd.PLMD_module):
     def __init__(self, caseDir, config, num_files ):
 
         # Save config parameters
-        self.load_config( config )
+        self.config = config
 
         # The directory we're working in 
         self.directory = caseDir
@@ -18,7 +18,7 @@ class analysisHandler (plmd.PLMD_module):
         self.mdTrajectory = MDAnalysis.Universe( caseDir+"/md-files/peptide_nowat.prmtop", caseDir+"/mergedResult.dcd") 
         self.backbone = self.mdTrajectory.selectAtoms('protein and backbone')         
         self.simFrames = self.mdTrajectory.trajectory.numframes     
-        self.simTime = self.mdTrajectory.trajectory.numframes * self.timestepSize * self.timestepPerFrame * 0.001
+        self.simTime = self.mdTrajectory.trajectory.numframes * self.config.timestepSize * self.config.timestepPerFrame * 0.001
         
         # Set how many frames to skip in analysis
         # Ideally we'd want a maximum of 500 points/frames
@@ -28,8 +28,8 @@ class analysisHandler (plmd.PLMD_module):
                 
         # Print information about the trajectory for the user to see
         print "Number of frames in trajectory: "+str(self.mdTrajectory.trajectory.numframes)
-        print "Number of timesteps per frame: "+str(self.timestepPerFrame)
-        print "Timestep size: "+str(self.timestepSize)+"ps"
+        print "Number of timesteps per frame: "+str(self.config.timestepPerFrame)
+        print "Timestep size: "+str(self.config.timestepSize)+"ps"
         print "Total Simulation time: "+str( self.simTime )+"ns"
         
         # Run perl script from AMBER to get data from log files
@@ -59,10 +59,10 @@ class analysisHandler (plmd.PLMD_module):
         for ptrajType in ["full", "short"]:        
         
             # Calculate factor for time-axis in ptraj analyses
-            self.ptrajFactor = int(self.framesToSkip * self.timestepPerFrame * self.timestepSize)
+            self.ptrajFactor = int(self.framesToSkip * self.config.timestepPerFrame * self.config.timestepSize)
             
             # Create new submission file
-            TEMPLATE = open( self.PLMDHOME+"/src/templates/cpptraj_analysis_"+ptrajType+".txt", 'r')
+            TEMPLATE = open( self.config.PLMDHOME+"/src/templates/cpptraj_analysis_"+ptrajType+".txt", 'r')
             TEMP = TEMPLATE.read().replace("[FOLDER]", self.directory  ). \
                                    replace("[DIHEDRALS]", dihedralTxt ). \
                                    replace("[FIRSTRESI]", ":1" ). \
@@ -85,9 +85,9 @@ class analysisHandler (plmd.PLMD_module):
         ########################################
         
         # Block averaging analysis
-        if self.noBlock == False:
+        if self.config.noBlock == False:
             self.printStage( "Running block analysis for: "+self.directory )
-            block.runAnalysis( self.directory, self.mdTrajectory, self.timestepSize );           
+            block.runAnalysis( self.directory, self.mdTrajectory, self.config.timestepSize );           
         
         ## Run analyses using cpptraj
         #############################
@@ -120,7 +120,7 @@ class analysisHandler (plmd.PLMD_module):
         #################################
             
         # Plot Energies
-        if self.noEnergy == False:
+        if self.config.noEnergy == False:
             self.printStage( "Plotting energies: "+self.directory )
             energy.runAnalysis( self.directory );
 

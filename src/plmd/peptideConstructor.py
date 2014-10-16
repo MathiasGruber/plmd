@@ -15,14 +15,18 @@ class Creator:
     def createPeptide( self , sequenceString, peptideCount, outFile ):
         
         # Check that output path exists
-        outDir = os.path.dirname(outFile)
-        if os.path.isdir( outDir ):
+        outDir = os.path.dirname( outFile )
+        if os.path.isdir( outDir ) or not outDir:
+            
+            # If we are in current directory
+            if not outDir:
+                outDir = "./"
             
             # Available residues       
             resNames = [ "ALA","ARG","ASN","ASX","CYS","GLU","GLN","GLX","GLY","HIS","ILE","LEU","LYS","MET","PHE","PRO","SER","THR","TRP","TYR","VAL" ]
             cTerm = ["C"+b for b in resNames]
             nTerm = ["N"+b for b in resNames]
-
+    
             # Validate sequence            
             sequence = sequenceString.split()
             for entry in sequence:
@@ -56,7 +60,7 @@ class Creator:
                 
             # User information
             print "Script finished. \n Check the file: "+outFile+" to inspect final result.  \n Check the file: "+outDir+"/LEaP_peptideCreation.log for debug information"
-                            
             
         else:
-            raise Exception("Output directory '"+outDir+"' does not exist!")
+            
+            raise Exception("Specified output directory does not exist")
