@@ -1,7 +1,7 @@
 import os, math, re
 import MDAnalysis
 import plmd
-import energy, dihedral, pca
+import energy, dihedral, pca, endToEnd
 
 # The analysis handler provides the interface to all the analysis modules
 class analysisHandler (plmd.PLMD_module):
@@ -9,7 +9,7 @@ class analysisHandler (plmd.PLMD_module):
     def __init__(self, config, dataFiles ):
 
         # Save config parameters
-        self.load_config( config )
+        self.config = config
 
         # The directory we're working in 
         self.dataFiles = dataFiles
@@ -22,14 +22,17 @@ class analysisHandler (plmd.PLMD_module):
     def runAll( self ):
     
         # Plot Energies
-        if self.noEnergy == False:
+        if self.config.noEnergy == False:
             self.printStage( "Plotting energies")
             energy.runAnalysis( "Kinetic Energies", self.dataFiles[ "summary.EKTOT" ] );
             energy.runAnalysis( "Potential Energies", self.dataFiles[ "summary.EPTOT" ] );
             energy.runAnalysis( "Total Energies", self.dataFiles[ "summary.ETOT" ] );
             
         # Get dihedral angles
-        dihedral.runAnalysis( self.dataFiles, self.backbone )       
+        dihedral.runAnalysis( self.dataFiles, self.backbone ) 
+        
+        # Plot all end-to-end distances on top of each other
+        endToEnd.runAnalysis( self.dataFiles[ "dist_end_to_end.list.timeCorrected" ] ) 
         
         # Do the PCA analysis
         pca.runAnalysis( self.dataFiles[ 'caseDirs' ] )
