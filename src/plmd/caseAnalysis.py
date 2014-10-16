@@ -94,7 +94,7 @@ class Analysis (plmd.PLMD_module):
             
                 # Compress the analysis/plots folder
                 folderToCompres = "globalAnalysesPlots"
-                archieveName = self.name + "globalAnalysesPlots"
+                archieveName = self.config.name + "globalAnalysesPlots"
                 ftpObject.zipDirectory( archieveName , folderToCompres )
                 
                 # Send it
