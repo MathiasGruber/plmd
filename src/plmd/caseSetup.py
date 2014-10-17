@@ -22,6 +22,9 @@ class Setup (plmd.PLMD_module):
         self.peptideResnames = []
         self.qmRegion = ""
         
+        # Variable for storing possible leap modifications
+        self.leapMods = False
+        
         # Ensure integrity of input files
         self.setupInputFiles()
         
@@ -90,11 +93,21 @@ class Setup (plmd.PLMD_module):
             print "Now importing the predefined ion to be user to library."
             
             # Check that the file exists in pre-defined library
-            if os.path.isfile( self.config.PLMDHOME+"/src/ligands/"+self.config.pLigand+".mol2" ):
+            if os.path.isfile( self.config.PLMDHOME+"/src/ligands/"+self.config.pLigand+"/"+self.config.pLigand+".mol2" ):
                 
                 # Copy and set
-                shutil.copy( self.config.PLMDHOME+"/src/ligands/"+self.config.pLigand+".mol2", "predefinedInput/"+self.config.pLigand+".mol2" )
+                shutil.copy( self.config.PLMDHOME+"/src/ligands/"+self.config.pLigand+"/"+self.config.pLigand+".mol2", "predefinedInput/"+self.config.pLigand+".mol2" )
                 self.config.ligand = "predefinedInput/"+self.config.pLigand+".mol2"
+                
+                # Check if there are LEaP modifications to be loaded
+                if os.path.isfile( self.config.PLMDHOME+"/src/ligands/"+self.config.pLigand+"/leapLigand.ff" ):
+                    
+                    # User info
+                    print "Found a LEaP modification for this file. Saving for future reference"                    
+                    
+                    # Save the leap modifications
+                    with open( self.config.PLMDHOME+"/src/ligands/"+self.config.pLigand+"/leapLigand.ff" ) as fl:
+                        self.leapMods = fl.readlines()
                 
             else:
                 
@@ -231,6 +244,11 @@ class Setup (plmd.PLMD_module):
         ffString = "source "+self.config.AMBERHOME+"/dat/leap/cmd/"+self.config.ff 
         ffString += "\nsource "+self.config.AMBERHOME+"/dat/leap/cmd/leaprc.gaff"
         #ffString += "\nsource "+self.AMBERHOME+"/dat/leap/parm/frcmod.ionsjc_spce"
+        
+        # Any additional 
+        if self.leapMods != False:
+            for line in self.leapMods:
+                ffString += line
 
         # Structures Loading. Start with peptide
         structureString = "compound = loadpdb "+self.config.peptide
@@ -251,6 +269,7 @@ class Setup (plmd.PLMD_module):
         # Explicit solvent case: Equilibration
         TEMPLATE = open( self.config.PLMDHOME+"/src/templates/LEaP_submit.txt", 'r')
         TEMP = TEMPLATE.read().replace("[FORCEFIELDS]", ffString ). \
+                              replace("[PLMDHOME]", self.config.PLMDHOME ). \
                               replace("[STRUCTURES_IMPORT]", structureString ). \
                               replace("[FOLDER]", "cases/"+caseName )
         TEMPLATE.close()
