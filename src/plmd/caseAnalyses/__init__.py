@@ -20,6 +20,8 @@ class analysisHandler (plmd.PLMD_module):
         self.simFrames = self.mdTrajectory.trajectory.numframes     
         self.simTime = self.mdTrajectory.trajectory.numframes * self.config.timestepSize * self.config.timestepPerFrame * 0.001
         
+        self.timePerFrame = self.config.timestepPerFrame * self.config.timestepSize        
+        
         # Set how many frames to skip in analysis
         # Ideally we'd want a maximum of 500 points/frames
         self.framesToSkip = 1
@@ -87,19 +89,22 @@ class analysisHandler (plmd.PLMD_module):
         # Block averaging analysis
         if self.config.noBlock == False:
             self.printStage( "Running block analysis for: "+self.directory )
-            block.runAnalysis( self.directory, self.mdTrajectory, self.config.timestepSize );           
+            block.runAnalysis( self.directory, self.mdTrajectory, self.timePerFrame );           
         
         ## Run analyses using cpptraj
         #############################
+
+        # H-bond plotting
+        hbond.runAnalysis( self.directory );            
+        
+        # RMSd map
+        RMSdMap.runAnalysis(self.directory, self.ptrajFactor)        
         
         # Plot angles
-        dihedral.runAnalysis( self.directory, self.backbone , self.ptrajFactor);
+        dihedral.runAnalysis( self.directory, self.backbone , self.timePerFrame );
                 
         # Run the PCA analysis
         pca.runAnalysis( self.directory , self.mdTrajectory )        
-        
-        # H-bond plotting
-        hbond.runAnalysis( self.directory );            
         
         # Plot the B factor
         bFactor.runAnalysis( self.directory );
@@ -113,8 +118,6 @@ class analysisHandler (plmd.PLMD_module):
         # C-alpha map
         CaToCaMap.runAnalysis(self.directory )
         
-        # RMSd map
-        RMSdMap.runAnalysis(self.directory, self.ptrajFactor)
         
         ## Run analyses using MD log data            
         #################################

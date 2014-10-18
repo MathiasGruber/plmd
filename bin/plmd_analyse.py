@@ -20,6 +20,11 @@ try:
         print "MatPlotLIb version: ",matplotlib.__version__, matplotlib.__file__   
         sys.exit(1)    
     
+    # Set plotting configuration
+    import matplotlib.pyplot as plt
+    plt.rcParams['axes.color_cycle'] = ["348ABD", "7A68A6", "A60628", "467821", "CF4457", "188487", "E24A33"]
+    
+    
     import plmd.caseAnalysis
     import getpass
     

@@ -1,7 +1,6 @@
 #!/usr/bin/python
-import numpy, matplotlib
+import numpy
 from pylab import plot,errorbar, subplot, xlabel, ylabel, savefig, plt
-import MDAnalysis
 
 # == BLOCK AVERAGING MODULE
 # == For details on the mathematics behind block averaging, read:
@@ -34,7 +33,7 @@ def runAnalysis( saveDir, mdTrajectory , timePerFrame ):
     print "Calculating radius of gyration for trajectory"
     tmp = []
     for ts in mdTrajectory.trajectory:
-        time = ts.frame*timePerFrame
+        time = ts.frame*timePerFrame / 1000
         tmp.append([time,rgyr(mdTrajectory)])
     rg = numpy.array(tmp)
 
@@ -46,34 +45,31 @@ def runAnalysis( saveDir, mdTrajectory , timePerFrame ):
         r = numpy.array(results)
 
     # Print block analysis
-    have_matplotlib = True
-    if have_matplotlib:
-        
-        font = {'family' : 'Arial',
-        'weight' : 'normal',
-        'size'   : 10}
-        plt.rc('font', **font)
-        
-        subplot(221)
-        errorbar(r[:,0], r[:,2], yerr=r[:,3])
-        xlabel("number of blocks")
-        ylabel(r"$\langle R_{\rm{gyr}} \rangle$ ($\AA$)")
-        
-        subplot(222)
-        errorbar(r[:,1], r[:,2], yerr=r[:,3])
-        xlabel("block size")
-        ylabel(r"$\langle R_{\rm{gyr}} \rangle$ ($\AA$)")
+    font = {'family' : 'Arial',
+    'weight' : 'normal',
+    'size'   : 10}
+    plt.rc('font', **font)
+    
+    subplot(221)
+    errorbar(r[:,0], r[:,2], yerr=r[:,3], rasterized=True)
+    xlabel("number of blocks")
+    ylabel(r"$\langle R_{\rm{gyr}} \rangle$ ($\AA$)")
+    
+    subplot(222)
+    errorbar(r[:,1], r[:,2], yerr=r[:,3], rasterized=True)
+    xlabel("block size")
+    ylabel(r"$\langle R_{\rm{gyr}} \rangle$ ($\AA$)")
 
-        subplot(223)
-        plot(rg[:,0], rg[:,1])
-        xlabel("Time")
-        ylabel(r"$R_{\rm{gyr}}$ ($\AA$)")
-        
-        subplot(224)
-        plot(r[:,1]*timePerFrame*1000, numpy.divide(r[:,3] , numpy.sqrt(r[:,0]) ) )
-        xlabel("block length (ps)")
-        ylabel("Blocked Standard Error")
-        
-        savefig(saveDir+"/analysis/plots/blocks.pdf")
-        
-        print "Wrote ./figures/blocks.{pdf,png}" % vars()
+    subplot(223)
+    plot(rg[:,0], rg[:,1], rasterized=True)
+    xlabel("Time (ns)")
+    ylabel(r"$R_{\rm{gyr}}$ ($\AA$)")
+    
+    subplot(224)
+    plot(r[:,1]*timePerFrame/1000., numpy.divide(r[:,3] , numpy.sqrt(r[:,0]) ) , rasterized=True)
+    xlabel("block length (ns)")
+    ylabel("Blocked Standard Error")
+    
+    savefig(saveDir+"/analysis/plots/blocks.pdf")
+    
+    print "Wrote ./figures/blocks.{pdf,png}" % vars()

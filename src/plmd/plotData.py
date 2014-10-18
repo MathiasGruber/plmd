@@ -5,11 +5,6 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 from matplotlib.ticker import LinearLocator
 
-
-# Set plotting colors
-#plt.rcParams['axes.color_cycle'] = ['darkred', 'orange','green', 'yellow', 'lightgreen',  'lightblue']
-plt.rcParams['axes.color_cycle'] = ["348ABD", "7A68A6", "A60628", "467821", "CF4457", "188487", "E24A33"]
-
 # Plot graphs
 # Can plot multiple files
 def plotData( outputDir , title, labels , inputFiles , unit , xUnit = "Time (ps)", types=None, scatter = False, skipLines = 0, xFactor = 1 ):
@@ -61,8 +56,7 @@ def plotData( outputDir , title, labels , inputFiles , unit , xUnit = "Time (ps)
         
             # Do the plot
             color = plt.rcParams['axes.color_cycle'][i]
-            area = 2
-            plt.scatter( xData, yData , s=area, color=color, label = labels[i] , rasterized=True)
+            plt.scatter( xData, yData , s=2, color=color, label = labels[i] , rasterized=True)
         
         # Next in line
         i = i + 1

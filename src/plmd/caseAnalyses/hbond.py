@@ -38,9 +38,12 @@ def runAnalysis( caseDir ):
             'weight' : 'normal',
             'size'   : 10}
         
+    # Color of the bars
+    color = plt.rcParams['axes.color_cycle'][0]        
+        
     # Do a bar plot of fractions
     fig = plt.figure(figsize=(16,5))
-    plt.barh(y_pos, fractions, align='center')   
+    plt.barh(y_pos, fractions, align='center', color=color)   
     plt.yticks(y_pos, names)
     ax = fig.gca()
     ax.set_xlabel("Occupied Fraction", fontsize=12)
@@ -51,7 +54,7 @@ def runAnalysis( caseDir ):
 
     # Do a bar plot of avg dists
     fig = plt.figure(figsize=(16,5))
-    plt.barh(y_pos, avgDists, align='center')   
+    plt.barh(y_pos, avgDists, align='center', color=color)   
     plt.yticks(y_pos, names)
     ax = fig.gca()
     ax.set_xlabel("Average Distance", fontsize=12)
@@ -62,7 +65,7 @@ def runAnalysis( caseDir ):
     
     # Do a bar plot of avg angles
     fig = plt.figure(figsize=(16,5))
-    plt.barh(y_pos, avgAngles, align='center')   
+    plt.barh(y_pos, avgAngles, align='center', color=color)   
     plt.yticks(y_pos, names)
     ax = fig.gca()
     ax.set_xlabel("Average Angle", fontsize=12)
