@@ -10,5 +10,6 @@ def runAnalysis( datafiles ):
         "End to End Residue Distance", 
         datafiles['caseLabels'] , 
         datafiles['filepaths'] , 
-        "Distance ($\AA$)"
+        "Distance ($\AA$)",
+        scatter = True
     )
