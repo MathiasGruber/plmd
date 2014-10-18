@@ -7,9 +7,6 @@ atomicfluct out [FOLDER]/analysis/data/bFactor.n @N byatom bfactor
 atomicfluct out [FOLDER]/analysis/data/bFactor.c @C byatom bfactor
 atomicfluct out [FOLDER]/analysis/data/bFactor.ca @CA byatom bfactor
 
-# Dihedral angles
-[DIHEDRALS]
-
 # CA distance matrix
 matrix dist @CA out [FOLDER]/analysis/data/CAdistmat.dat
 

@@ -1,6 +1,10 @@
 # Load the trajectory
 trajin [FOLDER]/mergedResult.dcd 1 last 1
 
+# Dihedral angles
+#################
+[DIHEDRALS]
+
 # Hydrogen Bon analysis
 #######################
 

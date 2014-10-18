@@ -92,14 +92,14 @@ class analysisHandler (plmd.PLMD_module):
         ## Run analyses using cpptraj
         #############################
         
+        # Plot angles
+        dihedral.runAnalysis( self.directory, self.backbone , self.ptrajFactor);
+                
         # Run the PCA analysis
         pca.runAnalysis( self.directory , self.mdTrajectory )        
         
         # H-bond plotting
         hbond.runAnalysis( self.directory );            
-        
-        # Plot angles
-        dihedral.runAnalysis( self.directory, self.backbone , self.ptrajFactor);
         
         # Plot the B factor
         bFactor.runAnalysis( self.directory );

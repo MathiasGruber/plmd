@@ -38,6 +38,12 @@ def plotData( outputDir , title, labels , inputFiles , unit , xUnit = "Time (ps)
                 xData = xData[::timesOver]
                 yData = yData[::timesOver]
         
+        # If xFactor is above 1, save the corrected data set in a new data file
+        if xFactor > 1:
+            with open( filename+"_timeCorrected", "w" ) as fo:
+                for n in range( 0, len(xData) ):
+                    fo.write( str(xData[n]) + "\t" + str(yData[n])  +"\n")
+        
         # Set linetype for the plot
         lineType = '-'
         if types != None:
