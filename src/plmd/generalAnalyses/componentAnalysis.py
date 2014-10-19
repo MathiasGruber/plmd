@@ -171,7 +171,7 @@ class PCA():
                     H = -1 * boltzman * temperature * (np.log( H_normalized )-np.log(np.max(H_normalized)))
                     
                     # Now plot the 2d histogram
-                    img = ax.imshow(H,  interpolation='nearest', origin='lower',extent=[yedges[0], yedges[-1],xedges[0], xedges[-1]])
+                    img = ax.imshow(H,  interpolation='nearest', origin='lower',extent=[yedges[0], yedges[-1],xedges[0], xedges[-1]] , rasterized=True )
                     colorbar = plt.colorbar(img, ax=ax)
                     colorbar.set_label("Kcal / mol")
                     self.colorBars.append(colorbar)
@@ -179,7 +179,7 @@ class PCA():
                 elif plotType == "distribution":
             
                     # Directly do the 2d histogram of matplotlib        
-                    _, _, _, img = ax.hist2d(self.np_arrays[0], self.np_arrays[component], bins=100)
+                    _, _, _, img = ax.hist2d(self.np_arrays[0], self.np_arrays[component], bins=100 , rasterized=True )
                     colorbar = plt.colorbar(img, ax=ax)
                     colorbar.set_label("Occurances")
                     self.colorBars.append(colorbar)

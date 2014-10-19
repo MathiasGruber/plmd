@@ -11,13 +11,13 @@ atomicfluct out [FOLDER]/analysis/data/bFactor.ca @CA byatom bfactor
 matrix dist @CA out [FOLDER]/analysis/data/CAdistmat.dat
 
 # End to End distance of center of mass of first and last residue
-distance end_to_end [FIRSTRESI] [LASTRESI] out [FOLDER]/analysis/data/dist_end_to_end.list
+distance end_to_end :[FIRSTRESI] :[LASTRESI] out [FOLDER]/analysis/data/dist_end_to_end.list
 
 # End to End distance of CA of first and last residue
-distance end_to_end2  [FIRSTRESI]@CA [LASTRESI]@CA out [FOLDER]/analysis/data/ca_end_to_end.list
+distance end_to_end2  :[FIRSTRESI]@CA :[LASTRESI]@CA out [FOLDER]/analysis/data/ca_end_to_end.list
 
 # Time correlation for end to end distance
-vector v0 [FIRSTRESI]@CA ired [LASTRESI]@CA
+vector v0 :[FIRSTRESI]@CA ired :[LASTRESI]@CA
 
 # Analyze Time correlation
 analyze timecorr vec1 v0 out [FOLDER]/analysis/data/timeCorr.out

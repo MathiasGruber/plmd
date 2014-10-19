@@ -67,8 +67,8 @@ class analysisHandler (plmd.PLMD_module):
             TEMPLATE = open( self.config.PLMDHOME+"/src/templates/cpptraj_analysis_"+ptrajType+".txt", 'r')
             TEMP = TEMPLATE.read().replace("[FOLDER]", self.directory  ). \
                                    replace("[DIHEDRALS]", dihedralTxt ). \
-                                   replace("[FIRSTRESI]", ":1" ). \
-                                   replace("[LASTRESI]", ":"+str(numOfResidues) ). \
+                                   replace("[FIRSTRESI]", "1" ). \
+                                   replace("[LASTRESI]", str(numOfResidues) ). \
                                    replace("[FRAMESKIP]", str(int(self.framesToSkip)) )
             TEMPLATE.close()
                                   

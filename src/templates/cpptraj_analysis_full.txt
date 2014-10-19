@@ -83,9 +83,13 @@ hbond print .05 series hbond avgout [FOLDER]/analysis/data/hbond.avg out [FOLDER
 
 # Run PCA analysis
 ##################
+# See paper: 
+# "Evaluation of Enhanced Sampling Provided by Accelerated Molecular 
+#  Dynamics with Hamiltonian Replica Exchange Methods” 
+# by DR Roe, C Bergonzo, and TE Cheatham, III
 
 # Average the trajectory
-rms first :1-4&!@H=
+rms first :1-[LASTRESI]&!@H=
 average [FOLDER]/analysis/data/averageStructure.rst restart
 
 # Save coordinates in memory
@@ -98,24 +102,19 @@ run
 reference [FOLDER]/analysis/data/averageStructure.rst.1 [avg]
 
 # RMS-fit coordinates in crd1 to average
-rms ref [avg] mass :1-4&!@H= out [FOLDER]/analysis/data/RMSD.out
+crdaction crd1 rms ref [avg] mass :1-[LASTRESI]&!@H= out [FOLDER]/analysis/data/RMSD.out
 
 # Create covariance matrix for all heavy atoms
-matrix covar name matrixdat @CA,C,N out [FOLDER]/analysis/data/covmat-ca.dat
+crdaction crd1 matrix covar name matrixdat :1-[LASTRESI]&!@H= out [FOLDER]/analysis/data/covmat-ca.dat
 
-# Diagonalize matrix and do PCA
+# Diagonalize coordinate covariance matrix for eigenmodes 
 analyze matrix matrixdat out [FOLDER]/analysis/data/evecs-ca.dat vecs 100
-analyze matrix matrixdat name [FOLDER]/analysis/data/evecs-ca vecs 100
-
-# Analyze fluctuation and displacements
-analyze modes fluct out [FOLDER]/analysis/data/analyzemodesflu.dat stack [FOLDER]/analysis/data/evecs-ca beg 1 end 100
-analyze modes displ out [FOLDER]/analysis/data/analyzemodesdis.dat stack [FOLDER]/analysis/data/evecs-ca beg 1 end 100
 
 # Run the matrix stuff. Otherwise they will not be initialized for the upcoming projection
 run 
 
 # Project the modes
-projection modes [FOLDER]/analysis/data/evecs-ca.dat out [FOLDER]/analysis/data/pca12-ca beg 1 end 4 @CA,C,N
+crdaction crd1 projection modes [FOLDER]/analysis/data/evecs-ca.dat out [FOLDER]/analysis/data/pca12-ca beg 1 end 5 :1-[LASTRESI]&!@H=
 
 # Run analysis
 go

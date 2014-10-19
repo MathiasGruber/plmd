@@ -11,14 +11,22 @@ def runAnalysis( caseDirs ):
         columns = 2
         if dirs > 2:
             rows = 2
+            
+    # Create & run cpptraj for plotting all cases on the axes of the first eigenvector
+    # Good URLs for PCA in CPPTRAJ:
+    # http://archive.ambermd.org/201404/0243.html
 
-    # Do the plotting
+    buffer = "trajin "+caseDirs[0]+"/mergedResult.dcd 1 last 1"
+    
+
+    # PCA plotter
     pcaHandler = pcaFuncs.PCA( 
         "globalAnalysesPlots/PCA_analysis.pdf",
         subplotColums = columns,
         subplotRows = rows
     )
 
+    # Go through the case dirs to plot
     for caseDir in caseDirs:
 
         # Do the plots of energy landscapes & distributions
