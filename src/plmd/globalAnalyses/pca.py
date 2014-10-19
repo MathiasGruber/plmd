@@ -13,42 +13,55 @@ def runAnalysis( caseDirs ):
         if dirs > 2:
             rows = 2
             
-    # PCA plotter
-    pcaHandler = pcaFuncs.PCA( 
-        "globalAnalysesPlots/PCA_analysis.pdf",
-        subplotColums = columns,
-        subplotRows = rows
-    )
-
-    # Go through the case dirs to plot
-    for caseDir in caseDirs:
-        
-        # Create & run cpptraj for plotting all cases on the axes of the first eigenvector
-        # Good URLs for PCA in CPPTRAJ:
-        # http://archive.ambermd.org/201404/0243.html
-        
-        # Create new submission file
-        TEMPLATE = open( caseDir+"/ccptraj_analysis_global.ptraj", 'r')
-        TEMP = TEMPLATE.read().replace("[PCAREFERENCE]", caseDirs[0]  )
-        TEMPLATE.close()
-                              
-        # Write the submission file
-        FILE = open(caseDir+"/ccptraj_analysis_global_done.ptraj","w");        
-        FILE.write( TEMP );
-        FILE.close();
-        
-        # Run the cpptraj utility
-        os.system( "$AMBERHOME/bin/cpptraj -p "+caseDir+"/md-files/peptide_nowat.prmtop -i "+caseDir+"/ccptraj_analysis_global_done.ptraj" )
     
+    # Do a reference for each one
+    for refDir in caseDirs:
 
-        # Do the plots of energy landscapes & distributions
-        pcaHandler.plotPCA( 
-            "Case: "+caseDir.split("/")[-1],   # Plot Title
-            caseDir+"/analysis/data/" ,        # Data Dir
-            "global_pca",                      # Eigenvector file
-            eigenVectorCount = 2,              # Only plot two
-            plotDistibution = False            # Do not plot the distribution
+        # ID of reference case
+        refID = refDir.split("/")[-1]
+        
+        # Get the PCA limits of component 1-2 plot
+        limit = 10
+        with open(refDir+"/analysis/data/pca_limits_1", "r") as fi:
+            limit = int(fi.read())
+        
+         # PCA plotter
+        pcaHandler = pcaFuncs.PCA( 
+            "globalAnalysesPlots/PCA_analysis_Components"+refID+".pdf",
+            subplotColums = columns,
+            subplotRows = rows
         )
+
+        # Go through the case dirs to plot
+        for caseDir in caseDirs:
+            
+            # Create & run cpptraj for plotting all cases on the axes of the first eigenvector
+            # Good URLs for PCA in CPPTRAJ:
+            # http://archive.ambermd.org/201404/0243.html
+            
+            # Create new submission file
+            TEMPLATE = open( caseDir+"/ccptraj_analysis_global.ptraj", 'r')
+            TEMP = TEMPLATE.read().replace("[PCAREFERENCE]", refDir  )
+            TEMPLATE.close()
+                                  
+            # Write the submission file
+            FILE = open(caseDir+"/ccptraj_analysis_global_done.ptraj","w");        
+            FILE.write( TEMP );
+            FILE.close();
+            
+            # Run the cpptraj utility
+            os.system( "$AMBERHOME/bin/cpptraj -p "+caseDir+"/md-files/peptide_nowat.prmtop -i "+caseDir+"/ccptraj_analysis_global_done.ptraj" )
+        
     
-    # Save the plot
-    pcaHandler.savePlot()
+            # Do the plots of energy landscapes & distributions
+            pcaHandler.plotPCA( 
+                "Case: "+caseDir.split("/")[-1]+". Ref case: "+refID,   # Plot Title
+                caseDir+"/analysis/data/" ,        # Data Dir
+                "global_pca",                      # Eigenvector file
+                eigenVectorCount = 2,              # Only plot two
+                plotDistibution = False,           # Do not plot the distribution
+                limits = limit
+            )
+        
+        # Save the plot
+        pcaHandler.savePlot()

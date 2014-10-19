@@ -86,7 +86,7 @@ class PCA():
         
 
     # Function for running the actual analysis
-    def plotPCA( self, plotTitleIdentifier, dataDir, eigenVectorFile , eigenValueFile = False , eigenVectorCount = 4, plotDistibution = True ):
+    def plotPCA( self, plotTitleIdentifier, dataDir, eigenVectorFile , eigenValueFile = False , eigenVectorCount = 4, plotDistibution = True, limits = False ):
     
         # If this is the first plot, create grid
         if self.subPlots == 0:
@@ -186,13 +186,18 @@ class PCA():
                     colorbar.set_label("Occurances")
                     self.colorBars.append(colorbar)
             
-                mini = np.abs(np.min( [np.min(self.np_arrays[0]), np.min(self.np_arrays[component])] ))  
-                maxi = np.abs(np.max( [np.max(self.np_arrays[0]), np.max(self.np_arrays[component])] ))
-                limits = int(math.ceil(np.max( [mini,maxi] )))
-                print limits, "BLAH BLAH BLAH"                
-                
+                # Set limits if they are not specified
+                if limits == False:
+                    mini = np.abs(np.min( [np.min(self.np_arrays[0]), np.min(self.np_arrays[component])] ))  
+                    maxi = np.abs(np.max( [np.max(self.np_arrays[0]), np.max(self.np_arrays[component])] ))
+                    limits = int(math.ceil(np.max( [mini,maxi] )))
+                    
                 plt.ylim([-limits,limits])
-                plt.xlim([-limits,limits])            
+                plt.xlim([-limits,limits]) 
+                
+                # Save the limits for the component
+                with open(dataDir+"pca_limits_"+str(component), "w") as fo:
+                    fo.write( str(limits) )
             
                 # Set title, labels etc
                 plt.legend()
@@ -203,7 +208,7 @@ class PCA():
                     ax.set_xlabel("PC1", fontsize=12)
                     ax.set_ylabel("PC"+str(component+1), fontsize=12)
                 
-                ax.set_title( "PCA Analysis. "+plotTitleIdentifier )
+                ax.set_title( "PCA. "+plotTitleIdentifier )
                 #ax.rc('font', **font)   
         
                 # Save pdf page if it's filled
