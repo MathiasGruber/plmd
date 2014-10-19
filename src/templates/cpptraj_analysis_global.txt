@@ -1,0 +1,29 @@
+# Run PCA analysis
+##################
+# See paper: 
+# "Evaluation of Enhanced Sampling Provided by Accelerated Molecular 
+#  Dynamics with Hamiltonian Replica Exchange Methods” 
+# by DR Roe, C Bergonzo, and TE Cheatham, III
+
+# This script saves a cpptraj script to be used in later global analyses
+
+# Load the trajectory
+trajin [FOLDER]/mergedResult.dcd 1 last 1
+
+# Save coordinates in memory
+createcrd crd1
+
+# Run for further processing
+run
+
+# Create reference
+reference [FOLDER]/analysis/data/averageStructure.rst.1 [avg]
+
+# RMS-fit coordinates in crd1 to average
+crdaction crd1 rms ref [avg] mass :1-[LASTRESI]&!@H= out [FOLDER]/analysis/data/RMSD_pca.out
+
+# Project the modes
+crdaction crd1 projection modes [PCAREFERENCE]/analysis/data/evecs-ca.dat out [FOLDER]/analysis/data/global_pca beg 1 end 5 :1-[LASTRESI]&!@H=
+
+# Run analysis
+go

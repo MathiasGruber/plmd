@@ -2,8 +2,9 @@
 import math
 import numpy as np
 import MDAnalysis
-from pylab import plt,hist2d
+from pylab import plt
 from matplotlib.backends.backend_pdf import PdfPages
+from matplotlib.colors import LogNorm
 
 class PCA():
     
@@ -85,7 +86,7 @@ class PCA():
         
 
     # Function for running the actual analysis
-    def plotPCA( self, plotTitleIdentifier, dataDir, eigenValueFile, eigenVectorFile , eigenVectorCount = 4, plotDistibution = True ):
+    def plotPCA( self, plotTitleIdentifier, dataDir, eigenVectorFile , eigenValueFile = False , eigenVectorCount = 4, plotDistibution = True ):
     
         # If this is the first plot, create grid
         if self.subPlots == 0:
@@ -103,17 +104,18 @@ class PCA():
             pcs.append([])
     
         # Go through analysis file and get eigenvalues
-        eigenValues = []
-        eigenValueTotal = 0
-        with open(dataDir+eigenValueFile,"r") as f:
-            lookForVec = 1
-            for line in f:
-                temp = line.split()
-                if len(temp) == 2 and temp[0] == str(lookForVec):
-                    lookForVec += 1
-                    eigenValueTotal += float(temp[1])
-                    eigenValues.append(float(temp[1]))
-        eigenValues = (np.array(eigenValues) / eigenValueTotal) * 100               
+        if eigenValueFile != False:
+            eigenValues = []
+            eigenValueTotal = 0
+            with open(dataDir+eigenValueFile,"r") as f:
+                lookForVec = 1
+                for line in f:
+                    temp = line.split()
+                    if len(temp) == 2 and temp[0] == str(lookForVec):
+                        lookForVec += 1
+                        eigenValueTotal += float(temp[1])
+                        eigenValues.append(float(temp[1]))
+            eigenValues = (np.array(eigenValues) / eigenValueTotal) * 100               
     
         # Get the file with all the projection data
         pcaFile = open(dataDir+eigenVectorFile,"r")
@@ -179,15 +181,28 @@ class PCA():
                 elif plotType == "distribution":
             
                     # Directly do the 2d histogram of matplotlib        
-                    _, _, _, img = ax.hist2d(self.np_arrays[0], self.np_arrays[component], bins=100 , rasterized=True )
+                    _, _, _, img = ax.hist2d(self.np_arrays[0], self.np_arrays[component], bins=100 , rasterized=True, norm=LogNorm() )
                     colorbar = plt.colorbar(img, ax=ax)
                     colorbar.set_label("Occurances")
                     self.colorBars.append(colorbar)
             
+                mini = np.abs(np.min( [np.min(self.np_arrays[0]), np.min(self.np_arrays[component])] ))  
+                maxi = np.abs(np.max( [np.max(self.np_arrays[0]), np.max(self.np_arrays[component])] ))
+                limits = int(math.ceil(np.max( [mini,maxi] )))
+                print limits, "BLAH BLAH BLAH"                
+                
+                plt.ylim([-limits,limits])
+                plt.xlim([-limits,limits])            
+            
                 # Set title, labels etc
                 plt.legend()
-                ax.set_xlabel("PC1 ({0:.2f}%)".format(eigenValues[0]), fontsize=12)
-                ax.set_ylabel("PC"+str(component+1)+" ({0:.2f}%)".format(eigenValues[component]), fontsize=12)
+                if eigenValueFile != False:
+                    ax.set_xlabel("PC1 ({0:.2f}%)".format(eigenValues[0]), fontsize=12)
+                    ax.set_ylabel("PC"+str(component+1)+" ({0:.2f}%)".format(eigenValues[component]), fontsize=12)
+                else:
+                    ax.set_xlabel("PC1", fontsize=12)
+                    ax.set_ylabel("PC"+str(component+1), fontsize=12)
+                
                 ax.set_title( "PCA Analysis. "+plotTitleIdentifier )
                 #ax.rc('font', **font)   
         

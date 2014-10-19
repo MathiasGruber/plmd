@@ -13,8 +13,8 @@ def runAnalysis( caseDir, mdTrajectory ):
     pcaHandler.plotPCA( 
         "Case: "+caseDir.split("/")[-1],               # Plot Title
         caseDir+"/analysis/data/" ,                    # Data Dir
-        "evecs-ca.dat",                                # Eigenvalue file
-        "pca12-ca"                                     # Eigenvector file
+        "pca12-ca",                                     # Eigenvector file
+        "evecs-ca.dat"                                # Eigenvalue file
     )
     
     # Save all the structures
