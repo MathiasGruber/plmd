@@ -188,10 +188,12 @@ class PCA():
             
                 # Set limits if they are not specified
                 if limits == False:
+                    print "Calculating plot limits based on data"
                     mini = np.abs(np.min( [np.min(self.np_arrays[0]), np.min(self.np_arrays[component])] ))  
                     maxi = np.abs(np.max( [np.max(self.np_arrays[0]), np.max(self.np_arrays[component])] ))
                     limits = int(math.ceil(np.max( [mini,maxi] )))
-                    
+                   
+                print "Setting plot limits to: "+limits
                 plt.ylim([-limits,limits])
                 plt.xlim([-limits,limits]) 
                 
