@@ -193,7 +193,7 @@ class PCA():
                     maxi = np.abs(np.max( [np.max(self.np_arrays[0]), np.max(self.np_arrays[component])] ))
                     limits = int(math.ceil(np.max( [mini,maxi] )))
                    
-                print "Setting plot limits to: "+limits
+                print "Setting plot limits to: ",limits
                 plt.ylim([-limits,limits])
                 plt.xlim([-limits,limits]) 
                 
