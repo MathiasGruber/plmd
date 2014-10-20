@@ -194,8 +194,8 @@ class PCA():
                     limits = int(math.ceil(np.max( [mini,maxi] )))
                    
                 print "Setting plot limits to: ",limits
-                plt.ylim([-limits,limits])
-                plt.xlim([-limits,limits]) 
+                ax.set_ylim([-limits,limits])
+                ax.set_xlim([-limits,limits]) 
                 
                 # Save the limits for the component
                 with open(dataDir+"pca_limits_"+str(component), "w") as fo:
