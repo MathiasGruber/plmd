@@ -19,7 +19,7 @@ def getDefaultConfig():
     config.set('inputFiles', 'peptide', 'filenamePeptide.pdb')
     config.set('inputFiles', 'peptideCount', '1')
     config.set('inputFiles', 'pPeptide', 'false')
-    config.set('inputFiles', 'cases', '10')
+    config.set('inputFiles', 'cases', '4')
     config.set('inputFiles', 'quiet', 'false')
     config.set('inputFiles', 'noTranslate', 'false')
     
@@ -35,7 +35,7 @@ def getDefaultConfig():
     config.set('simulationParameters', 'timestepNumber', '1000000')
 
     config.add_section('submissionParameters')
-    config.set('submissionParameters', 'nodeControl', 'nodes=1:ppn=8')
+    config.set('submissionParameters', 'nodeControl', 'nodes=2:ppn=8')
     config.set('submissionParameters', 'wallClock', '72:00:00')
     config.set('submissionParameters', 'mdRuns', '50')
 
