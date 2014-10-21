@@ -1,3 +1,5 @@
+
+
 #!/usr/bin/python
 import ConfigParser
 
@@ -22,7 +24,7 @@ def getDefaultConfig():
     config.set('inputFiles', 'noTranslate', 'false')
     
     config.add_section('simulationParameters')
-    config.set('simulationParameters', 'forceField', 'leaprc.ff12SB')
+    config.set('simulationParameters', 'forceField', 'leaprc.ff14SB')
     config.set('simulationParameters', 'qmCharge', '-2')
     config.set('simulationParameters', 'qmShake', '1')
     config.set('simulationParameters', 'qmTheory', 'PM6-D')
