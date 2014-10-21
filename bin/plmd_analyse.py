@@ -22,6 +22,7 @@ try:
     
     # Set plotting configuration
     import matplotlib.pyplot as plt
+
     plt.rcParams['axes.color_cycle'] = ["348ABD", "7A68A6", "A60628", "467821", "CF4457", "188487", "E24A33","348ABD", "7A68A6", "A60628", "467821", "CF4457", "188487", "E24A33"]
     
     

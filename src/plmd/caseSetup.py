@@ -117,13 +117,18 @@ class Setup (plmd.PLMD_module):
     # Main functon for setting up all the cases
     def setupCases(self):
         
-        # Get the coordinates & resnames of peptide & ligand. Passed by reference.
-        structureManipulation.processStructureFile( self.config.peptide , "pdb", self.peptideCoordinates, self.peptideResnames )
-        structureManipulation.processStructureFile( self.config.ligand , "mol2", self.ligandCoordinates, self.ligandResnames )
+        # Get the coordinates, resnames and center of masses of peptide. Passed by reference.
+        if self.config.peptideCount > 0:
+            structureManipulation.processStructureFile( self.config.peptide , "pdb", self.peptideCoordinates, self.peptideResnames )
+            self.peptideCenterOfMass = structureManipulation.centerOfMass( self.peptideCoordinates )
+        else:
+            raise Exception("A simulation without protein is senseless. If you are trying to debug the ion, please run Amber manually for increased control.") 
         
-        # Get center of masses
-        self.peptideCenterOfMass = structureManipulation.centerOfMass( self.peptideCoordinates )
-        self.ligandCenterOfMass = structureManipulation.centerOfMass( self.ligandCoordinates )
+        # Get the coordinates, resnames and center of masses of ligand. Passed by reference.
+        if self.config.ligandCount > 0:
+            structureManipulation.processStructureFile( self.config.ligand , "mol2", self.ligandCoordinates, self.ligandResnames )
+            self.ligandCenterOfMass = structureManipulation.centerOfMass( self.ligandCoordinates )
+        
         
         # Create main folder for project
         self.createMainFolder()        
@@ -139,17 +144,18 @@ class Setup (plmd.PLMD_module):
             
             # Calculate a random translation for the ligand (pass by value)
             # LEaP performs the translation using this vector
-            self.ligandsForLEaP[:] = []
-            for x in range(0, self.config.ligandCount):
-                self.ligandsForLEaP.append( 
-                    structureManipulation.calcIonPosition( 
-                        deepcopy(self.peptideCenterOfMass), 
-                        deepcopy(self.peptideCoordinates),
-                        deepcopy(self.ligandCenterOfMass), 
-                        deepcopy(self.ligandCoordinates),
-                        self.ligandsForLEaP
+            if self.config.ligandCount > 0:
+                self.ligandsForLEaP[:] = []
+                for x in range(0, self.config.ligandCount):
+                    self.ligandsForLEaP.append( 
+                        structureManipulation.calcIonPosition( 
+                            deepcopy(self.peptideCenterOfMass), 
+                            deepcopy(self.peptideCoordinates),
+                            deepcopy(self.ligandCenterOfMass), 
+                            deepcopy(self.ligandCoordinates),
+                            self.ligandsForLEaP
+                        )
                     )
-                )
             
             # Create LEaP input File for case
             self.leapCreateInput( str(i) )
@@ -243,7 +249,6 @@ class Setup (plmd.PLMD_module):
         # Forcefield loading
         ffString = "source "+self.config.AMBERHOME+"/dat/leap/cmd/"+self.config.ff 
         ffString += "\nsource "+self.config.AMBERHOME+"/dat/leap/cmd/leaprc.gaff"
-        #ffString += "\nsource "+self.AMBERHOME+"/dat/leap/parm/frcmod.ionsjc_spce"
         
         # Any additional 
         if self.leapMods != False:
@@ -254,17 +259,18 @@ class Setup (plmd.PLMD_module):
         structureString = "compound = loadpdb "+self.config.peptide
         
         # Go through the ligands
-        for i in range(0,len(self.ligandsForLEaP)):
-            
-            # Import ligand
-            structureString += "\nligand"+str(i)+" = loadmol2 "+self.config.ligand
-            
-            # Translate to correct position
-            if self.config.noTranslate == False:
-                structureString += "\ntranslate ligand"+str(i)+" {"+str(self.ligandsForLEaP[i][0])+" "+str(self.ligandsForLEaP[i][1])+" "+str(self.ligandsForLEaP[i][2])+" }"
-            
-            # Combine with previous structure
-            structureString += "\ncompound = combine { compound ligand"+str(i)+" }"
+        if self.config.ligandCount > 0:
+            for i in range(0,len(self.ligandsForLEaP)):
+                
+                # Import ligand
+                structureString += "\nligand"+str(i)+" = loadmol2 "+self.config.ligand
+                
+                # Translate to correct position
+                if self.config.noTranslate == False:
+                    structureString += "\ntranslate ligand"+str(i)+" {"+str(self.ligandsForLEaP[i][0])+" "+str(self.ligandsForLEaP[i][1])+" "+str(self.ligandsForLEaP[i][2])+" }"
+                
+                # Combine with previous structure
+                structureString += "\ncompound = combine { compound ligand"+str(i)+" }"
         
         # Explicit solvent case: Equilibration
         TEMPLATE = open( self.config.PLMDHOME+"/src/templates/LEaP_submit.txt", 'r')
