@@ -32,5 +32,8 @@ The two major components of this package are a module for setting up & running m
   10. Cluster analysis of peptide structures
   11. Hydrogen binding
   12. Block analysis
-* Upon completion be able to send plots & pdb files in zip package to email specified in config file
+* Upon completion be able to send plots & pdb files in zip package to ftp specified in config file
 * Should contain a module for visualizing the molecules, and create images & vmd states of all the different stages automatically
+
+2.2. Design of Analysis Module
+===
