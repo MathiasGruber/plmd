@@ -98,7 +98,7 @@ class Analysis (plmd.PLMD_module):
                 ftpObject.zipDirectory( archieveName , folderToCompres )
                 
                 # Send it
-                ftpObject.shipFile( archieveName+".tar" , "globalAnalysesPlots" )
+                ftpObject.shipTar( archieveName+".tar" , "globalAnalysesPlots" )
                 ftpObject.shipDir( folderToCompres , "globalAnalysesPlots" )
             
         else:
@@ -156,7 +156,7 @@ class Analysis (plmd.PLMD_module):
                 ftpObject.zipDirectory( archieveName , folderToCompres )
                 
                 # Send it
-                ftpObject.shipFile( archieveName+".tar" , caseDir )
+                ftpObject.shipTar( archieveName+".tar" , caseDir )
                 ftpObject.shipDir( folderToCompres , caseNumber )
         
     # A function for merging all the trajectories in a case fodler
