@@ -20,7 +20,7 @@ Peptides: Equilibration
   ntpr = [TIMESTEPPERFRAME], 
   ntwx = [TIMESTEPPERFRAME], 
   ntwr = 1000,
-  ifqnt=1
+  ifqnt=[EABLEQM]
  /
  &qmmm
   qmmask='[QMREGION]',

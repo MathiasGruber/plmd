@@ -8,7 +8,7 @@ Peptide: Minimization in solvatebox
   ntc = [NTC],
   ntf = [NTF],
   cut = 10.0,
-  ifqnt=1
+  ifqnt=[EABLEQM]
  /
 &qmmm
   qmmask='[QMREGION]',

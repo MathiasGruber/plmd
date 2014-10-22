@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import os, shutil
+import os, shutil, re, sys
 from copy import deepcopy
 import structureManipulation, peptideConstructor, plmd 
 
@@ -186,6 +186,9 @@ class Setup (plmd.PLMD_module):
         # Go through each template file
         for templateFile in templateFiles:
 
+            # Enable quantum variable
+            isQM = 1 if self.config.ligandCount > 0 else 0
+
             # Load templates, change variables, and save in case folder
             TEMPLATE = open(templateFile, 'r')
             TEMP = TEMPLATE.read().replace("[NTC]", self.config.ntc ). \
@@ -195,9 +198,16 @@ class Setup (plmd.PLMD_module):
                                   replace("[QMREGION]", self.qmRegion ). \
                                   replace("[TIMESTEPS]", self.config.timestepNumber ). \
                                   replace("[DT]", str(self.config.timestepSize) ). \
+                                  replace("[EABLEQM]", str(isQM) ). \
                                   replace("[QMSHAKE]", self.config.qmShake ). \
                                   replace("[TIMESTEPPERFRAME]", str(self.config.timestepPerFrame) )
             TEMPLATE.close()
+            
+            # If not QM, delete qmmm dict from TEMP
+            if isQM == 0:
+                
+                # Must be compiled first, so as to use DOTALL that will match newlines also
+                TEMP = re.sub(re.compile('&qmmm(.+)\s/\n', re.DOTALL), "", TEMP )
                                            
             # Save the input file with same name, but change extension to .in
             saveFile = os.path.basename(templateFile).split(".")[0]+".in"                                    
