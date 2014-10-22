@@ -35,5 +35,5 @@ The two major components of this package are a module for setting up & running m
 * Upon completion be able to send plots & pdb files in zip package to ftp specified in config file
 * Should contain a module for visualizing the molecules, and create images & vmd states of all the different stages automatically
 
-#2.2. Design of Analysis Module
-===
+## 2.2. Design of Analysis Module
+The main focus of this package is on the analysis module, which is expected to be continously updated with new features & improvements. The design of this module therefore warrents further explanation. 
