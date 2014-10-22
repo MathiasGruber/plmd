@@ -8,78 +8,9 @@ trajin [FOLDER]/mergedResult.dcd 1 last 1
 # Hydrogen Bon analysis
 #######################
 
-#-- Donors from standard amino acids
-donor mask :GLN@OE1
-donor mask :GLN@NE2
-donor mask :ASN@OD1
-donor mask :ASN@ND2
-donor mask :TYR@OH
-donor mask :ASP@OD1
-donor mask :ASP@OD2
-donor mask :GLU@OE1
-donor mask :GLU@OE2
-donor mask :SER@OG
-donor mask :THR@OG1
-donor mask :HIS@ND1
-donor mask :HIE@ND1
-donor mask :HID@NE2
-donor mask @O
-
-# PO4 Ion
-donor mask :PO4@O
-donor mask :PO4@O1
-donor mask :PO4@O2
-donor mask :PO4@O3
-
-# HPO4 Ion
-donor mask :PI1@O1
-donor mask :PI1@O2
-donor mask :PI1@O3
-
-# H2PO4 Ion
-donor mask :PI2@O1
-donor mask :PI2@O2
-donor mask :PI2@O3
-
-#-- Acceptors from standard amino acids
-acceptor mask  :ASN@ND2 :ASN@HD21
-acceptor mask  :ASN@ND2 :ASN@HD22
-acceptor mask  :TYR@OH  :TYR@HH
-acceptor mask  :GLN@NE2 :GLN@HE21
-acceptor mask  :GLN@NE2 :GLN@HE22
-acceptor mask  :TRP@NE1 :TRP@HE1
-acceptor mask  :LYS@NZ  :LYS@HZ1
-acceptor mask  :LYS@NZ  :LYS@HZ2
-acceptor mask  :LYS@NZ  :LYS@HZ3
-acceptor mask  :SER@OG  :SER@HG
-acceptor mask  :THR@OG1 :THR@HG1
-acceptor mask  :ARG@NH2 :ARG@HH21
-acceptor mask  :ARG@NH2 :ARG@HH22
-acceptor mask  :ARG@NH1 :ARG@HH11
-acceptor mask  :ARG@NH1 :ARG@HH12
-acceptor mask  :ARG@NE  :ARG@HE
-acceptor mask  :HIS@NE2 :HIS@HE2
-acceptor mask  :HIE@NE2 :HIE@HE2
-acceptor mask  :HID@ND1 :HID@HD1
-acceptor mask  :HIP@ND1,NE2 :HIP@HE2,HD1
-acceptor WAT O H1 
-acceptor WAT O H2 
-
-# HPO4 Ion
-donor mask :PI1@O :PI1@H
-
-# H2PO4 Ion
-donor mask :PI2@O :PI2@H
-donor mask :PI2@O1 :PI2@H1
-
-#Terminal residues have different atom names
-donor mask @OXT
-acceptor mask :1@N :1@H1
-acceptor mask :1@N :1@H2
-acceptor mask :1@N :1@H3]
-
 # Run the analysis
-hbond print .05 series hbond avgout [FOLDER]/analysis/data/hbond.avg out [FOLDER]/analysis/data/hbond.out
+hbond :1-[LASTRESI] out [FOLDER]/analysis/data/hbond.out avgout [FOLDER]/analysis/data/hbond.avg
+
 
 # Run PCA analysis
 ##################
