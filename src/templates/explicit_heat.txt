@@ -7,6 +7,8 @@ Peptide: heat in solvatebox
   ntb    = 1,
   cut    = 10.0,
   ntr = 1,
+  restraint_wt=1.0,
+  restraintmask='[PEPTIDERESI]',
   ntc = [NTC],
   ntf = [NTF],
   tempi  = 0.0,
