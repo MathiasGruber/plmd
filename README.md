@@ -2,8 +2,8 @@ PLMD: Peptide Ligand Molecular Dynamics
 ==============
 
 The purpose of this module is automatize the use of the Molecular Dynamics 
-framework Amber12 for investigation of the interaction between specifically 
-small peptides and their ligands. Given the peptide and its ligands as input 
+framework Amber14 for investigation of the interaction between small peptides 
+and their ligands. Given the peptide and its ligands as input 
 files, the module aim to make the process of setting up & running the molecular 
 dynamics simulations and the subsequent analysis as easy as possible.
 
@@ -14,7 +14,7 @@ PLMD module.
 PLMD REQUIREMENTS
 ====================
 
-* PLMD requires both Amber12 and AmberTools to be installed and set up properly in 
+* PLMD requires both Amber14 and AmberTools14 to be installed and set up properly in 
 environment.
 
 * The analysis module requires `MDAnalysis` to be installed:
@@ -23,11 +23,11 @@ https://code.google.com/p/mdanalysis/
 ```
 See below on how to install this locally on the DTU HPC
 
-* The module furthermore requires numpy, matplotlib, and pylab modules to be installed
-
 * The scripts were specifically designed to run at the DTU HPC cluster: http://www.cc.dtu.dk, but may work elsewhere, with appropriate modifications, as well
 
-* The module also requires python 2.7. On the DTU HPC, python 2.7 can be loaded by typing the following:
+* The module furthermore requires numpy, matplotlib, and pylab modules to be properly installed. As such, on the DTU HPC, it requires that you are logged in on the backend nodes!
+
+* The module requires python 2.7. On the DTU HPC, python 2.7 can be loaded by typing the following:
 ```
 module load python/2.7.3
 ```
@@ -79,9 +79,9 @@ Please note that if you are installing it on the DTU HPC, you need to login on t
 How To: Setting up a set of cases
 =============================
 
-* Create a directory where you want to run your simulations
+* Create a directory where you want to run your simulations, e.g. "HPO4_SGAGKT"
 * Go to that directory.
-* Retrieve default configuration file with the command 
+* Retrieve default configuration file with the command:
 ```
 plmd_getConfig.py
 ```
@@ -91,30 +91,44 @@ plmd_getConfig.py
 ```
 plmd_setup.py defaultExample.cfg -pPeptide "NSER GLY ALA GLY LYS CTHR" -pLigand HPO4 --quiet
 ```
-* This will create a cases/ directory with all your chases set up and ready for submission.
-* Type "plmd_setup -h" for further information
+* This will create a cases/ directory with all your chases set up and ready for submission using the SGAGKT peptide, and the HPO4 ion. 
+* Type "plmd_setup -h" for further information on setup options
 
 How To: Submit to queue
 =============================================
 
 * To submit a case directory to the cluster queue use: 
 ```
-plmd_submit cases/
+plmd_submit defaultExample.cfg cases/
 ```
-where `cases/` is the directory created during previous step.
-* The plmd_submit command will walk through all subdirectories and submit all identified cases.
+where `cases/` is the directory created during previous step and `defaultExample.cgf` is the configuration file
+* The plmd_submit command will walk through all subdirectories and submit all identified cases. Submission specifications (walltime, nodes, job name etc.) are in the configuration file.
 
 How To: Run Post-processing
 ===========================
 
-* To run postprocessing on a given case use the command "plmd_analyze cases/" which will run postprocessing on all cases found in your cases/ directory.
-* Type "plmd_analyze -h" for further information
+* To postprocess a given case use the following command 
+```
+plmd_analyze defaultExample.cfg cases/
+```
+which will run postprocessing on all cases found in your cases/ directory.
+* Type "plmd_analyze -h" for further information on the options available during the step. Some of the options warrent special notice:
+
+`-noQueue:` This effectively runs the analysis in your terminal, instead of submitting it to the server queue.
+
+`-noMerge` Each case is run in several separate MD runs. During analysis, these are merged together, which can take quite some time. If you don't need the latest merged trajectory (e.g. during debugging), you can use this option to turn merging off.
+
+`-noBlock` The block averaging analysis inherently requires a lot of time. In case it's not strictly needed, you can disable it with this flag.
+
+`-noFTP` By default the script will assume you want your results uploaded to a FTP server when they are done. The FTP details are specified in the configuration file (except password, which is not stored at any point). If you want to disable this feature, this flag is for you.
+
+`-doGlobal` Once you've run your initial analysis, you may want to re-run the analysis module with this flag enabled. It will use data files from the previous analyses, and do a "global" analysis, i.e. compare various results from each case with each other.
  
 
 How To: Add Analysis Module
 ===========================
 
-If you are looking add a specific analysis module to this package, please read this first. The Analysis modules can be found in `src/plmd/analyses`. When you want to add a new module, you'll have to add that in to this directory (see other modules for inspiration). The `__init__`-file in the `analyses` directory, is where you link your module to the rest of the package, i.e. make sure you:
+If you are looking add a specific analysis module to this package, please read this first. There are two kinds of analysis modules: case-based and global analyses. The modules can be found in `src/plmd/caseAnalyses` and  `src/plmd/globalAnalyses`, respectively. When you want to add a new module, you'll have to add that in to these directories (see other modules for inspiration). The `__init__`-files in the module directories, are where you link your module to the rest of the package, i.e. make sure you:
 
 * `import YOUR_PACKAGE` at the top of the `__init__`-file
 * Add the call to your module in the `run_all`-function of the `__init__`-file
