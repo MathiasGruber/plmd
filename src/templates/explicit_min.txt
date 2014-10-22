@@ -5,6 +5,8 @@ Peptide: Minimization in solvatebox
   ncyc = 5000,
   ntb = 1,
   ntr = 1,
+  restraint_wt=1.0,
+  restraintmask='[PEPTIDERESI]',
   ntc = [NTC],
   ntf = [NTF],
   cut = 10.0,

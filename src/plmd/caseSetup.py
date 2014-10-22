@@ -21,6 +21,7 @@ class Setup (plmd.PLMD_module):
         self.ligandResnames = []
         self.peptideResnames = []
         self.qmRegion = ""
+        self.peptideRegion = ""
         
         # Variable for storing possible leap modifications
         self.leapMods = False
@@ -198,6 +199,7 @@ class Setup (plmd.PLMD_module):
                                   replace("[QMREGION]", self.qmRegion ). \
                                   replace("[TIMESTEPS]", self.config.timestepNumber ). \
                                   replace("[DT]", str(self.config.timestepSize) ). \
+                                  replace("[PEPTIDERESI]", str(self.peptideRegion) ). \
                                   replace("[EABLEQM]", str(isQM) ). \
                                   replace("[QMSHAKE]", self.config.qmShake ). \
                                   replace("[TIMESTEPPERFRAME]", str(self.config.timestepPerFrame) )
@@ -231,11 +233,14 @@ class Setup (plmd.PLMD_module):
             pdb = fl.readlines()
         
         qmRegion = []
+        peptideRegion = []
         
         # Go throug the file and find all residues having the resname of the ligand
         for line in pdb:
             if line[17:20] in self.ligandResnames:
                 qmRegion.append( str(int(line[22:26])) )
+            elif line[17:20] in self.peptideResnames:
+                peptideRegion.append( str(int(line[22:26])) )
         
         # Define the region string, as per Amber specifications
         if not qmRegion:
@@ -247,6 +252,9 @@ class Setup (plmd.PLMD_module):
             
             # Set the QM region to the start-end ligand residues
             self.qmRegion = ":"+qmRegion[0]+"-"+qmRegion[ len(qmRegion)-1 ] 
+            
+        # Set the peptide region
+        self.peptideRegion = ":"+peptideRegion[0]+"-"+peptideRegion[-1] 
             
         
          
