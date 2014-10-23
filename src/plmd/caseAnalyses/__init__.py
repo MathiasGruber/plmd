@@ -69,6 +69,7 @@ class analysisHandler (plmd.PLMD_module):
                                    replace("[DIHEDRALS]", dihedralTxt ). \
                                    replace("[FIRSTRESI]", "1" ). \
                                    replace("[LASTRESI]", str(numOfResidues) ). \
+                                   replace("[LASTID]", str( numOfResidues + self.config.ligandCount ) ). \
                                    replace("[FRAMESKIP]", str(int(self.framesToSkip)) )
             TEMPLATE.close()
                                   

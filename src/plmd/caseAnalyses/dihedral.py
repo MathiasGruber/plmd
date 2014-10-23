@@ -31,7 +31,8 @@ def runAnalysis( caseDir , backbone , timeFactor ):
         ["$\Psi_"+str(i)+"$","$\Phi_"+str(i)+"$"],
         [ psiPath , phiPath ] , 
         "Angle (Degrees)", 
-        xFactor = timeFactor )
+        xFactor = timeFactor,
+        scatter = True )
  
         # Create a Ramachandran plot
         ############################

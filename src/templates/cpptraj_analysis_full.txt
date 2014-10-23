@@ -21,7 +21,7 @@ cluster hieragglo \
 #######################
 
 # Run the analysis
-hbond :1-[LASTRESI] out [FOLDER]/analysis/data/hbond.out avgout [FOLDER]/analysis/data/hbond.avg
+hbond :1-[LASTID] out [FOLDER]/analysis/data/hbond.out avgout [FOLDER]/analysis/data/hbond.avg
 
 
 # Run PCA analysis
