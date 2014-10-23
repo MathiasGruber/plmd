@@ -1,6 +1,18 @@
 # Load the trajectory
 trajin [FOLDER]/mergedResult.dcd 1 last 1
 
+# Cluster Analysis
+##################
+cluster hieragglo \
+    epsilon 3.0 \
+    averagelinkage \
+    rms :1-[LASTRESI] @CA,C,N \
+    out [FOLDER]/analysis/data/cluster_hier_out \
+    gracecolor \
+    summary [FOLDER]/analysis/data/cluster_hier_summary.dat \
+    info [FOLDER]/analysis/data/cluster_hier_info \
+    repout [FOLDER]/analysis/data/cluster_hier_centroid repfmt pdb sieve 25 
+
 # Dihedral angles
 #################
 [DIHEDRALS]
