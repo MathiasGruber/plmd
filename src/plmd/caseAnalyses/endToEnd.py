@@ -33,4 +33,6 @@ def runAnalysis( caseDir , timeFactor ):
         ["End to End"], 
         [distanceFile] , 
         "Distance ($\AA$)", 
-        xFactor = timeFactor )
+        xFactor = timeFactor,
+        skipLines = 1 
+    )

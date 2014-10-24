@@ -11,5 +11,6 @@ def runAnalysis( datafiles ):
         datafiles['caseLabels'] , 
         datafiles['filepaths'] , 
         "Distance ($\AA$)",
-        scatter = True
+        scatter = True,
+        skipLines = 1
     )

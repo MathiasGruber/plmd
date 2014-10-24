@@ -108,13 +108,10 @@ class PCA():
             eigenValues = []
             eigenValueTotal = 0
             with open(dataDir+eigenValueFile,"r") as f:
-                lookForVec = 1
                 for line in f:
                     temp = line.split()
-                    if len(temp) == 2 and temp[0] == str(lookForVec):
-                        lookForVec += 1
-                        eigenValueTotal += float(temp[1])
-                        eigenValues.append(float(temp[1]))
+                    eigenValueTotal += float(temp[1])
+                    eigenValues.append(float(temp[1]))
             eigenValues = (np.array(eigenValues) / eigenValueTotal) * 100               
     
         # Get the file with all the projection data

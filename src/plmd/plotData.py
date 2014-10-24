@@ -7,22 +7,43 @@ from matplotlib.ticker import LinearLocator
 
 # Plot graphs
 # Can plot multiple files
-def plotData( outputDir , title, labels , inputFiles , unit , xUnit = "Time (ps)", types=None, scatter = False, skipLines = 0, xFactor = 1 ):
+def plotData( 
+    outputDir , 
+    title, 
+    labels , 
+    inputFiles , 
+    unit , 
+    xUnit = "Time (ps)", 
+    types = None, 
+    scatter = False, 
+    skipLines = 0, 
+    xFactor = 1,
+    lowerLegend = False,
+    figWidth = 8,
+    figHeight = 6,
+    legendLoc = 1,
+    legendAlpha = 0,
+    legendFrame = 0
+):
     
     # plot using pdf 
     pp = PdfPages( outputDir+"/"+title+".pdf" )
     
     # Set figure size
-    fig = plt.figure(figsize=(8,6))
+    fig = plt.figure(
+        figsize=(figWidth,figHeight)
+    )
     
     # Go through the to plot
     i = 0
+    xmin = 0
+    xmax = 0
     for filename in inputFiles:
         xData, yData = [],[]
         qbfile = open(filename,"r")
         n = 0
         for aline in qbfile:
-            if n > skipLines:
+            if n >= skipLines:
                 values = aline.split()
                 xData.append(float(values[0])*xFactor)
                 yData.append(values[1])
@@ -58,16 +79,30 @@ def plotData( outputDir , title, labels , inputFiles , unit , xUnit = "Time (ps)
             color = plt.rcParams['axes.color_cycle'][i]
             plt.scatter( xData, yData , s=2, color=color, label = labels[i] , rasterized=True)
         
+        # Get limits
+        xmax = np.max( xData ) if np.max( xData ) > xmax else xmax
+        xmin = np.min( xData ) if np.min( xData ) < xmin else xmin
+        
         # Next in line
         i = i + 1
                 
     # Set title, labels etc
-    plt.legend()
     ax = fig.gca()
     ax.set_xlabel(xUnit, fontsize=12)
     ax.set_ylabel(unit, fontsize=12)
+    ax.set_xlim([-xmin,xmax]) 
+    
+    # Plot title
     plt.title( title )
-
+    
+    # Create the legend
+    plt.legend(
+        loc=legendLoc, 
+        ncol=1, 
+        framealpha=legendAlpha, 
+        frameon=legendFrame
+    )   
+    
     # Set the plotting font and default size
     font = {'family' : 'Arial',
             'weight' : 'normal',
@@ -75,7 +110,10 @@ def plotData( outputDir , title, labels , inputFiles , unit , xUnit = "Time (ps)
     plt.rc('font', **font)        
     
     # Save figure in pdf and png
-    plt.savefig(pp, format="pdf",dpi=150)
+    pp.savefig(
+        fig,
+        dpi=150
+    )
     
     # Close the figure
     pp.close()

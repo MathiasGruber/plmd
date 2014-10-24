@@ -14,6 +14,7 @@ def runAnalysis( plotTitle, datafiles ):
         plotTitle, 
         datafiles['caseLabels'], 
         datafiles['filepaths'] , 
-        "E (kcal/mol)" 
+        "E (kcal/mol)" ,
+        skipLines = 1
     )
     

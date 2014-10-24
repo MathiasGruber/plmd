@@ -13,4 +13,6 @@ def runAnalysis( caseDir ):
         "B Factor for Protein Backbone", 
         ["CA atom", "C atom","N atom", "CA, C and N"], 
         [caseDir+"/analysis/data/bFactor.ca",caseDir+"/analysis/data/bFactor.c",caseDir+"/analysis/data/bFactor.n",caseDir+"/analysis/data/bFactor.all"] , 
-        "B Factor", xUnit="Atom ID", types=["bs","gs","rs","-"])
+        "B Factor", xUnit="Atom ID", types=["bs","gs","rs","-"],
+        skipLines = 1
+    )

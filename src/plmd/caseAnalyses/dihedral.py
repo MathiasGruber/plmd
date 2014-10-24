@@ -26,13 +26,17 @@ def runAnalysis( caseDir , backbone , timeFactor ):
 
         # Common Plot command
         myPlot.plotData( 
-        caseDir+"/analysis/plots" , 
-        "Dihedral Angles. Res ID: "+str(i)+", Residue name: "+str(resNames[i]), 
-        ["$\Psi_"+str(i)+"$","$\Phi_"+str(i)+"$"],
-        [ psiPath , phiPath ] , 
-        "Angle (Degrees)", 
-        xFactor = timeFactor,
-        scatter = True )
+            caseDir+"/analysis/plots" , 
+            "Dihedral Angles. Res ID: "+str(i)+", Residue name: "+str(resNames[i]), 
+            ["$\Psi_"+str(i)+"$","$\Phi_"+str(i)+"$"],
+            [ psiPath , phiPath ] , 
+            "Angle (Degrees)", 
+            xFactor = timeFactor,
+            scatter = True ,
+            skipLines = 1,
+            legendFrame = 1,
+            legendAlpha = 1
+        )
  
         # Create a Ramachandran plot
         ############################

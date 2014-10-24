@@ -11,7 +11,10 @@ cluster hieragglo \
     gracecolor \
     summary [FOLDER]/analysis/data/cluster_hier_summary.dat \
     info [FOLDER]/analysis/data/cluster_hier_info \
-    repout [FOLDER]/analysis/data/cluster_hier_centroid repfmt pdb sieve 25 
+    repout [FOLDER]/analysis/structures/cluster/cluster_hier_centroid repfmt pdb sieve 25 
+
+# rmsd
+drmsd @N,CA,C out [FOLDER]/analysis/data/backbone.rmsd first
 
 # Dihedral angles
 #################
