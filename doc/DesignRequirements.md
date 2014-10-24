@@ -1,6 +1,4 @@
-
-DESIGN REQUIREMENTS
-PLMD: Peptide Ligand Molecular Dynamics
+PLMD DESIGN REQUIREMENTS
 ==========================================
 
 The two major components of this package are a module for setting up & running multiple molecular dynamics simulations of a given peptide-ligand interaction, and a module for subsequent analysis of the results.
@@ -37,3 +35,9 @@ The two major components of this package are a module for setting up & running m
 
 ## 2.2. Design of Analysis Module
 The main focus of this package is on the analysis module, which is expected to be continously updated with new features & improvements. The design of this module therefore warrents further explanation. 
+
+The analysis modules are distributed in 3 directories in `src/plmd` called `caseAnalyses`, `globalAnalyses`, and `generalAnalyses`. As their names indicate, the first two refer to the analysis of single cases, and the comparison of multiple cases, respectively. `generalAnalyses` contain modules used by analyses in both single and multi-case analyses. 
+
+The main class that manages the analyses is the one set up in `caseAnalysis.py`. This class manages which type (single or global) analysis the user wants to do, and it handles common tasks such as merging of trajectories, and passes all the neccesary information to the `__init__.py` file in either `caseAnalyses` or `globalAnalyses`, which then handles the actual analysis.
+
+The package makes heavy use of the data processing power of cpptraj (supplied with Amber). These are mainly run by the `__init__.py` in `caseAnalyses`, in three runs, using the `cpptraj` templates `full`, `short`, `global` which are found in `plmd/templates` folder. Anyone wishing to add additional cpptraj processing should make use of the appropriate template, so as to minimize the amount of individual cpptraj runs.
