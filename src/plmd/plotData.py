@@ -16,9 +16,9 @@ def plotData(
     xUnit = "Time (ps)", 
     types = None, 
     scatter = False, 
+    tightXlimits = True,
     skipLines = 0, 
     xFactor = 1,
-    lowerLegend = False,
     figWidth = 8,
     figHeight = 6,
     legendLoc = 1,
@@ -82,7 +82,7 @@ def plotData(
         # Get limits
         xmax = np.max( xData ) if np.max( xData ) > xmax else xmax
         xmin = np.min( xData ) if np.min( xData ) < xmin else xmin
-        
+    
         # Next in line
         i = i + 1
                 
@@ -90,8 +90,12 @@ def plotData(
     ax = fig.gca()
     ax.set_xlabel(xUnit, fontsize=12)
     ax.set_ylabel(unit, fontsize=12)
-    ax.set_xlim([-xmin,xmax]) 
     
+    # Check if tight x-limits
+    if tightXlimits == True:
+        ax.set_xlim([-xmin,xmax]) 
+        print "Setting limites to: ",xmin, xmax
+        
     # Plot title
     plt.title( title )
     
