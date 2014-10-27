@@ -62,5 +62,9 @@ run
 # Project the modes
 crdaction crd1 projection modes [FOLDER]/analysis/data/evecs-ca.dat out [FOLDER]/analysis/data/pca12-ca beg 1 end 5 :1-[LASTRESI]&!@H=
 
+# RMSd compared to initial minimized structure
+reference [FOLDER]/pdb-files/finalLEaP_nowat.pdb [min]
+drmsd @N,CA,C out [FOLDER]/analysis/data/refMinimized.rmsd ref [min]
+
 # Run analysis
 go

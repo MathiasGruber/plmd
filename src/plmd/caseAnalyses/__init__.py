@@ -1,6 +1,6 @@
 import os, math
 import MDAnalysis
-import block, energy, bFactor, dihedral, timeCorr, endToEnd,CaToCaMap, RMSdMap, hbond, pca, hierCluster
+import block, energy, bFactor, dihedral, timeCorr, endToEnd,CaToCaMap, RMSdMap, hbond, pca, hierCluster, RMSdFrequency
 import plmd
 
 # The analysis handler provides the interface to all the analysis modules
@@ -94,6 +94,9 @@ class analysisHandler (plmd.PLMD_module):
         
         ## Run analyses using cpptraj
         #############################
+
+        # RMSd Frequencies
+        RMSdFrequency.runAnalysis( self.directory )
 
         # Hieragglo cluster
         hierCluster.runAnalysis( self.directory )
