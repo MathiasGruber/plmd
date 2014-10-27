@@ -11,7 +11,22 @@ cluster hieragglo \
     gracecolor \
     summary [FOLDER]/analysis/data/cluster_hier_summary.dat \
     info [FOLDER]/analysis/data/cluster_hier_info \
-    repout [FOLDER]/analysis/structures/cluster/cluster_hier_centroid repfmt pdb sieve 25 
+    repout [FOLDER]/analysis/structures/cluster/cluster_hier_centroid \
+    repfmt pdb \
+    sieve [SIEVE]
+
+cluster dbscan \
+    minpoints [MINPOINTS] \
+    epsilon 0.9 \
+    sievetoframe \
+    rms :1-[LASTRESI] @CA,C,N,O \
+    out [FOLDER]/analysis/data/cluster_dbscan_out \
+    gracecolor \
+    summary [FOLDER]/analysis/data/cluster_dbscan_summary.dat \
+    info [FOLDER]/analysis/data/cluster_dbscan_info \
+    repout [FOLDER]/analysis/structures/cluster/cluster_dbscan_centroid \
+    repfmt pdb \
+    sieve [SIEVE] 
 
 # rmsd
 drmsd @N,CA,C out [FOLDER]/analysis/data/backbone.rmsd first

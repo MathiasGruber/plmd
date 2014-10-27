@@ -6,15 +6,15 @@ import plmd.generalAnalyses.clusterAnalysis as cluster
 def runAnalysis( caseDir ):
 
     # User information
-    print "Now Doing hier Cluster"
+    print "Now Doing dbscan Cluster"
     
     # Instantiate the class
-    handler = cluster.clusterBase( caseDir+"/analysis/data/cluster_hier_out" )    
-      
+    handler = cluster.clusterBase( caseDir+"/analysis/data/cluster_dbscan_out" )
+
     # RMSd PLOT
     numRmsdDataSets = handler.separateDataSet( 
         caseDir+"/analysis/data/backbone.rmsd",
-        caseDir+"/analysis/data/cluster_hier_rmsd_"
+        caseDir+"/analysis/data/cluster_dbscan_rmsd_"
     )
     
     # User info
@@ -23,14 +23,14 @@ def runAnalysis( caseDir ):
     # Create lists of labels and files for plotting
     clusterLabels = []
     clusterFiles = []
-    for i in range( 1, numRmsdDataSets+1):
+    for i in range( 0, numRmsdDataSets):
         clusterLabels.append( "Cluster "+str(i) )
-        clusterFiles.append( caseDir+"/analysis/data/cluster_hier_rmsd_d1_c"+str(i) )
+        clusterFiles.append( caseDir+"/analysis/data/cluster_dbscan_rmsd_d1_c"+str(i) )
     
     # Do the plottin
     myPlot.plotData( 
         caseDir+"/analysis/plots" , 
-        "RMSd Hier Cluster Plot", 
+        "RMSd DBscan Cluster Plot", 
         clusterLabels, 
         clusterFiles , 
         "RMSd ($\AA$)",
@@ -44,9 +44,9 @@ def runAnalysis( caseDir ):
     # Separate the dataset
     numPCAdataSets = handler.separateDataSet( 
         caseDir+"/analysis/data/pca12-ca", 
-        caseDir+"/analysis/data/cluster_hier_pca_",
+        caseDir+"/analysis/data/cluster_dbscan_pca_",
         xColumn = 1
-    )       
+    )    
     
     # User info
     print "Number of datasets for PCA: "+str(numPCAdataSets)    
@@ -57,9 +57,9 @@ def runAnalysis( caseDir ):
         # Create lists of labels and files for plotting
         clusterLabels = []
         clusterFiles = []
-        for i in range( 1, numPCAdataSets+1):
+        for i in range( 0, numPCAdataSets):
             clusterLabels.append( "Cluster "+str(i) )
-            clusterFiles.append( caseDir+"/analysis/data/cluster_hier_pca_d"+str(n)+"_c"+str(i) )
+            clusterFiles.append( caseDir+"/analysis/data/cluster_dbscan_pca_d"+str(n)+"_c"+str(i) )
         
         print "Calling plot"
         print "labels", clusterLabels  
@@ -67,7 +67,7 @@ def runAnalysis( caseDir ):
         
         myPlot.plotData( 
             caseDir+"/analysis/plots" , 
-            "PCA Hier Cluster, 1vs"+str(n), 
+            "PCA DBscan Cluster, 1vs"+str(n), 
             clusterLabels, 
             clusterFiles , 
             "PC"+str(n),

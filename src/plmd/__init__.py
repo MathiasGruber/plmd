@@ -83,6 +83,7 @@ class PLMD_Config:
         self.noBlock = config.getboolean('analysisParameters', 'noBlock')
         self.noEnergy = config.getboolean('analysisParameters', 'noEnergy')
         self.noFTP = config.getboolean('analysisParameters', 'noFTP')
+        self.clusterFrames = config.getfloat('analysisParameters', 'clusterFrames')
         
         # FTP configuration
         if config.has_option( "ftpConfiguration", "ftpPass" ):

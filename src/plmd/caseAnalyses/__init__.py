@@ -1,6 +1,6 @@
 import os, math
 import MDAnalysis
-import block, energy, bFactor, dihedral, timeCorr, endToEnd,CaToCaMap, RMSdMap, hbond, pca, hierCluster, RMSdFrequency
+import block, energy, bFactor, dihedral, timeCorr, endToEnd,CaToCaMap, RMSdMap, hbond, pca, hierCluster, dbscanCluster, RMSdFrequency
 import plmd
 
 # The analysis handler provides the interface to all the analysis modules
@@ -56,6 +56,13 @@ class analysisHandler (plmd.PLMD_module):
                 dihedralTxt += "\ndihedral psi_"+str(i)+" :"+str(i)+"@N  :"+str(i)+"@CA :"+str(i)+"@C  :"+str(i+1)+"@N out "+self.directory+"/analysis/data/psi_"+str(i)
                 dihedralTxt += "\ndihedral omega_"+str(i)+" :"+str(i)+"@CA :"+str(i)+"@C  :"+str(i+1)+"@N  :"+str(i+1)+"@CA out "+self.directory+"/analysis/data/omega_"+str(i)
         
+        # Sieve limits. Aim for 10000 frames in cluster analysis
+        self.sieveValue = math.ceil( self.simFrames / self.config.clusterFrames )
+        self.dbscanMinpoints = math.ceil(self.config.clusterFrames / 1000)
+        if self.dbscanMinpoints < 10:
+            self.dbscanMinpoints = 10
+        
+        
         # We run ptraj twice, once going through all frames (for analyses requiring that)
         # and once limited the trajectory to just enough points for a good plot
         for ptrajType in ["full", "short", "global"]:        
@@ -68,6 +75,8 @@ class analysisHandler (plmd.PLMD_module):
             TEMP = TEMPLATE.read().replace("[FOLDER]", self.directory  ). \
                                    replace("[DIHEDRALS]", dihedralTxt ). \
                                    replace("[FIRSTRESI]", "1" ). \
+                                   replace("[SIEVE]", str(self.sieveValue) ). \
+                                   replace("[MINPOINTS]", str(self.dbscanMinpoints) ). \
                                    replace("[LASTRESI]", str(numOfResidues) ). \
                                    replace("[LASTID]", str( numOfResidues + self.config.ligandCount ) ). \
                                    replace("[FRAMESKIP]", str(int(self.framesToSkip)) )
@@ -100,6 +109,9 @@ class analysisHandler (plmd.PLMD_module):
 
         # Hieragglo cluster
         hierCluster.runAnalysis( self.directory )
+        
+        # dbscan cluster
+        dbscanCluster.runAnalysis( self.directory )
 
         # H-bond plotting
         hbond.runAnalysis( self.directory );            
