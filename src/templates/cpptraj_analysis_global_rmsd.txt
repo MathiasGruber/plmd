@@ -1,0 +1,7 @@
+# RMSd Analysis
+trajin [FOLDER]/mergedResult.dcd 1 last 1
+reference [REFERENCE] [min]
+drmsd @N,CA,C out [FOLDER]/analysis/data/refGlobalMinimized.rmsd ref [min]
+
+# Run analysis
+go

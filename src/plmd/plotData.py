@@ -76,7 +76,8 @@ def plotData(
         else:
         
             # Do the plot
-            color = plt.rcParams['axes.color_cycle'][i]
+            colors = plt.rcParams['axes.color_cycle']
+            color = colors[i % len(colors)]
             plt.scatter( xData, yData , s=2, color=color, label = labels[i] , rasterized=True)
         
         # Get limits

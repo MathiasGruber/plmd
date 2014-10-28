@@ -65,7 +65,7 @@ class analysisHandler (plmd.PLMD_module):
         
         # We run ptraj twice, once going through all frames (for analyses requiring that)
         # and once limited the trajectory to just enough points for a good plot
-        for ptrajType in ["full", "short", "global"]:        
+        for ptrajType in ["full", "short", "global_pca", "global_rmsd"]:        
         
             # Calculate factor for time-axis in ptraj analyses
             self.ptrajFactor = int(self.framesToSkip * self.config.timestepPerFrame * self.config.timestepSize)

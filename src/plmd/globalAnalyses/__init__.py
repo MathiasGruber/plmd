@@ -1,7 +1,6 @@
-import os, math, re
 import MDAnalysis
 import plmd
-import energy, pca, endToEnd
+import energy, pca, endToEnd, RMSdFrequency
 
 # The analysis handler provides the interface to all the analysis modules
 class analysisHandler (plmd.PLMD_module):
@@ -21,6 +20,12 @@ class analysisHandler (plmd.PLMD_module):
     # Run all the analyses modules
     def runAll( self ):
     
+        # RMSd frequency
+        RMSdFrequency.runAnalysis( self.dataFiles[ 'caseDirs' ] )    
+    
+        # Do the PCA analysis
+        pca.runAnalysis( self.dataFiles[ 'caseDirs' ] )
+         
         # Plot Energies
         if self.config.noEnergy == False:
             self.printStage( "Plotting energies")
@@ -31,6 +36,4 @@ class analysisHandler (plmd.PLMD_module):
         # Plot all end-to-end distances on top of each other
         endToEnd.runAnalysis( self.dataFiles[ "dist_end_to_end.list.timeCorrected" ] ) 
         
-        # Do the PCA analysis
-        pca.runAnalysis( self.dataFiles[ 'caseDirs' ] )
-     
+        

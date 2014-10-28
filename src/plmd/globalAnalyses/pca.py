@@ -4,7 +4,10 @@ import os
 
 # Function for running the actual analysis
 def runAnalysis( caseDirs ):
-
+    
+    # User info
+    print "Doing PCA analysis."
+    
     # Determine layout
     rows,columns = 1,1
     dirs = len( caseDirs )
@@ -40,17 +43,17 @@ def runAnalysis( caseDirs ):
             # http://archive.ambermd.org/201404/0243.html
             
             # Create new submission file
-            TEMPLATE = open( caseDir+"/ccptraj_analysis_global.ptraj", 'r')
+            TEMPLATE = open( caseDir+"/ccptraj_analysis_global_pca.ptraj", 'r')
             TEMP = TEMPLATE.read().replace("[PCAREFERENCE]", refDir  )
             TEMPLATE.close()
                                   
             # Write the submission file
-            FILE = open(caseDir+"/ccptraj_analysis_global_done.ptraj","w");        
+            FILE = open(caseDir+"/ccptraj_analysis_global_pca.ptraj","w");        
             FILE.write( TEMP );
             FILE.close();
             
             # Run the cpptraj utility
-            os.system( "$AMBERHOME/bin/cpptraj -p "+caseDir+"/md-files/peptide_nowat.prmtop -i "+caseDir+"/ccptraj_analysis_global_done.ptraj" )
+            os.system( "$AMBERHOME/bin/cpptraj -p "+caseDir+"/md-files/peptide_nowat.prmtop -i "+caseDir+"/ccptraj_analysis_global_pca.ptraj" )
         
     
             # Do the plots of energy landscapes & distributions
