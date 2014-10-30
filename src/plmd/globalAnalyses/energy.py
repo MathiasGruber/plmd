@@ -5,12 +5,12 @@ import plmd.plotData as myPlot
 # ==============================================
 
 # Function for running the actual analysis
-def runAnalysis( plotTitle, datafiles ):
+def runAnalysis( plotTitle, datafiles, resultsDir ):
 
     print "Creating plot of: "+plotTitle
 
     myPlot.plotData( 
-        "globalAnalysesPlots" , 
+        resultsDir+"/plots" , 
         plotTitle, 
         datafiles['caseLabels'], 
         datafiles['filepaths'] , 

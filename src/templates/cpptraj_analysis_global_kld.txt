@@ -1,0 +1,40 @@
+# See paper: 
+# "Evaluation of Enhanced Sampling Provided by Accelerated Molecular 
+#  Dynamics with Hamiltonian Replica Exchange Methods” 
+# by DR Roe, C Bergonzo, and TE Cheatham, III
+
+# Load the trajectory
+trajin [ANALYSISDIR]/data/combinedCaseTrajectory.dcd 1 last 1
+
+# Average the trajectory
+rms first :1-[LASTRESI]&!@H=
+average [ANALYSISDIR]/data/averageStructure.rst restart
+
+# Save coordinates in memory
+createcrd crd1
+
+# Run for further processing
+run
+
+# Create reference
+reference [ANALYSISDIR]/data/averageStructure.rst.1 [avg]
+
+# RMS-fit coordinates in crd1 to average
+crdaction crd1 rms ref [avg] mass :1-[LASTRESI]&!@H= out [ANALYSISDIR]/data/RMSD.out
+
+# Create covariance matrix for all heavy atoms
+crdaction crd1 matrix covar name matrixdat :1-[LASTRESI]&!@H= out [ANALYSISDIR]/data/covmat-ca.dat
+
+# Diagonalize coordinate covariance matrix for eigenmodes 
+analyze matrix matrixdat out [ANALYSISDIR]/data/evecs-ca.dat vecs 100
+
+# Run the matrix stuff. Otherwise they will not be initialized for the upcoming projection
+run 
+
+# Project the modes
+crdaction crd1 projection modes [ANALYSISDIR]/data/evecs-ca.dat out [ANALYSISDIR]/data/pca12-ca beg 1 end 5 :1-[LASTRESI]&!@H=
+
+[KLDINFO]
+
+# Run analysis
+go

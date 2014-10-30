@@ -1,12 +1,12 @@
 #!/usr/bin/python
 import plmd.plotData as myPlot
 
-def runAnalysis( datafiles ):
+def runAnalysis( datafiles , resultsDir ):
 
     print "Creating plot of end-to-end distance"    
 
     myPlot.plotData( 
-        "globalAnalysesPlots" , 
+        resultsDir+"/plots" , 
         "End to End Residue Distance", 
         datafiles['caseLabels'] , 
         datafiles['filepaths'] , 

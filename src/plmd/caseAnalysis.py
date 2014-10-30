@@ -77,11 +77,21 @@ class Analysis (plmd.PLMD_module):
         if len( dataArray ) > 0:
             
             # Create directory for the global analyses
-            self.createFolder( "globalAnalysesPlots" , True )            
+            analysisDir = "globalAnalysesResults"
+            self.createFolder( analysisDir , True ) 
+            self.createFolder( analysisDir+"/plots/" , True )
+            self.createFolder( analysisDir+"/structures/" , True )
+            self.createFolder( analysisDir+"/data/" , True )
             
             # Instantiate the handler for the analyses
             self.printStage( "Setting up analysis handler for: "+caseDir )
-            handler = globalAnalyses.analysisHandler( self.config, dataArray )
+            handler = globalAnalyses.analysisHandler( self.config, dataArray, analysisDir )
+            
+            # Run all ptraj analyses
+            handler.loadPtrajTemplates()   
+            
+            # Merge all cases to one
+            handler.runPtrajCaseMerging()
             
             # Run all the analyses present in the handler
             handler.runAll()
@@ -93,13 +103,13 @@ class Analysis (plmd.PLMD_module):
                 ftpObject = plmd.caseFTP.Setup( self.config )
             
                 # Compress the analysis/plots folder
-                folderToCompres = "globalAnalysesPlots"
-                archieveName = self.config.name + "globalAnalysesPlots"
+                folderToCompres = "globalAnalysesResults"
+                archieveName = self.config.name + "globalAnalysesResults"
                 ftpObject.zipDirectory( archieveName , folderToCompres )
                 
                 # Send it
-                ftpObject.shipTar( archieveName+".tar" , "globalAnalysesPlots" )
-                ftpObject.shipDir( folderToCompres , "globalAnalysesPlots" )
+                ftpObject.shipTar( archieveName+".tar" , "globalAnalysesResults" )
+                ftpObject.shipDir( folderToCompres , "globalAnalysesResults" )
             
         else:
             raise Exception("Not enough data was found to run global analysis")

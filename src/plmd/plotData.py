@@ -17,6 +17,7 @@ def plotData(
     types = None, 
     scatter = False, 
     tightXlimits = True,
+    tightYlimits = False,
     skipLines = 0, 
     xFactor = 1,
     figWidth = 8,
@@ -36,8 +37,7 @@ def plotData(
     
     # Go through the to plot
     i = 0
-    xmin = 0
-    xmax = 0
+    xmin,xmax,ymin,ymax = 0,0,0,0
     for filename in inputFiles:
         xData, yData = [],[]
         qbfile = open(filename,"r")
@@ -46,7 +46,7 @@ def plotData(
             if n >= skipLines:
                 values = aline.split()
                 xData.append(float(values[0])*xFactor)
-                yData.append(values[1])
+                yData.append(float(values[1]))
             n = n + 1
             
         # Limit data to 500 data points
@@ -83,6 +83,8 @@ def plotData(
         # Get limits
         xmax = np.max( xData ) if np.max( xData ) > xmax else xmax
         xmin = np.min( xData ) if np.min( xData ) < xmin else xmin
+        ymax = np.max( yData ) if np.max( yData ) > ymax else ymax
+        ymin = np.min( yData ) if np.min( yData ) < ymin else ymin
     
         # Next in line
         i = i + 1
@@ -94,8 +96,15 @@ def plotData(
     
     # Check if tight x-limits
     if tightXlimits == True:
-        ax.set_xlim([-xmin,xmax]) 
-        print "Setting limites to: ",xmin, xmax
+        xmin,xmax = math.floor(xmin), math.ceil(xmax)
+        ax.set_xlim([xmin,xmax]) 
+        print "Setting X limites to: ",xmin, xmax
+        
+    # Check if tight y-limits
+    if tightYlimits == True:
+        ymin,ymax = math.floor(ymin), math.ceil(ymax)
+        ax.set_ylim([ymin,ymax]) 
+        print "Setting Y limites to: ",ymin, ymax
         
     # Plot title
     plt.title( title )

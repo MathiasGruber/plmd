@@ -4,7 +4,7 @@ import numpy as np
 import plmd.plotData as myPlot
 
 # Function for running the actual analysis
-def runAnalysis( caseDirs ):
+def runAnalysis( caseDirs , resultsDir ):
 
     # User info
     print "Doing RMSd analysis."
@@ -57,7 +57,7 @@ def runAnalysis( caseDirs ):
 
     # Do that plotting    
     myPlot.plotData( 
-        "globalAnalysesPlots" , 
+        resultsDir+"/plots" , 
         "RMSd Frequency", 
         dataLabels, 
         dataFiles , 

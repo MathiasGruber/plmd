@@ -3,7 +3,7 @@ import plmd.generalAnalyses.componentAnalysis as pcaFuncs
 import os
 
 # Function for running the actual analysis
-def runAnalysis( caseDirs ):
+def runAnalysis( caseDirs , resultsDir ):
     
     # User info
     print "Doing PCA analysis."
@@ -30,7 +30,7 @@ def runAnalysis( caseDirs ):
         
          # PCA plotter
         pcaHandler = pcaFuncs.PCA( 
-            "globalAnalysesPlots/PCA_analysis_Components"+refID+".pdf",
+            resultsDir+"/plots/PCA_analysis_Components"+refID+".pdf",
             subplotColums = columns,
             subplotRows = rows
         )

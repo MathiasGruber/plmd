@@ -1,0 +1,5 @@
+# Load the trajectory
+[INPUTTRAJ]
+
+trajout [OUTPUTDIR]/combinedCaseTrajectory.dcd charmm nobox
+go
