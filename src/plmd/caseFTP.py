@@ -36,10 +36,10 @@ class Setup (plmd.PLMD_module):
         tfile.close()
                
     # Send a given file to the user ftp
-    def shipTar( self, filepath, caseDir ):
+    def shipTar( self, filepath, caseDir, postpend = "data" ):
         
         # User info
-        serverFile = "tars/"+self.config.name+'_'+caseDir.split("/")[-1]+".tar"
+        serverFile = "tars/"+self.config.name+'_'+caseDir.split("/")[-1]+"_"+postpend+".tar"
         self.printStage("Sending file to FTP: "+filepath + " to " + serverFile)
         
         # Upload file

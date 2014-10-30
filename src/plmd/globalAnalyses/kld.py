@@ -34,7 +34,7 @@ def runAnalysis( caseDirs, resultsDir, trajectories, backbone ):
     crdActions += "\n"
     
     # How many modes to analyze with KLD
-    modesToAnalyze = 5   
+    modesToAnalyze = 3   
     kldData = {}
     for i in range( 1,modesToAnalyze+1 ):
         kldData[ i ] = {"files":[],"labels":[]}

@@ -103,13 +103,18 @@ class Analysis (plmd.PLMD_module):
                 ftpObject = plmd.caseFTP.Setup( self.config )
             
                 # Compress the analysis/plots folder
-                folderToCompres = "globalAnalysesResults"
-                archieveName = self.config.name + "globalAnalysesResults"
-                ftpObject.zipDirectory( archieveName , folderToCompres )
+                folderToCompres1 = "globalAnalysesResults/plots"
+                archieveName1 = self.config.name + "globalAnalysesResults-plots"
+                ftpObject.zipDirectory( archieveName1 , folderToCompres1 )
+                
+                folderToCompres2 = "globalAnalysesResults/structures"
+                archieveName2 = self.config.name + "globalAnalysesResults-structures"
+                ftpObject.zipDirectory( archieveName2 , folderToCompres2 )
                 
                 # Send it
-                ftpObject.shipTar( archieveName+".tar" , "globalAnalysesResults" )
-                ftpObject.shipDir( folderToCompres , "globalAnalysesResults" )
+                ftpObject.shipTar( archieveName1+".tar" , "globalAnalysesResults", postpend = "plots" )
+                ftpObject.shipTar( archieveName2+".tar" , "globalAnalysesResults", postpend = "structures" )
+                ftpObject.shipDir( folderToCompres1 , "globalAnalysesResults" )
             
         else:
             raise Exception("Not enough data was found to run global analysis")
@@ -162,13 +167,19 @@ class Analysis (plmd.PLMD_module):
                 ftpObject = plmd.caseFTP.Setup( self.config )
                 
                 # Compress the analysis/plots folder
-                folderToCompres = caseDir+"/analysis/plots"
-                archieveName = caseDir+"/analysis/"+self.config.name+"-"+caseNumber
-                ftpObject.zipDirectory( archieveName , folderToCompres )
+                folderToCompres1 = caseDir+"/analysis/plots"
+                archieveName1 = caseDir+"/analysis/"+self.config.name+"-"+caseNumber+"-plots"
+                ftpObject.zipDirectory( archieveName1 , folderToCompres1 )
+                
+                # Compress the analysis/structures folder
+                folderToCompres2 = caseDir+"/analysis/structures"
+                archieveName2 = caseDir+"/analysis/"+self.config.name+"-"+caseNumber+"-structures"
+                ftpObject.zipDirectory( archieveName2 , folderToCompres2 )
                 
                 # Send it
-                ftpObject.shipTar( archieveName+".tar" , caseDir )
-                ftpObject.shipDir( folderToCompres , caseNumber )
+                ftpObject.shipTar( archieveName1+".tar" , caseDir , postpend = "plots")
+                ftpObject.shipTar( archieveName2+".tar" , caseDir , postpend = "structures")
+                ftpObject.shipDir( folderToCompres1 , caseNumber )
         
     # A function for merging all the trajectories in a case fodler
     def mergeTrajectories( self, caseDir ):
