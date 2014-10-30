@@ -97,53 +97,91 @@ class analysisHandler (plmd.PLMD_module):
         ########################################
         
         # Block averaging analysis
-        if self.config.noBlock == False:
-            self.printStage( "Running block analysis for: "+self.directory )
-            block.runAnalysis( self.directory, self.mdTrajectory, self.timePerFrame );           
+        try:
+            if self.config.noBlock == False:
+                self.printStage( "Running block analysis for: "+self.directory )
+                block.runAnalysis( self.directory, self.mdTrajectory, self.timePerFrame );   
+        except Exception as e:
+            print "Failed block analysis",e
         
         ## Run analyses using cpptraj
         #############################
 
         # RMSd Frequencies
-        RMSdFrequency.runAnalysis( self.directory )
-
+        try:
+            RMSdFrequency.runAnalysis( self.directory )
+        except Exception as e:
+            print "Failed block analysis",e
+        
         # Hieragglo cluster
-        hierCluster.runAnalysis( self.directory )
+        try:
+            hierCluster.runAnalysis( self.directory )
+        except Exception as e:
+            print "Failed hier cluster analysis",e
         
         # dbscan cluster
-        dbscanCluster.runAnalysis( self.directory )
-
+        try:
+            dbscanCluster.runAnalysis( self.directory )
+        except Exception as e:
+            print "Failed dbscan cluser analysis",e
+        
         # H-bond plotting
-        hbond.runAnalysis( self.directory );            
+        try:
+            hbond.runAnalysis( self.directory );            
+        except Exception as e:
+            print "Failed hbond analysis",e
         
         # RMSd map
-        RMSdMap.runAnalysis(self.directory, self.ptrajFactor)        
+        try:
+            RMSdMap.runAnalysis(self.directory, self.ptrajFactor)        
+        except Exception as e:
+            print "Failed rmsdmap analysis",e
         
         # Plot angles
-        dihedral.runAnalysis( self.directory, self.backbone , self.timePerFrame );
-                
+        try:
+            dihedral.runAnalysis( self.directory, self.backbone , self.timePerFrame );
+        except Exception as e:
+            print "Failed dihedral analysis",e
+              
         # Run the PCA analysis
-        pca.runAnalysis( self.directory , self.mdTrajectory )        
+        try:
+            pca.runAnalysis( self.directory , self.mdTrajectory )        
+        except Exception as e:
+            print "Failed pca analysis",e
         
         # Plot the B factor
-        bFactor.runAnalysis( self.directory );
+        try:
+            bFactor.runAnalysis( self.directory );
+        except Exception as e:
+            print "Failed bfactor analysis",e
         
         # Time correlation
-        timeCorr.runAnalysis( self.directory , self.ptrajFactor)
+        try:
+            timeCorr.runAnalysis( self.directory , self.ptrajFactor)
+        except Exception as e:
+            print "Failed timecorr analysis",e
         
         # Time correlation
-        endToEnd.runAnalysis( self.directory , self.ptrajFactor)
+        try:
+            endToEnd.runAnalysis( self.directory , self.ptrajFactor)
+        except Exception as e:
+            print "Failed endtoend analysis",e
         
         # C-alpha map
-        CaToCaMap.runAnalysis(self.directory )
+        try:
+            CaToCaMap.runAnalysis(self.directory )
+        except Exception as e:
+            print "Failed CaToCa map analysis",e
         
         
         ## Run analyses using MD log data            
         #################################
             
         # Plot Energies
-        if self.config.noEnergy == False:
-            self.printStage( "Plotting energies: "+self.directory )
-            energy.runAnalysis( self.directory );
-
+        try:
+            if self.config.noEnergy == False:
+                self.printStage( "Plotting energies: "+self.directory )
+                energy.runAnalysis( self.directory );
+        except Exception as e:
+            print "Failed energy analysis",e
      

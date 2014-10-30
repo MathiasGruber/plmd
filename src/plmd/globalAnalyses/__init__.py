@@ -29,23 +29,38 @@ class analysisHandler (plmd.PLMD_module):
     def runAll( self ):
     
         # Run KLD analysis
-        kld.runAnalysis( self.dataFiles['caseDirs'] , self.resultDir, self.mdTrajectories, self.backbone )    
-    
+        try:
+            kld.runAnalysis( self.dataFiles['caseDirs'] , self.resultDir, self.mdTrajectories, self.backbone )    
+        except Exception as e:
+            print "Failed kld analysis",e
+        
         # RMSd frequency
-        RMSdFrequency.runAnalysis( self.dataFiles[ 'caseDirs' ] , self.resultDir )    
-    
+        try:
+            RMSdFrequency.runAnalysis( self.dataFiles[ 'caseDirs' ] , self.resultDir )    
+        except Exception as e:
+            print "Failed rmsd frequency analysis",e
+        
         # Do the PCA analysis
-        pca.runAnalysis( self.dataFiles[ 'caseDirs' ] , self.resultDir )
-         
+        try:
+            pca.runAnalysis( self.dataFiles[ 'caseDirs' ] , self.resultDir )
+        except Exception as e:
+            print "Failed pca analysis",e
+        
         # Plot Energies
-        if self.config.noEnergy == False:
-            self.printStage( "Plotting energies")
-            energy.runAnalysis( "Kinetic Energies", self.dataFiles[ "summary.EKTOT" ] , self.resultDir );
-            energy.runAnalysis( "Potential Energies", self.dataFiles[ "summary.EPTOT" ] , self.resultDir );
-            energy.runAnalysis( "Total Energies", self.dataFiles[ "summary.ETOT" ] , self.resultDir );
-            
+        try:
+            if self.config.noEnergy == False:
+                self.printStage( "Plotting energies")
+                energy.runAnalysis( "Kinetic Energies", self.dataFiles[ "summary.EKTOT" ] , self.resultDir );
+                energy.runAnalysis( "Potential Energies", self.dataFiles[ "summary.EPTOT" ] , self.resultDir );
+                energy.runAnalysis( "Total Energies", self.dataFiles[ "summary.ETOT" ] , self.resultDir );
+        except Exception as e:
+            print "Failed energy analysis",e
+         
         # Plot all end-to-end distances on top of each other
-        endToEnd.runAnalysis( self.dataFiles[ "dist_end_to_end.list.timeCorrected" ] , self.resultDir ) 
+        try:
+            endToEnd.runAnalysis( self.dataFiles[ "dist_end_to_end.list.timeCorrected" ] , self.resultDir ) 
+        except Exception as e:
+            print "Failed endtoend analysis",e
         
     # Create and run ptraj file
     def loadPtrajTemplates( self ):
