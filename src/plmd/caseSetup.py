@@ -189,7 +189,8 @@ class Setup (plmd.PLMD_module):
         for templateFile in templateFiles:
 
             # Enable quantum variable
-            isQM = 1 if self.config.ligandCount > 0 else 0
+            if self.config.ligandCount <= 0:
+                self.config.qmEnable = 0
 
             # Load templates, change variables, and save in case folder
             TEMPLATE = open(templateFile, 'r')
@@ -201,13 +202,13 @@ class Setup (plmd.PLMD_module):
                                   replace("[TIMESTEPS]", self.config.timestepNumber ). \
                                   replace("[DT]", str(self.config.timestepSize) ). \
                                   replace("[PEPTIDERESI]", str(self.peptideRegion) ). \
-                                  replace("[EABLEQM]", str(isQM) ). \
+                                  replace("[EABLEQM]", str(self.config.qmEnable) ). \
                                   replace("[QMSHAKE]", self.config.qmShake ). \
                                   replace("[TIMESTEPPERFRAME]", str(self.config.timestepPerFrame) )
             TEMPLATE.close()
             
             # If not QM, delete qmmm dict from TEMP
-            if isQM == 0:
+            if self.config.qmEnable == 0:
                 
                 # Must be compiled first, so as to use DOTALL that will match newlines also
                 TEMP = re.sub(re.compile('&qmmm(.+)\s/\n', re.DOTALL), "", TEMP )

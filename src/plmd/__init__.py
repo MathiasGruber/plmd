@@ -64,6 +64,7 @@ class PLMD_Config:
         self.quiet = config.getboolean('inputFiles', 'quiet')
         
         self.ff = config.get('simulationParameters', 'forceField')
+        self.qmEnable = config.getboolean('simulationParameters', 'qmEnable')
         self.qmCharge = config.get('simulationParameters', 'qmCharge')
         self.qmShake = config.get('simulationParameters', 'qmShake')
         self.qmTheory = config.get('simulationParameters', 'qmTheory')
