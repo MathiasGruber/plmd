@@ -17,6 +17,7 @@ echo $CUDADEV
 
 # load the required modules
 module load cuda/5.5
+export CUDA_HOME=/opt/cuda/5.5/
 
 # Number of MD steps
 md_steps=[MDRUNS]
