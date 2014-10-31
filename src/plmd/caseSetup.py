@@ -189,8 +189,10 @@ class Setup (plmd.PLMD_module):
         for templateFile in templateFiles:
 
             # Enable quantum variable
-            if self.config.ligandCount <= 0:
+            if self.config.ligandCount <= 0 or self.config.qmEnable == False:
                 self.config.qmEnable = 0
+            else:
+                self.config.qmEnable = 1
 
             # Load templates, change variables, and save in case folder
             TEMPLATE = open(templateFile, 'r')
