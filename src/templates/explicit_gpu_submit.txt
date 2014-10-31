@@ -7,20 +7,24 @@
 # Run in the current working (submission) directory
 if test X$PBS_ENVIRONMENT = XPBS_BATCH; then cd $PBS_O_WORKDIR; fi
 
-# Set absolute path to amber
-amber=$AMBERHOME/bin/pmemd.cuda
-
 # The CUDA device reserved for you by the batch system
 CUDADEV=`cat $PBS_GPUFILE | rev | cut -d"-" -f1 | rev | tr -cd [:digit:]`
 echo "CUDA Devices"
 echo $CUDADEV
 
+# Show the library path for debugging
+echo "LIBRARY PATH"
+echo $LD_LIBRARY_PATH
+
 # load the required modules
 module load cuda/5.5
-export CUDA_HOME=/opt/cuda/5.5/
+CUDA_HOME=/opt/cuda/5.5/
 
 # Number of MD steps
 md_steps=[MDRUNS]
+
+# Set absolute path to amber
+amber=$AMBERHOME/bin/pmemd.cuda
 
 ######################
 
