@@ -14,7 +14,7 @@ echo $CUDADEV
 
 # load the required modules
 module load cuda/5.5
-CUDA_HOME=/opt/cuda/5.5/
+CUDA_HOME=/opt/cuda/5.5
 
 # Number of MD steps
 md_steps=[MDRUNS]
@@ -23,7 +23,7 @@ md_steps=[MDRUNS]
 amber=$AMBERHOME/bin/pmemd.cuda
 
 # Show the library path for debugging
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/cuda/5.5/lib64
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/cuda/5.5/lib
 echo "LIBRARY PATH"
 echo $LD_LIBRARY_PATH
 
