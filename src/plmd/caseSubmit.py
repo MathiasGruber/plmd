@@ -12,6 +12,10 @@ class Setup (plmd.PLMD_module):
         # Confirm with user
         self.printStage("Step 1: Starting up PLMD. Submission file parameters:")
 
+        # Add GPU to nodecontrol if applicable
+        if self.config.gpuEnabled == True:
+            self.config.nodeControl += ":gpus="+str(self.config.gpuCores)
+
         print "\n== Submission Parameters"
         print "========================"
         print "submissionName: " + self.config.name
@@ -34,7 +38,13 @@ class Setup (plmd.PLMD_module):
         caseID = caseName.split("/")[-1] 
         
          # Create new submission file
-        TEMPLATE = open( self.config.PLMDHOME+"/src/templates/explicit_submit.txt", 'r')
+        TEMPLATE = ""
+        if self.config.gpuEnabled == True:
+            TEMPLATE = open( self.config.PLMDHOME+"/src/templates/explicit_gpu_submit.txt", 'r')
+        else:
+            TEMPLATE = open( self.config.PLMDHOME+"/src/templates/explicit_submit.txt", 'r')
+            
+        # Replace stuff within
         TEMP = TEMPLATE.read().replace("[FOLDER]", caseName  ). \
                               replace("[NAME]", self.config.name+"_"+caseID  ). \
                               replace("[CPUCONTROL]", self.config.nodeControl ). \

@@ -177,7 +177,8 @@ class Setup (plmd.PLMD_module):
         templateFiles = [
             self.config.PLMDHOME+"/src/templates/explicit_min.txt",
             self.config.PLMDHOME+"/src/templates/explicit_heat.txt",
-            self.config.PLMDHOME+"/src/templates/explicit_equil.txt"
+            self.config.PLMDHOME+"/src/templates/explicit_equil.txt",
+            self.config.PLMDHOME+"/src/templates/explicit_gpu_equil.txt"
         ]
         
         

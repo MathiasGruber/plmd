@@ -47,9 +47,9 @@ def getDefaultConfig():
     config.set('analysisParameters', 'noFTP', 'false')
     config.set('analysisParameters', 'clusterFrames', '10000')
     
-    #config.add_section('gpuRun')
-    #config.set('gpuRun', 'enable', 'false')
-    #config.set('gpuRun', 'gpus', '1')
+    config.add_section('gpuRun')
+    config.set('gpuRun', 'enable', 'false')
+    config.set('gpuRun', 'gpus', '1')
     
     config.add_section('ftpConfiguration')
     config.set('ftpConfiguration', 'server', 'ftp.nanomathias.com')

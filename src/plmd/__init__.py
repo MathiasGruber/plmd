@@ -77,6 +77,10 @@ class PLMD_Config:
         self.wallClock = config.get('submissionParameters', 'wallClock')
         self.mdRuns = config.get('submissionParameters', 'mdRuns')
         
+        # GPU run
+        self.gpuEnabled = config.getboolean('gpuRun', 'enable')       
+        self.gpuCores =  config.getint('gpuRun', 'gpus')       
+        
         # Analysis configuration
         self.noMerge = config.getboolean('analysisParameters', 'noMerge')
         self.noStrip = config.getboolean('analysisParameters', 'noStrip')
