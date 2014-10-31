@@ -11,7 +11,6 @@ Peptides: Equilibration
   cut = 10.0, 
   ntc = [NTC],
   ntf = [NTF],
-  tempi = 300.0, 
   temp0 = 300.0,
   ntt = 3, 
   gamma_ln = 1.0,
@@ -19,7 +18,8 @@ Peptides: Equilibration
   dt = [DT],
   ntpr = [TIMESTEPPERFRAME], 
   ntwx = [TIMESTEPPERFRAME], 
-  ntwr = 1000,
+  ntxo = 2,
+  ioutfm = 1,
   ifqnt=[EABLEQM]
  /
  &qmmm

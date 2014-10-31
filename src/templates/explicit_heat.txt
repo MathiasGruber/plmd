@@ -18,9 +18,10 @@ Peptide: heat in solvatebox
   gamma_ln = 1.0,
   nstlim = 500000,
   dt = [DT],
-  ntpr = 100,
-  ntwx = 100,
-  ntwr = 1000,
+  ntpr = [TIMESTEPPERFRAME], 
+  ntwx = [TIMESTEPPERFRAME], 
+  ntxo = 2,
+  ioutfm = 1,
   ifqnt=[EABLEQM]
  /
  &wt type='TEMP0', istep1=0,istep2=400000,
