@@ -11,6 +11,7 @@ if test X$PBS_ENVIRONMENT = XPBS_BATCH; then cd $PBS_O_WORKDIR; fi
 CUDADEV=`cat $PBS_GPUFILE | rev | cut -d"-" -f1 | rev | tr -cd [:digit:]`
 echo "CUDA Devices"
 echo $CUDADEV
+export CUDA_VISIBLE_DEVICES=$CUDADEV
 
 # load the required modules
 module load cuda/5.5
