@@ -43,17 +43,17 @@ def runAnalysis( caseDirs , resultsDir ):
             # http://archive.ambermd.org/201404/0243.html
             
             # Create new submission file
-            TEMPLATE = open( caseDir+"/ccptraj_analysis_global_pca.ptraj", 'r')
+            TEMPLATE = open( caseDir+"/ccptraj_analysis_pca.ptraj", 'r')
             TEMP = TEMPLATE.read().replace("[PCAREFERENCE]", refDir  )
             TEMPLATE.close()
                                   
             # Write the submission file
-            FILE = open(caseDir+"/ccptraj_analysis_global_pca.ptraj","w");        
+            FILE = open(caseDir+"/ccptraj_analysis_pca.ptraj","w");        
             FILE.write( TEMP );
             FILE.close();
             
             # Run the cpptraj utility
-            os.system( "$AMBERHOME/bin/cpptraj -p "+caseDir+"/md-files/peptide_nowat.prmtop -i "+caseDir+"/ccptraj_analysis_global_pca.ptraj" )
+            os.system( "$AMBERHOME/bin/cpptraj -p "+caseDir+"/md-files/peptide_nowat.prmtop -i "+caseDir+"/ccptraj_analysis_pca.ptraj" )
         
     
             # Do the plots of energy landscapes & distributions

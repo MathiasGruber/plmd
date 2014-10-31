@@ -24,18 +24,18 @@ def runAnalysis( caseDirs , resultsDir ):
         # http://archive.ambermd.org/201404/0243.html
         
         # Create new submission file
-        TEMPLATE = open( caseDir+"/ccptraj_analysis_global_rmsd.ptraj", 'r')
+        TEMPLATE = open( caseDir+"/ccptraj_analysis_rmsd.ptraj", 'r')
         TEMP = TEMPLATE.read().replace("[REFERENCE]", refStructure  ). \
                                replace("[FOLDER]", caseDir )
         TEMPLATE.close()
                               
         # Write the submission file
-        FILE = open(caseDir+"/ccptraj_analysis_global_rmsd_done.ptraj","w");        
+        FILE = open(caseDir+"/ccptraj_analysis_rmsd_done.ptraj","w");        
         FILE.write( TEMP );
         FILE.close();
         
         # Run the cpptraj utility
-        os.system( "$AMBERHOME/bin/cpptraj -p "+caseDir+"/md-files/peptide_nowat.prmtop -i "+caseDir+"/ccptraj_analysis_global_rmsd_done.ptraj" )
+        os.system( "$AMBERHOME/bin/cpptraj -p "+caseDir+"/md-files/peptide_nowat.prmtop -i "+caseDir+"/ccptraj_analysis_rmsd_done.ptraj" )
 
         # Get the data
         rmsdValues = []
