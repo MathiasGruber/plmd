@@ -12,10 +12,6 @@ CUDADEV=`cat $PBS_GPUFILE | rev | cut -d"-" -f1 | rev | tr -cd [:digit:]`
 echo "CUDA Devices"
 echo $CUDADEV
 
-# Show the library path for debugging
-echo "LIBRARY PATH"
-echo $LD_LIBRARY_PATH
-
 # load the required modules
 module load cuda/5.5
 CUDA_HOME=/opt/cuda/5.5/
@@ -25,6 +21,10 @@ md_steps=[MDRUNS]
 
 # Set absolute path to amber
 amber=$AMBERHOME/bin/pmemd.cuda
+
+# Show the library path for debugging
+echo "LIBRARY PATH"
+echo $LD_LIBRARY_PATH
 
 ######################
 
