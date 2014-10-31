@@ -23,8 +23,10 @@ md_steps=[MDRUNS]
 amber=$AMBERHOME/bin/pmemd.cuda
 
 # Show the library path for debugging
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/cuda/5.5/lib64
 echo "LIBRARY PATH"
 echo $LD_LIBRARY_PATH
+
 
 ######################
 
