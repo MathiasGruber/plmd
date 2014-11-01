@@ -88,7 +88,7 @@ class PLMD_Config:
         
         # aMD run
         self.amdEnabled = config.getboolean('amdRun', 'enable')  
-        self.iamd =  config.getfloat('amdRun', 'iamd') 
+        self.iamd =  config.getint('amdRun', 'iamd') 
         self.ePR =  config.getfloat('amdRun', 'energyPerResidue') 
         self.ePA =  config.getfloat('amdRun', 'energyPerAtom') 
         self.aDf =  config.getfloat('amdRun', 'alphaDfactor') 
