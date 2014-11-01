@@ -9,6 +9,6 @@ savepdb compound [FOLDER]/pdb-files/finalLEaP_nowat.pdb
 saveamberparm compound [FOLDER]/md-files/peptide_nowat.prmtop [FOLDER]/md-files/peptide_nowat.inpcrd
 
 # Solvate & save again
-solvatebox compound TIP3PBOX 10.0
+solvatebox compound TIP3PBOX 8.0
 savepdb compound [FOLDER]/pdb-files/finalLEaP.pdb
 saveamberparm compound [FOLDER]/md-files/peptide.prmtop [FOLDER]/md-files/peptide.inpcrd

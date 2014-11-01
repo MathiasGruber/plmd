@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import os
+import os, re
 import plmd 
 
 class Setup (plmd.PLMD_module):
@@ -15,6 +15,10 @@ class Setup (plmd.PLMD_module):
         # Add GPU to nodecontrol if applicable
         if self.config.gpuEnabled == True:
             self.config.nodeControl += ":gpus="+str(self.config.gpuCores)
+            
+        # AMD setup variable
+        self.aMDinput = ""
+            
 
         print "\n== Submission Parameters"
         print "========================"
@@ -33,8 +37,11 @@ class Setup (plmd.PLMD_module):
     # Create submission file for submitting case to HPC queue
     def hpcCreateSubmission( self, caseName ):
         
+        # Create in-files
+        self.amberCreateInput( caseName )
+        
         # User information
-        self.printStage( "Stage 2, Case: "+caseName+". Creating HPC submission files" )          
+        self.printStage( "Stage 3, Case: "+caseName+". Creating HPC submission files" )          
         caseID = caseName.split("/")[-1] 
         
          # Create new submission file
@@ -44,6 +51,15 @@ class Setup (plmd.PLMD_module):
         else:
             TEMPLATE = open( self.config.PLMDHOME+"/src/templates/explicit_submit.txt", 'r')
             
+        # Check if we're running an aMD sim
+        #if self.config.amdEnabled == True:
+            # Check the equil file, ensure all AMD data is set properly
+        #    equilFile += ""
+        #else:
+            # Check the equil file, remove all AMD mentions
+        #    equilFile =+ ""
+            
+        
         # Replace stuff within
         TEMP = TEMPLATE.read().replace("[FOLDER]", caseName  ). \
                               replace("[NAME]", self.config.name+"_"+caseID  ). \
@@ -63,9 +79,212 @@ class Setup (plmd.PLMD_module):
     def hpcSubmission( self, caseName ):
         
         # User information
-        self.printStage( "Stage 3, Case: "+caseName+". Submitting to HPC" )          
+        self.printStage( "Stage 4, Case: "+caseName+". Submitting to HPC" )          
         
         # Do submission        
         os.system( "qsub "+caseName+"/submit_run.sh" )
              
+    # Create all the amber input files for a case
+    def amberCreateInput( self, caseName ):
+        
+        # User information
+        self.printStage( "Stage 2, Case: "+caseName+". Creating Amber input files" )  
+
+        # The template files for the amber imput files
+        templateFiles = [
+            self.config.PLMDHOME+"/src/templates/explicit_min.txt",
+            self.config.PLMDHOME+"/src/templates/explicit_heat.txt",
+            self.config.PLMDHOME+"/src/templates/explicit_equil.txt"
+        ]
+        
+        # Open the pdb file created by LEaP to find residues
+        self.ligandResnames = []
+        self.peptideResnames = []
+        peptides = 0
+        with open(caseName+"/pdb-files/finalLEaP_nowat.pdb",'r') as fl:
+            for line in fl:
+                
+                # Check for TER commands
+                if "TER" in line:
+                    
+                    # Increase count
+                    peptides += 1
+                else:
+                    
+                    # If we're not done with peptide, add resname                
+                    if peptides < self.config.peptideCount:
+                        if line[17:20] not in self.peptideResnames:
+                            self.peptideResnames.append( line[17:20] )
+                    else:
+                        if line[17:20] not in self.ligandResnames:
+                            self.ligandResnames.append( line[17:20] )
+        
+        # Set the QM region of this case
+        self.calcQMregion( caseName )
+        
+        # Go through each template file
+        for templateFile in templateFiles:
+
+            # Enable quantum variable
+            if self.config.ligandCount <= 0 or self.config.qmEnable == False:
+                self.config.qmEnable = 0
+            else:
+                self.config.qmEnable = 1
+                
+            # Special things on equilfile
+            if "equil" in templateFile:
+                
+                # Enable GPU sim
+                if self.config.gpuEnabled == True:
+                    self.config.ntt = "3"
+                    self.config.ntb = "1"
+                    self.config.ntp = "0"
+                    self.config.gamma_ln = "2.0"
+                    
+                # Enable aMD
+                if self.config.amdEnabled == True:
+                    
+                    # Check for the latest equil log file to get aMD data. Otherwise abort
+                    ePot, eDih = 0,0
+                    for subdir,dirs,files in os.walk( caseName+"/md-logs/" ):
+                        for filename in files:
+                            if filename == "outMD1.log":
+                                with open( subdir+filename , "r") as fi:
+                                    startSearch = False
+                                    for line in fi:
+                                        
+                                        # Start Search
+                                        if "A V E R A G E S   O V E R" in line:
+                                            startSearch = True
+                                            
+                                        # Do Search
+                                        if startSearch == True:
+                                             m1 = re.search('EPtot(\s+?)=(\s+?)(-?\d+\.?\d+)', line)
+                                             if m1:
+                                                ePot = float(m1.group(3))
+                                             m2 = re.search('DIHED(\s+?)=(\s+?)(-?\d+\.?\d+)', line)
+                                             if m2:
+                                                eDih = float(m2.group(3))
+                                            
+                                        # End Search
+                                        if "Ewald error estimate" in line:
+                                            startSearch = False
+                    
+                    # Check that we found values
+                    if ePot == 0 and eDih == 0:
+                        raise Exception('To run aMD, a outMD1.log file must be present. This file is needed for information about the energies in the system.') 
+                                
+                    # Confirm aMD parameters
+                    self.printStage( "Stage 2.5, Case: "+caseName+". aMD settings" )  
+                    
+                    # Get residues & atoms in the system
+                    atoms, residues = 0,[]
+                    with open( caseName+"/pdb-files/finalLEaP.pdb",'r' ) as fi:
+                        for line in fi:
+                            if "ATOM" in line:
+                                atoms += 1
+                            if line[17:20] in self.peptideResnames:
+                                resID = str(int(line[22:26]))
+                                if resID not in residues:
+                                    residues.append( resID )
+                        
+                    # Input data
+                    print "ATOMS: "+str(atoms)
+                    print "RESIDUES: "+str(len(residues))
+                    print "EPOT: "+str(ePot)
+                    print "DIHED: "+str(eDih)
+                    
+                    # alphaP Calc
+                    self.alphaP = self.config.ePA * atoms 
+                    print "alphaP = "+str(self.config.ePA)+" * "+str(atoms)+" = "+str(self.alphaP)+" kcal mol-1"
+                    
+                    # EthreshP Calc
+                    self.EthreshP = ePot + self.alphaP
+                    print "EthreshP = "+str(ePot)+" + "+str(self.alphaP)+" = "+str(self.EthreshP)+" kcal mol-1"
+                    
+                    # EthreshD Calc
+                    self.EthreshD = eDih + self.config.ePR * len(residues)
+                    print "EthreshD = "+str(eDih)+" + "+str( self.config.ePR )+" * "+str(len(residues))+" = "+str(self.EthreshD)+" kcal mol-1"
+                    
+                    # alphaD Calc
+                    self.alphaD = self.config.aDf * self.config.ePR * len(residues)
+                    print "alphaD = "+str( self.config.aDf ) + " * " + str(self.config.ePR) + " * "+str(len(residues))+" = "+str(self.alphaD)+" kcal mol-1"
+
+                    # Create entry for the input file
+                    self.aMDinput = ",iamd="+str(self.config.iamd)+\
+                               ",ethreshd="+str(self.EthreshD)+\
+                               ",alphad="+str(self.alphaD)+\
+                               ",ethreshp="+str(self.EthreshP)+\
+                               ",alphap="+str(self.alphaP)
+                    print self.aMDinput
+
+                    # Confirm   
+                    if self.config.quiet == False:                     
+                        self.confirmProgress()            
+
+            # Load templates, change variables, and save in case folder
+            TEMPLATE = open(templateFile, 'r')
+            TEMP = TEMPLATE.read().replace("[NTC]", self.config.ntc ). \
+                                  replace("[NTF]", self.config.ntf ). \
+                                  replace("[NTB]", self.config.ntb ). \
+                                  replace("[NTT]", self.config.ntt ). \
+                                  replace("[NTP]", self.config.ntp ). \
+                                  replace("[GAMMALN]", self.config.gamma_ln ). \
+                                  replace("[QMCHARGE]", self.config.qmCharge ). \
+                                  replace("[QMTHEORY]", self.config.qmTheory ). \
+                                  replace("[QMREGION]", self.qmRegion ). \
+                                  replace("[TIMESTEPS]", self.config.timestepNumber ). \
+                                  replace("[DT]", str(self.config.timestepSize) ). \
+                                  replace("[PEPTIDERESI]", str(self.peptideRegion) ). \
+                                  replace("[EABLEQM]", str(self.config.qmEnable) ). \
+                                  replace("[QMSHAKE]", self.config.qmShake ). \
+                                  replace("[AMDsetup]", self.aMDinput ). \
+                                  replace("[TIMESTEPPERFRAME]", str(self.config.timestepPerFrame) )
+            TEMPLATE.close()
+            
+            # If not QM, delete qmmm dict from TEMP
+            if self.config.qmEnable == 0:
+                
+                # Must be compiled first, so as to use DOTALL that will match newlines also
+                TEMP = re.sub(re.compile('&qmmm(.+)\s/\n', re.DOTALL), "", TEMP )
+                                           
+            # Save the input file with same name, but change extension to .in
+            saveFile = os.path.basename(templateFile).split(".")[0]+".in"                                    
+            FILE = open(caseName+"/in_files/"+saveFile,"w");
+            FILE.write( TEMP );
+            FILE.close();
+            
+            
+     # Function which analyses a final pdb file and figures out the QM region (ligand region)
+    def calcQMregion( self, caseName ):
+        
+        # Open the pdb file created by LEaP
+        with open(caseName+"/pdb-files/finalLEaP_nowat.pdb",'r') as fl:
+            pdb = fl.readlines()
+        
+        # Set QM & peptide region
+        qmRegion = []
+        peptideRegion = []
+        
+        # Go throug the file and find all residues having the resname of the ligand
+        for line in pdb:
+            if line[22:26]:
+                if line[17:20] in self.ligandResnames:
+                    qmRegion.append( str(int(line[22:26])) )
+                elif line[17:20] in self.peptideResnames:
+                    peptideRegion.append( str(int(line[22:26])) )
+        
+        # Define the region string, as per Amber specifications
+        if not qmRegion:
+            
+            # List was empty, not QM region
+            self.qmRegion = ""
+        
+        else:
+            
+            # Set the QM region to the start-end ligand residues
+            self.qmRegion = ":"+qmRegion[0]+"-"+qmRegion[ len(qmRegion)-1 ] 
+            
+        # Set the peptide region
+        self.peptideRegion = ":"+peptideRegion[0]+"-"+peptideRegion[-1] 
             

@@ -31,7 +31,11 @@ def getDefaultConfig():
     config.set('simulationParameters', 'qmTheory', 'PM6-D')
     config.set('simulationParameters', 'ntf', '2')
     config.set('simulationParameters', 'ntc', '2')
-    config.set('simulationParameters', 'timestepPerFrame', '100')
+    config.set('simulationParameters', 'ntt', '3')
+    config.set('simulationParameters', 'ntb', '2')
+    config.set('simulationParameters', 'ntp', '1')
+    config.set('simulationParameters', 'gamma_ln', '2.0')
+    config.set('simulationParameters', 'timestepPerFrame', '1000')
     config.set('simulationParameters', 'timestepSize', '0.002')
     config.set('simulationParameters', 'timestepNumber', '1000000')
 
@@ -51,6 +55,13 @@ def getDefaultConfig():
     config.add_section('gpuRun')
     config.set('gpuRun', 'enable', 'false')
     config.set('gpuRun', 'gpus', '1')
+    
+    config.add_section('amdRun')
+    config.set('amdRun', 'enable', 'false')
+    config.set('amdRun', 'iamd', '2')
+    config.set('amdRun', 'energyPerResidue', '4')
+    config.set('amdRun', 'energyPerAtom', '0.16')
+    config.set('amdRun', 'alphaDfactor', '0.2')
     
     config.add_section('ftpConfiguration')
     config.set('ftpConfiguration', 'server', 'ftp.nanomathias.com')

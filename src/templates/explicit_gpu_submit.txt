@@ -69,7 +69,7 @@ local cStep=$1
 local pStep=$(($1-1))
 
 # Start amber MD simulation
-$amber -O -i [FOLDER]/in_files/explicit_gpu_equil.in -o [FOLDER]/md-logs/outMD${cStep}.log -c [FOLDER]/md-files/equil${pStep}.rst -p [FOLDER]/md-files/peptide.prmtop -r [FOLDER]/md-files/equil${cStep}.rst -x [FOLDER]/md-files/equil${cStep}.mdcrd
+$amber -O -i [FOLDER]/in_files/explicit_equil.in -o [FOLDER]/md-logs/outMD${cStep}.log -c [FOLDER]/md-files/equil${pStep}.rst -p [FOLDER]/md-files/peptide.prmtop -r [FOLDER]/md-files/equil${cStep}.rst -x [FOLDER]/md-files/equil${cStep}.mdcrd
 
 # Create pdb file from results
 $AMBERHOME/bin/ambpdb -p [FOLDER]/md-files/peptide.prmtop < [FOLDER]/md-files/equil${cStep}.rst > [FOLDER]/pdb-files/equil${cStep}.pdb

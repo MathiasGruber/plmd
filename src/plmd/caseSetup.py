@@ -35,30 +35,11 @@ class Setup (plmd.PLMD_module):
         # Confirm with user
         self.printStage("Step 1: Starting up PLMD. Configuration file:")
 
-        print "\n== Input Files"
-        print "=============="
-        print "ligand: " + self.config.ligand
-        print "ligand count: " + str(self.config.ligandCount)
-        print "peptide: " + self.config.peptide
-        print "peptide count: " + str(self.config.peptideCount)
-        print "cases: " + str(self.config.cases)
-
-        print "\n== Simulation Parameters"
-        print "========================"
-        print "Forcefield: " + self.config.ff
-        print "qmCharge: " + self.config.qmCharge 
-        print "qmShake: " + self.config.qmShake
-        print "qmTheory: " + self.config.qmTheory
-        print "ntf: " + self.config.ntf 
-        print "ntc: " + self.config.ntc
-        print "timestepSize: " + str(self.config.timestepSize)
-        print "timestepNumber: " + self.config.timestepNumber
-
-        print "\n== Submission Parameters"
-        print "========================"
-        print "nodeControl: " + self.config.nodeControl
-        print "wallClock: " + self.config.wallClock
-        print "mdRuns: " + self.config.mdRuns
+        # Show configuration file
+        for section in config.sections():
+            print "\n== "+section
+            for (name, value) in config.items( section ):
+                print name+": "+value
         
         if self.config.quiet == False:
             var = raw_input("Please confirm this submission with any key press. Press 'n' to discontinue")
@@ -163,104 +144,6 @@ class Setup (plmd.PLMD_module):
             
             # Run the LEaP file
             self.leapRunInput( str(i) )
-            
-            # Create input files for amber run
-            self.amberCreateInput( str(i) )
-        
-    # Create all the amber input files for a case
-    def amberCreateInput( self, caseName ):
-        
-        # User information
-        self.printStage( "Stage 6, Case: "+caseName+". Creating Amber input files" )  
-
-        # The template files for the amber imput files
-        templateFiles = [
-            self.config.PLMDHOME+"/src/templates/explicit_min.txt",
-            self.config.PLMDHOME+"/src/templates/explicit_heat.txt",
-            self.config.PLMDHOME+"/src/templates/explicit_equil.txt",
-            self.config.PLMDHOME+"/src/templates/explicit_gpu_equil.txt"
-        ]
-        
-        
-        # Set the QM region of this case
-        self.calcQMregion( caseName )
-        
-        # Go through each template file
-        for templateFile in templateFiles:
-
-            # Enable quantum variable
-            if self.config.ligandCount <= 0 or self.config.qmEnable == False:
-                self.config.qmEnable = 0
-            else:
-                self.config.qmEnable = 1
-
-            # Load templates, change variables, and save in case folder
-            TEMPLATE = open(templateFile, 'r')
-            TEMP = TEMPLATE.read().replace("[NTC]", self.config.ntc ). \
-                                  replace("[NTF]", self.config.ntf ). \
-                                  replace("[QMCHARGE]", self.config.qmCharge ). \
-                                  replace("[QMTHEORY]", self.config.qmTheory ). \
-                                  replace("[QMREGION]", self.qmRegion ). \
-                                  replace("[TIMESTEPS]", self.config.timestepNumber ). \
-                                  replace("[DT]", str(self.config.timestepSize) ). \
-                                  replace("[PEPTIDERESI]", str(self.peptideRegion) ). \
-                                  replace("[EABLEQM]", str(self.config.qmEnable) ). \
-                                  replace("[QMSHAKE]", self.config.qmShake ). \
-                                  replace("[TIMESTEPPERFRAME]", str(self.config.timestepPerFrame) )
-            TEMPLATE.close()
-            
-            # If not QM, delete qmmm dict from TEMP
-            if self.config.qmEnable == 0:
-                
-                # Must be compiled first, so as to use DOTALL that will match newlines also
-                TEMP = re.sub(re.compile('&qmmm(.+)\s/\n', re.DOTALL), "", TEMP )
-                                           
-            # Save the input file with same name, but change extension to .in
-            saveFile = os.path.basename(templateFile).split(".")[0]+".in"                                    
-            FILE = open("cases/"+caseName+"/in_files/"+saveFile,"w");
-            FILE.write( TEMP );
-            FILE.close();
-            
-            # Show user the submission file
-            print "\n"+TEMP+"\n"
-            
-            # Let user review results
-            if self.config.quiet == False:
-                self.confirmProgress()
-            
-
-     # Function which analyses a final pdb file and figures out the QM region (ligand region)
-    def calcQMregion( self, caseName ):
-        
-        # Open the pdb file created by LEaP
-        with open("cases/"+caseName+"/pdb-files/finalLEaP_nowat.pdb",'r') as fl:
-            pdb = fl.readlines()
-        
-        qmRegion = []
-        peptideRegion = []
-        
-        # Go throug the file and find all residues having the resname of the ligand
-        for line in pdb:
-            if line[17:20] in self.ligandResnames:
-                qmRegion.append( str(int(line[22:26])) )
-            elif line[17:20] in self.peptideResnames:
-                peptideRegion.append( str(int(line[22:26])) )
-        
-        # Define the region string, as per Amber specifications
-        if not qmRegion:
-            
-            # List was empty, not QM region
-            self.qmRegion = ""
-        
-        else:
-            
-            # Set the QM region to the start-end ligand residues
-            self.qmRegion = ":"+qmRegion[0]+"-"+qmRegion[ len(qmRegion)-1 ] 
-            
-        # Set the peptide region
-        self.peptideRegion = ":"+peptideRegion[0]+"-"+peptideRegion[-1] 
-            
-        
          
     # Function to create a LEaP input file
     def leapCreateInput( self, caseName ):

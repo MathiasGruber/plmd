@@ -70,6 +70,10 @@ class PLMD_Config:
         self.qmTheory = config.get('simulationParameters', 'qmTheory')
         self.ntf = config.get('simulationParameters', 'ntf')
         self.ntc = config.get('simulationParameters', 'ntc')
+        self.ntt = config.get('simulationParameters', 'ntt')
+        self.ntb = config.get('simulationParameters', 'ntb')
+        self.ntp = config.get('simulationParameters', 'ntp')
+        self.gamma_ln = config.get('simulationParameters', 'gamma_ln')
         self.timestepPerFrame = config.getint('simulationParameters', 'timestepPerFrame')
         self.timestepSize = config.getfloat('simulationParameters', 'timestepSize')
         self.timestepNumber = config.get('simulationParameters', 'timestepNumber')
@@ -80,7 +84,14 @@ class PLMD_Config:
         
         # GPU run
         self.gpuEnabled = config.getboolean('gpuRun', 'enable')       
-        self.gpuCores =  config.getint('gpuRun', 'gpus')       
+        self.gpuCores =  config.getint('gpuRun', 'gpus') 
+        
+        # aMD run
+        self.amdEnabled = config.getboolean('amdRun', 'enable')  
+        self.iamd =  config.getfloat('amdRun', 'iamd') 
+        self.ePR =  config.getfloat('amdRun', 'energyPerResidue') 
+        self.ePA =  config.getfloat('amdRun', 'energyPerAtom') 
+        self.aDf =  config.getfloat('amdRun', 'alphaDfactor') 
         
         # Analysis configuration
         self.noMerge = config.getboolean('analysisParameters', 'noMerge')

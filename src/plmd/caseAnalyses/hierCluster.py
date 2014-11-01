@@ -41,6 +41,9 @@ def runAnalysis( caseDir ):
         legendLoc = 4
     )
     
+    ## OCCUPANCY PLOT
+    #################
+    
     # Get the data to plot
     names, fractions = [],[]
     with open(caseDir+"/analysis/data/cluster_hier_summary.dat","r") as fi:
@@ -65,7 +68,7 @@ def runAnalysis( caseDir ):
     ax = fig.gca()
     ax.set_xlabel("Occupied Fraction", fontsize=12)
     ax.set_ylabel("", fontsize=12)
-    plt.title( "Cluster Occupancy Fraction" )
+    plt.title( "Cluster Hier Occupancy Fraction" )
     plt.rc('font', **font)        
     plt.savefig(pp, format="pdf",dpi=100)
     pp.close()
