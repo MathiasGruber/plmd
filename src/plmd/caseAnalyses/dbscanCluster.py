@@ -1,5 +1,8 @@
 #!/usr/bin/python
 import plmd.plotData as myPlot
+from pylab import plt
+import numpy as np
+from matplotlib.backends.backend_pdf import PdfPages
 import plmd.generalAnalyses.clusterAnalysis as cluster
 
 # Function for running the actual analysis
@@ -37,6 +40,38 @@ def runAnalysis( caseDir ):
         scatter = True,
         legendLoc = 4
     )
+    
+    ## OCCUPANCY PLOT
+    #################
+    
+    # Get the data to plot
+    names, fractions = [],[]
+    with open(caseDir+"/analysis/data/cluster_dbscan_summary.dat","r") as fi:
+        next(fi)
+        for aline in fi:
+            if aline:
+                values = aline.split()
+                names.append( "Cluster "+values[0] )                      
+                fractions.append( float(values[2]) )
+                
+    # Create an array for the interactions
+    y_pos = np.arange(len(names))
+    
+    # Do a bar plot of fractions
+    pp = PdfPages( caseDir+"/analysis/plots/ClusterDBscanOccupancy.pdf" )
+    font = {'family' : 'Arial',
+            'weight' : 'normal',
+            'size'   : 10}    
+    fig = plt.figure(figsize=(16,5))
+    plt.barh( y_pos, fractions, align = 'center', color = plt.rcParams['axes.color_cycle'][0]  )   
+    plt.yticks(y_pos, names)
+    ax = fig.gca()
+    ax.set_xlabel("Occupied Fraction", fontsize=12)
+    ax.set_ylabel("", fontsize=12)
+    plt.title( "Cluster DBscan Occupancy Fraction" )
+    plt.rc('font', **font)        
+    plt.savefig(pp, format="pdf",dpi=100)
+    pp.close()    
     
     ## PCA PLOT
     ###########

@@ -58,7 +58,7 @@ def runAnalysis( caseDir ):
     y_pos = np.arange(len(names))
     
     # Do a bar plot of fractions
-    pp = PdfPages( caseDir+"/analysis/plots/ClusterOccupancy.pdf" )
+    pp = PdfPages( caseDir+"/analysis/plots/ClusterHierOccupancy.pdf" )
     font = {'family' : 'Arial',
             'weight' : 'normal',
             'size'   : 10}    
