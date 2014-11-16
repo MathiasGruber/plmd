@@ -99,6 +99,8 @@ class PLMD_Config:
         self.noBlock = config.getboolean('analysisParameters', 'noBlock')
         self.noEnergy = config.getboolean('analysisParameters', 'noEnergy')
         self.noFTP = config.getboolean('analysisParameters', 'noFTP')
+        self.dbscanEps = config.getfloat('analysisParameters', 'dbscanEps')
+        self.dbscanMinPoints = config.getint('analysisParameters', 'dbscanMinPoints')
         self.clusterFrames = config.getfloat('analysisParameters', 'clusterFrames')
         
         # FTP configuration

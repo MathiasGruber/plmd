@@ -24,7 +24,9 @@ def plotData(
     figHeight = 6,
     legendLoc = 1,
     legendAlpha = 0,
-    legendFrame = 0
+    legendFrame = 0,
+    xLimits = False,
+    yLimits = False
 ):
     
     # plot using pdf 
@@ -105,6 +107,13 @@ def plotData(
         ymin,ymax = math.floor(ymin), math.ceil(ymax)
         ax.set_ylim([ymin,ymax]) 
         print "Setting Y limites to: ",ymin, ymax
+        
+    # Force limits
+    if xLimits != False:
+        ax.set_xlim(xLimits) 
+    if yLimits != False:
+        ax.set_ylim(yLimits) 
+        
         
     # Plot title
     plt.title( title )

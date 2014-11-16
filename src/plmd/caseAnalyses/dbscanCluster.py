@@ -6,15 +6,36 @@ from matplotlib.backends.backend_pdf import PdfPages
 import plmd.generalAnalyses.clusterAnalysis as cluster
 
 # Function for running the actual analysis
-def runAnalysis( caseDir ):
+def runAnalysis( caseDir , eps, minPoints ):
 
     # User information
     print "Now Doing dbscan Cluster"
+    titlePostpend = "eps: "+str(eps)+", minPoints: "+str(minPoints)
     
     # Instantiate the class
     handler = cluster.clusterBase( caseDir+"/analysis/data/cluster_dbscan_out" )
 
-    # RMSd PLOT
+    ## KDIST PLOT
+    #############
+
+    myPlot.plotData( 
+        caseDir+"/analysis/plots" , 
+        "Kdist Plots, ", 
+        ["1-dist","2-dist","3-dist","4-dist","5-dist","6-dist"], 
+        [caseDir+"/analysis/data/Kdist.1.dat", 
+         caseDir+"/analysis/data/Kdist.2.dat", 
+         caseDir+"/analysis/data/Kdist.3.dat", 
+         caseDir+"/analysis/data/Kdist.4.dat", 
+         caseDir+"/analysis/data/Kdist.5.dat", 
+         caseDir+"/analysis/data/Kdist.6.dat"] , 
+        "k-dist",
+        xUnit = "points",
+        skipLines = 1,
+        xLimits=[0,100])
+
+
+    ## RMSd PLOT
+    ############
     numRmsdDataSets = handler.separateDataSet( 
         caseDir+"/analysis/data/backbone.rmsd",
         caseDir+"/analysis/data/cluster_dbscan_rmsd_"
@@ -29,6 +50,9 @@ def runAnalysis( caseDir ):
     for i in range( 0, numRmsdDataSets):
         clusterLabels.append( "Cluster "+str(i) )
         clusterFiles.append( caseDir+"/analysis/data/cluster_dbscan_rmsd_d1_c"+str(i) )
+    
+    # First one is noise
+    clusterLabels[0] = "Noise"   
     
     # Do the plottin
     myPlot.plotData( 
@@ -68,7 +92,7 @@ def runAnalysis( caseDir ):
     ax = fig.gca()
     ax.set_xlabel("Occupied Fraction", fontsize=12)
     ax.set_ylabel("", fontsize=12)
-    plt.title( "Cluster DBscan Occupancy Fraction" )
+    plt.title( "Cluster DBscan Occupancy Fraction, "+titlePostpend )
     plt.rc('font', **font)        
     plt.savefig(pp, format="pdf",dpi=100)
     pp.close()    
@@ -95,6 +119,9 @@ def runAnalysis( caseDir ):
         for i in range( 0, numPCAdataSets):
             clusterLabels.append( "Cluster "+str(i) )
             clusterFiles.append( caseDir+"/analysis/data/cluster_dbscan_pca_d"+str(n)+"_c"+str(i) )
+        
+        # First one is noise
+        clusterLabels[0] = "Noise"        
         
         print "Calling plot"
         print "labels", clusterLabels  

@@ -58,10 +58,6 @@ class analysisHandler (plmd.PLMD_module):
         
         # Sieve limits. Aim for 10000 frames in cluster analysis
         self.sieveValue = math.ceil( self.simFrames / self.config.clusterFrames )
-        self.dbscanMinpoints = math.ceil(self.config.clusterFrames / 1000)
-        if self.dbscanMinpoints < 10:
-            self.dbscanMinpoints = 10
-                
         
         # We run ptraj twice, once going through all frames (for analyses requiring that)
         # and once limited the trajectory to just enough points for a good plot
@@ -76,11 +72,15 @@ class analysisHandler (plmd.PLMD_module):
                                    replace("[DIHEDRALS]", dihedralTxt ). \
                                    replace("[FIRSTRESI]", "1" ). \
                                    replace("[SIEVE]", str(self.sieveValue) ). \
-                                   replace("[MINPOINTS]", str(self.dbscanMinpoints) ). \
+                                   replace("[MINPOINTS]", str(self.config.dbscanMinPoints) ). \
+                                   replace("[DBSCANEPS]", str(self.config.dbscanEps) ). \
                                    replace("[LASTRESI]", str(numOfResidues) ). \
                                    replace("[LASTID]", str( numOfResidues + self.config.ligandCount ) ). \
                                    replace("[FRAMESKIP]", str(int(self.framesToSkip)) )
             TEMPLATE.close()
+                                  
+            # Move k-dist from dbScan cluster to data directory
+            os.system("mv Kdist.*.dat "+self.directory+"/analysis/data/")                                  
                                   
             # Write the submission file
             FILE = open(self.directory+"/ccptraj_analysis_"+ptrajType+".ptraj","w");        
@@ -121,7 +121,7 @@ class analysisHandler (plmd.PLMD_module):
         
         # dbscan cluster
         try:
-            dbscanCluster.runAnalysis( self.directory )
+            dbscanCluster.runAnalysis( self.directory, self.config.dbscanEps, self.config.dbscanMinPoints )
         except Exception as e:
             print "Failed dbscan cluser analysis",e
         
