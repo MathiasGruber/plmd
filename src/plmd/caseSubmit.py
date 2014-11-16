@@ -59,13 +59,20 @@ class Setup (plmd.PLMD_module):
             # Check the equil file, remove all AMD mentions
         #    equilFile =+ ""
             
+        # What to call the logfile
+        amdLogFile = ""
+        if self.config.amdEnabled == True:
+            amdLogFile = "outAMD"
+        else:
+            amdLogFile = "outMD"
         
         # Replace stuff within
         TEMP = TEMPLATE.read().replace("[FOLDER]", caseName  ). \
                               replace("[NAME]", self.config.name+"_"+caseID  ). \
                               replace("[CPUCONTROL]", self.config.nodeControl ). \
                               replace("[WALLCLOCK]", self.config.wallClock ). \
-                              replace("[MDRUNS]", self.config.mdRuns )
+                              replace("[MDRUNS]", self.config.mdRuns ). \
+                              replace("[LOGFILENAME]", amdLogFile )
         TEMPLATE.close()
                               
         # Write the submission file

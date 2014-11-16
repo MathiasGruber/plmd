@@ -37,7 +37,11 @@ class analysisHandler (plmd.PLMD_module):
         # Run perl script from AMBER to get data from log files
         buffer = ""
         for i in range(1,num_files):
-            buffer = buffer + " "+caseDir+"/md-logs/outMD"+str(i)+".log"
+            if self.config.amdEnabled == True:
+                buffer = buffer + " "+caseDir+"/md-logs/outAMD"+str(i)+".log"
+            else:
+                buffer = buffer + " "+caseDir+"/md-logs/outMD"+str(i)+".log"
+            
         print buffer
         os.system("perl $PLMDHOME/src/perl/process_mdout.perl "+buffer)
 
