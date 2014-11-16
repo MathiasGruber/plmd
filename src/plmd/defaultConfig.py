@@ -51,7 +51,7 @@ def getDefaultConfig():
     config.set('analysisParameters', 'noEnergy', 'false')
     config.set('analysisParameters', 'noFTP', 'false')
     config.set('analysisParameters', 'dbscanEps', '0.9')
-    config.set('analysisParameters', 'dbscanMinPoints', '25')
+    config.set('analysisParameters', 'dbscanMinPoints', '20')
     config.set('analysisParameters', 'clusterFrames', '10000')
     
     config.add_section('gpuRun')
