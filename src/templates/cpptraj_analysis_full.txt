@@ -6,37 +6,37 @@ trajin [FOLDER]/mergedResult.dcd 1 last 1
 cluster K1 dbscan \
     kdist 1 \
     rms :1-[LASTRESI]@CA,C,N,O \
-    sieve 10 \
+    sieve [SIEVE] \
     loadpairdist pairdist [FOLDER]/analysis/data/CpptrajPairDist
 
 cluster K2 dbscan \
     kdist 2 \
     rms :1-[LASTRESI]@CA,C,N,O \
-    sieve 10 \
+    sieve [SIEVE] \
     loadpairdist pairdist [FOLDER]/analysis/data/CpptrajPairDist
 
 cluster K3 dbscan \
     kdist 3 \
     rms :1-[LASTRESI]@CA,C,N,O \
-    sieve 10 \
+    sieve [SIEVE] \
     loadpairdist pairdist [FOLDER]/analysis/data/CpptrajPairDist
 
 cluster K4 dbscan \
     kdist 4 \
     rms :1-[LASTRESI]@CA,C,N,O \
-    sieve 10 \
+    sieve [SIEVE] \
     loadpairdist pairdist [FOLDER]/analysis/data/CpptrajPairDist
 
 cluster K5 dbscan \
     kdist 5 \
     rms :1-[LASTRESI]@CA,C,N,O \
-    sieve 10 \
+    sieve [SIEVE] \
     loadpairdist pairdist [FOLDER]/analysis/data/CpptrajPairDist
 
 cluster K6 dbscan \
     kdist 6 \
     rms :1-[LASTRESI]@CA,C,N,O \
-    sieve 10 \
+    sieve [SIEVE] \
     loadpairdist pairdist [FOLDER]/analysis/data/CpptrajPairDist
 
 cluster dbscan \

@@ -20,7 +20,7 @@ def runAnalysis( caseDir , eps, minPoints ):
 
     myPlot.plotData( 
         caseDir+"/analysis/plots" , 
-        "Kdist Plots, ", 
+        "Kdist Plots", 
         ["1-dist","2-dist","3-dist","4-dist","5-dist","6-dist"], 
         [caseDir+"/analysis/data/Kdist.1.dat", 
          caseDir+"/analysis/data/Kdist.2.dat", 
