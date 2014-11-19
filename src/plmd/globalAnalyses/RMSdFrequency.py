@@ -81,7 +81,7 @@ def runAnalysis( caseDirs , resultsDir ):
                         
             # Save references for plotting
             dataFiles.append( caseDir+"/analysis/data/refGlobalMinimized_reweightedpmf-c2.dat" )
-            dataLabels.append( "Case "+caseDir.split("/")[-1]+" Reweithed 2" )
+            dataLabels.append( "Case "+caseDir.split("/")[-1]+" Reweithed" )
             
             
     print "========================================="
@@ -97,5 +97,4 @@ def runAnalysis( caseDirs , resultsDir ):
         skipLines = 1
     )
     
-    sys.exit(2)
     
