@@ -174,7 +174,7 @@ class Setup (plmd.PLMD_module):
                                                 eDih = float(m2.group(3))
                                             
                                         # End Search
-                                        if "Ewald error estimate" in line:
+                                        if "Density" in line:
                                             startSearch = False
                     
                     # Check that we found values
