@@ -164,13 +164,13 @@ class Setup (plmd.PLMD_module):
                                         if "A V E R A G E S   O V E R" in line:
                                             startSearch = True
                                             
-                                        # Do Search
+                                        # Do Search, only take first
                                         if startSearch == True:
                                              m1 = re.search('EPtot(\s+?)=(\s+?)(-?\d+\.?\d+)', line)
-                                             if m1:
+                                             if m1 and ePot == 0:
                                                 ePot = float(m1.group(3))
                                              m2 = re.search('DIHED(\s+?)=(\s+?)(-?\d+\.?\d+)', line)
-                                             if m2:
+                                             if m2 and eDih == 0:
                                                 eDih = float(m2.group(3))
                                             
                                         # End Search
