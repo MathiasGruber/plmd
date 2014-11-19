@@ -142,11 +142,11 @@ class Setup (plmd.PLMD_module):
             if "equil" in templateFile:
                 
                 # GPU Optimization
-                #if self.config.gpuEnabled == True:
-                #    self.config.ntt = "3"
-                #    self.config.ntb = "1"
-                #    self.config.ntp = "0"
-                #    self.config.gamma_ln = "2.0"
+                if self.config.gpuEnabled == True:
+                    self.config.ntt = "3"
+                    self.config.ntb = "1"
+                    self.config.ntp = "0"
+                    self.config.gamma_ln = "2.0"
                     
                 # Enable aMD
                 if self.config.amdEnabled == True:
