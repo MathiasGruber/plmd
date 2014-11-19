@@ -141,12 +141,12 @@ class Setup (plmd.PLMD_module):
             # Special things on equilfile
             if "equil" in templateFile:
                 
-                # Enable GPU sim
-                if self.config.gpuEnabled == True:
-                    self.config.ntt = "3"
-                    self.config.ntb = "1"
-                    self.config.ntp = "0"
-                    self.config.gamma_ln = "2.0"
+                # GPU Optimization
+                #if self.config.gpuEnabled == True:
+                #    self.config.ntt = "3"
+                #    self.config.ntb = "1"
+                #    self.config.ntp = "0"
+                #    self.config.gamma_ln = "2.0"
                     
                 # Enable aMD
                 if self.config.amdEnabled == True:

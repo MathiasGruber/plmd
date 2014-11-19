@@ -28,17 +28,17 @@ class analysisHandler (plmd.PLMD_module):
     # Run all the analyses modules
     def runAll( self ):
     
+        # RMSd frequency
+        try:
+            RMSdFrequency.runAnalysis( self.dataFiles[ 'caseDirs' ] , self.resultDir )    
+        except Exception as e:
+            print "Failed rmsd frequency analysis",e    
+    
         # Run KLD analysis
         try:
             kld.runAnalysis( self.dataFiles['caseDirs'] , self.resultDir, self.mdTrajectories, self.backbone )    
         except Exception as e:
             print "Failed kld analysis",e
-        
-        # RMSd frequency
-        try:
-            RMSdFrequency.runAnalysis( self.dataFiles[ 'caseDirs' ] , self.resultDir )    
-        except Exception as e:
-            print "Failed rmsd frequency analysis",e
         
         # Do the PCA analysis
         try:

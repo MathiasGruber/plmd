@@ -1,4 +1,4 @@
-import os, math
+import os, math, sys
 import MDAnalysis
 import block, energy, bFactor, dihedral, timeCorr, endToEnd,CaToCaMap, RMSdMap, hbond, pca, hierCluster, dbscanCluster, RMSdFrequency
 import plmd
@@ -34,17 +34,48 @@ class analysisHandler (plmd.PLMD_module):
         print "Timestep size: "+str(self.config.timestepSize)+"ps"
         print "Total Simulation time: "+str( self.simTime )+"ns"
         
+        # If aMD files are found, merge them into a weights file
+        if os.path.isfile(caseDir+"/md-logs/aMD1.log"): 
+            self.printStage( "Creating aMD weights file" )
+            aMDfiles = len([f for f in os.listdir(caseDir+"/md-logs/") if os.path.isfile(os.path.join(caseDir+"/md-logs/", f)) and "aMD" in f and "out" not in f and ".log" in f] )
+            print "Found "+str(aMDfiles)+" aMD log files" 
+            
+            # Get the files as per specified at: http://mccammon.ucsd.edu/computing/amdReweighting/
+            for i in range(1,aMDfiles+1):
+                os.system("awk 'NR>3' "+caseDir+"/md-logs/aMD"+str(i)+".log | awk '{print ($8+$7)/(0.001987*300)\" \" $2 \" \" ($8+$7)}' > "+caseDir+"/md-logs/weights"+str(i)+".dat")
+                
+            # Merge all of them
+            buffer = ""
+            stepCounter = 0
+            for i in range(1,aMDfiles+1):
+                fileCounter = 0
+                with open(caseDir+"/md-logs/weights"+str(i)+".dat", "r") as fi:
+                    for line in fi:
+                        temp = line.split()
+                        increase = int(temp[1])-fileCounter
+                        stepCounter += increase
+                        fileCounter = int(temp[1])
+                        buffer += "\n"+temp[0]+" "+str(stepCounter)+" "+temp[2]
+                        
+            # Write the weights time
+            with open(caseDir+"/md-logs/weights.dat", "w") as fo:
+                fo.write( buffer )
+            
         # Run perl script from AMBER to get data from log files
         buffer = ""
         for i in range(1,num_files):
             if self.config.amdEnabled == True:
-                buffer = buffer + " "+caseDir+"/md-logs/outAMD"+str(i)+".log"
+                if os.path.isfile(caseDir+"/md-logs/outAMD"+str(i)+".log"): 
+                    buffer = buffer + " "+caseDir+"/md-logs/outAMD"+str(i)+".log"
+                elif os.path.isfile(caseDir+"/md-logs/outMD"+str(i)+".log"):
+                    buffer = buffer + " "+caseDir+"/md-logs/outMD"+str(i)+".log"    
             else:
-                buffer = buffer + " "+caseDir+"/md-logs/outMD"+str(i)+".log"
+                if os.path.isfile(caseDir+"/md-logs/outMD"+str(i)+".log"):
+                    buffer = buffer + " "+caseDir+"/md-logs/outMD"+str(i)+".log"
             
         print buffer
         os.system("perl $PLMDHOME/src/perl/process_mdout.perl "+buffer)
-
+        
         # Move all summary files to analysis/data folder
         os.system("mv summary* "+caseDir+"/analysis/data")
 

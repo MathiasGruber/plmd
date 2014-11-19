@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import os
+import os, sys
 import numpy as np
 import plmd.plotData as myPlot
 
@@ -54,6 +54,37 @@ def runAnalysis( caseDirs , resultsDir ):
         # Save references for plotting
         dataFiles.append( caseDir+"/analysis/data/refGlobalMinimizedCleared.rmsd" )
         dataLabels.append( "Case "+caseDir.split("/")[-1] )
+        
+        # Check if we should do a reweighted version
+        if os.path.isfile( caseDir+"/md-logs/weights.dat" ):
+            
+            # User info
+            print "aMD weights found. Now attempting reweighting"
+            
+            # Prepare input file
+            with open(caseDir+"/analysis/data/refGlobalMinimized.rmsd", "r") as fi:
+                with open(caseDir+"/analysis/data/refGlobalMinimized_singleColumn.rmsd", "w") as fo:
+                    next(fi)
+                    for line in fi:
+                        fo.write( line.split()[1]+"\n" )
+            
+            # Run the reweighting procedure
+            os.system("python $PLMDHOME/src/PyReweighting/PyReweighting-1D.py \
+                        -input "+caseDir+"/analysis/data/refGlobalMinimized_singleColumn.rmsd \
+                        -name "+caseDir+"/analysis/data/refGlobalMinimized_reweighted \
+                        -Xdim 0 7 \
+                        -disc 1 \
+                        -cutoff 1 \
+                        -Emax 20 \
+                        -job amdweight_CE \
+                        -weight "+caseDir+"/md-logs/weights.dat | tee -a reweight_variable.log")
+                        
+            # Save references for plotting
+            dataFiles.append( caseDir+"/analysis/data/refGlobalMinimized_reweightedpmf-c2.dat" )
+            dataLabels.append( "Case "+caseDir.split("/")[-1]+" Reweithed 2" )
+            
+            
+    print "========================================="
 
     # Do that plotting    
     myPlot.plotData( 
@@ -65,4 +96,6 @@ def runAnalysis( caseDirs , resultsDir ):
         xUnit="RMSd ($\AA$)",
         skipLines = 1
     )
+    
+    sys.exit(2)
     
