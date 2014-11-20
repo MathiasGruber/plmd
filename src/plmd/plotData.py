@@ -26,7 +26,8 @@ def plotData(
     legendAlpha = 0,
     legendFrame = 0,
     xLimits = False,
-    yLimits = False
+    yLimits = False,
+    logY = False
 ):
     
     # plot using pdf 
@@ -114,6 +115,9 @@ def plotData(
     if yLimits != False:
         ax.set_ylim(yLimits) 
         
+    # Log scale
+    if logY != False:
+        ax.set_yscale('log')
         
     # Plot title
     plt.title( title )

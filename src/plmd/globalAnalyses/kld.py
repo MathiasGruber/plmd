@@ -118,7 +118,7 @@ def runAnalysis( caseDirs, resultsDir, trajectories, backbone ):
             "KLD",
             scatter = True,
             skipLines = 8,
-            tightYlimits = True
+            logY = True
         )
 
 
