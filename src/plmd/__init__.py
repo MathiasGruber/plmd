@@ -98,6 +98,7 @@ class PLMD_Config:
         self.noStrip = config.getboolean('analysisParameters', 'noStrip')
         self.noBlock = config.getboolean('analysisParameters', 'noBlock')
         self.noEnergy = config.getboolean('analysisParameters', 'noEnergy')
+        self.noReweight = config.getboolean('analysisParameters', 'noReweight')
         self.noFTP = config.getboolean('analysisParameters', 'noFTP')
         self.dbscanEps = config.getfloat('analysisParameters', 'dbscanEps')
         self.dbscanMinPoints = config.getint('analysisParameters', 'dbscanMinPoints')

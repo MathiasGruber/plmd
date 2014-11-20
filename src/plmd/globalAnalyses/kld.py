@@ -87,7 +87,7 @@ def runAnalysis( caseDirs, resultsDir, trajectories, backbone ):
     # Create PC histogram plots
     myPlot.plotData( 
         resultsDir+"/plots" , 
-        "PC histograms from KDE", 
+        "PC-combined histograms from KDE", 
         histogramLabels , 
         kdeHist , 
         "Frequency (%)",
@@ -99,7 +99,7 @@ def runAnalysis( caseDirs, resultsDir, trajectories, backbone ):
     # Create PC histogram plots
     myPlot.plotData( 
         resultsDir+"/plots" , 
-        "PC histograms from PCA", 
+        "PC-combined histograms from PCA", 
         histogramLabels , 
         pcaHist , 
         "Frequency (%)",

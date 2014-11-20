@@ -49,6 +49,7 @@ def getDefaultConfig():
     config.set('analysisParameters', 'noStrip', 'false')
     config.set('analysisParameters', 'noBlock', 'false')
     config.set('analysisParameters', 'noEnergy', 'false')
+    config.set('analysisParameters', 'noReweight', 'false')
     config.set('analysisParameters', 'noFTP', 'false')
     config.set('analysisParameters', 'dbscanEps', '0.9')
     config.set('analysisParameters', 'dbscanMinPoints', '20')

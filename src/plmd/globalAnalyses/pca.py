@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import plmd.generalAnalyses.componentAnalysis as pcaFuncs
-import os
+import os, sys
 
 # Function for running the actual analysis
 def runAnalysis( caseDirs , resultsDir ):
@@ -65,6 +65,6 @@ def runAnalysis( caseDirs , resultsDir ):
                 plotDistibution = False,           # Do not plot the distribution
                 limits = limit
             )
-        
+            
         # Save the plot
         pcaHandler.savePlot()

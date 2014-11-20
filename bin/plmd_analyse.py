@@ -43,6 +43,7 @@ try:
     parser.add_argument('-noStrip', dest='noStrip',action='store_const', const="true", default="false", help="Do not strip water molecules in trajectory files")
     parser.add_argument('-noBlock', dest='noBlock',action='store_const', const="true", default="false", help="Do not run block averaging analysis")
     parser.add_argument('-noEnergy', dest='noEnergy',action='store_const', const="true", default="false", help="Do not run energy analysis")
+    parser.add_argument('-noReweight', dest='noReweight',action='store_const', const="true", default="false", help='Do not run any reweighting procedures') 
     parser.add_argument('-noFTP', dest='noFTP',action='store_const', const="true", default="false", help="Do not attempt to send results to FTP")
     parser.add_argument('-ftpPass', dest='ftpPass',nargs="?", default="false", help="FTP password to send results to")
     parser.add_argument('-doGlobal', dest='doGlobal',action='store_const', const="true", default="false", help='Perform global analyses of selected cases. This assumes that all local analyses have already been performed, and uses that data') 
@@ -59,6 +60,7 @@ try:
     config.set('analysisParameters', 'noStrip', args.noStrip )
     config.set('analysisParameters', 'noBlock', args.noBlock )
     config.set('analysisParameters', 'noEnergy', args.noEnergy )
+    config.set('analysisParameters', 'noReweight', args.noReweight )
     config.set('analysisParameters', 'noFTP', args.noFTP )
     
     # Get ftp pass

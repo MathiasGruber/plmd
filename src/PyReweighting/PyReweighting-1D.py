@@ -27,11 +27,14 @@ print " "
 def main():
 ## Set control parameters
     plt_figs = 0
+    
+    distribution = []
 
     args = cmdlineparse()   
     
     inputfile=loadfiletoarray(args.input)
     data=inputfile[:]
+    
     rows = len(data)
     weights,dV = weightparse(rows, args)
     if args.Xdim:
@@ -44,7 +47,6 @@ def main():
         cb_max=float(args.Emax)
     else :
         cb_max = 8
-        
 
 ##  SET HISTOGRAM CUTOFF
     if args.cutoff:
@@ -75,6 +77,7 @@ def main():
 ##REWEIGHTING
     if args.job == "amdweight_CE":
     	hist,newedgesX,c1,c2,c3 = reweight_CE(data,hist_min,binsX,discX,dV,T,fit)
+    	distribution = hist
 	pmf = hist2pmf(hist,hist_min,T)
 	c1 = -np.multiply(1.0/beta,c1)
 	c2 = -np.multiply(1.0/beta,c2)
@@ -118,38 +121,47 @@ def main():
 
 ##SAVE FREE ENERGY DATA INTO A FILE
     if args.job == "amdweight_MC" or args.job == "amdweight" or args.job == "noweight" :
-    	pmffile = str(args.name)+'pmf-c2.dat'
+    	pmffile = 'pmf-'+str(args.input)+'.xvg'
 	output_pmf(pmffile,hist,binsX)
     if args.job == "amdweight_CE" :
 	hist = pmf_c1
-    	pmffile = str(args.name)+'pmf-c1.dat'
+    	pmffile = str(args.name)+'-pmf-c1.dat'
 	output_pmf(pmffile,hist,binsX)
 
 	hist = pmf_c2
-    	pmffile = str(args.name)+'pmf-c2.dat'
+    	pmffile = str(args.name)+'-pmf-c2.dat'
 	output_pmf(pmffile,hist,binsX)
 
 	hist = pmf_c3
-    	pmffile = str(args.name)+'pmf-c3.dat'
+    	pmffile = str(args.name)+'-pmf-c3.dat'
 	output_pmf(pmffile,hist,binsX)
 
 ##SAVE WEIGHTS
     if args.job == "amdweight_MC" or args.job == "amdweight" :
-    	pmffile = str(args.name)+'_weights-c2.dat'
+    	pmffile = 'weights-'+str(args.input)+'.xvg'
         ## print "len(weights) = " + str(len(weights)) + "; len(data) = " + str(len(data)) + "; len(binsX) = " + str(len(binsX))
 	output_pmf(pmffile,weights,data)
     if args.job == "amdweight_CE" :
 	hist = np.exp(c1)
-    	pmffile = str(args.name)+'_weights-c1.dat'
+ 	pmffile = str(args.name)+'-weights-c1.dat'
 	output_pmf(pmffile,hist,binsX)
+	pmffile = str(args.name)+'-hist-c1.dat'
+	output_pmf(pmffile, (hist / np.sum( hist )) * distribution * 100 ,binsX)
 
 	hist = np.exp(c12)
-    	pmffile = str(args.name)+'_weights-c2.dat'
-	output_pmf(pmffile,hist,binsX)
+    	pmffile = str(args.name)+'-weights-c2.dat'
+	output_pmf(pmffile,hist,binsX) 
+	print hist / np.sum( hist ), len(hist / np.sum( hist ))
+	print distribution
+	print (hist / np.sum( hist )) * distribution
+	pmffile = str(args.name)+'-hist-c2.dat'
+	output_pmf(pmffile, (hist / np.sum( hist )) * distribution * 100 ,binsX)
 
 	hist = np.exp(c123)
-    	pmffile = str(args.name)+'_weights-c3.dat'
+    	pmffile = str(args.name)+'-weights-c3.dat'
 	output_pmf(pmffile,hist,binsX)
+	pmffile = str(args.name)+'-hist-c3.dat'
+	output_pmf(pmffile, (hist / np.sum( hist )) * distribution * 100 ,binsX)
 
     if args.job == "amd_time" or args.job == "amd_dV" :
     	hist, newedgesX, binf, dV_avg, dV_std, dV_anharm, dV_mat = reweight_dV(data,hist_min,binsX,discX,dV,T)
@@ -202,7 +214,7 @@ def main():
 def cmdlineparse():
     parser = ArgumentParser(description="command line arguments")
     parser.add_argument("-input", dest="input", required=True, help="input file", metavar="<input file>")
-    parser.add_argument("-name", dest="name", required=True, help="output file", metavar="<output_file_name>")
+    parser.add_argument("-name", dest="name", required=True, help="output file", metavar="<output file>")
     parser.add_argument("-job", dest="job", required=True, help="Reweighting method to use: <noweight>, <weighthist>, <amd_time>, <amd_dV>, <amdweight>, <amdweight_MC>, <amdweight_CE>", metavar="<Job type reweighting method>")
     parser.add_argument("-weight", dest="weight", required=False, help="weight file", metavar="<weight file>")
     parser.add_argument("-Xdim", dest="Xdim", required=False, nargs="+", help="Xdimensions", metavar="<Xmin Xmax>")
@@ -227,10 +239,8 @@ def weightparse(rows, args):
         weights=data[:,0]
         dV = np.zeros(rows)
     elif args.job == "amd_time" or args.job == "amd_dV" or args.job == "amdweight" or args.job == "amdweight_MC" or args.job == "amdweight_CE" :
-        data=np.loadtxt(args.weight, dtype = np.float64)
-        print "TEST",data[:,0]
+        data=np.loadtxt(args.weight)
         weights = np.exp(data[:,0])
-        print "TEST", weights
         dV = data[:,2]
     elif args.job == "noweight":
         weights = np.zeros(rows)
@@ -293,10 +303,10 @@ def reweight_CE(data,hist_min,binsX,discX,dV,T,fit):
     dV_avg3 = np.zeros(nbins)
     dV_std = np.zeros(nbins)
     dV_mat = np.zeros((nbins,hist_max)) # matrix for storing dV of each assigned 
-    
+
     dV_avg_all=np.average(dV)
     dV_std_all=np.std(dV)
-    print 'dV all: avg = ', dV_avg_all, 'std = ', dV_std_all, 'len(nbin) = ', nbins, 'len(hist) = ', nf, 'len(dV) = ', len(dV)
+    print 'dV all: avg = ', dV_avg_all, 'std = ', dV_std_all
 
     diff_tol_avg = 10
     diff_tol_std = 1
@@ -307,7 +317,6 @@ def reweight_CE(data,hist_min,binsX,discX,dV,T,fit):
 	if j >= nbins :
 	  j = nbins-1
 	binf[i] = j
-	#print j,i
 	dV_mat[j,nA[j]] = dV[i]
 	nA[j] = nA[j]+1
 
@@ -421,7 +430,7 @@ def hist2pmf(hist,hist_min,T):
 
 def output_pmf(pmffile,hist,binsX):
     	fpmf = open(pmffile, 'w')
-    	strpmf=""#'#RC \tPMF(kcal/mol)\n\n@    xaxis  label \"RC\"\n@    yaxis  label \"PMF(kcal/mol)\"\n@TYPE xy\n'
+    	strpmf="" # '#RC \tPMF(kcal/mol)\n\n@    xaxis  label \"RC\"\n@    yaxis  label \"PMF(kcal/mol)\"\n@TYPE xy\n'
     	fpmf.write(strpmf)
     	for j in range(len(hist[:])):
 		strpmf=str(binsX[j]) + ' \t' + str(hist[j]) + '\n'
@@ -431,7 +440,7 @@ def output_pmf(pmffile,hist,binsX):
 
 def output_dV(pmffile,dV):
     	fpmf = open(pmffile, 'w')
-    	strpmf='#dV \tp(dV) \n\n@    xaxis  label \"dV\"\n@    yaxis  label \"p(dV)\"\n@TYPE xy\n'
+    	strpmf="" # '#dV \tp(dV) \n\n@    xaxis  label \"dV\"\n@    yaxis  label \"p(dV)\"\n@TYPE xy\n'
 	hist_dV, bin_dV = np.histogram(dV, bins=50)
         for k in range(len(hist_dV)):
 		strpmf=strpmf + str(bin_dV[k]) + ' \t' + str(hist_dV[k]) + ' \n'
@@ -441,7 +450,7 @@ def output_dV(pmffile,dV):
 
 def output_dV_anharm(pmffile,binsX,dV_anharm):
     	fpmf = open(pmffile, 'w')
-    	strpmf='#RC \tdV_anharm \tError\n\n@    xaxis  label \"RC\"\n@    yaxis  label \"dV_anmarm\"\n@TYPE xy\n'
+    	strpmf="" #'#RC \tdV_anharm \tError\n\n@    xaxis  label \"RC\"\n@    yaxis  label \"dV_anmarm\"\n@TYPE xy\n'
     	fpmf.write(strpmf)
     	for j in range(len(dV_anharm[:])):
 		strpmf=str(binsX[j]) + ' \t' + str(dV_anharm[j]) + '\n'
@@ -451,7 +460,7 @@ def output_dV_anharm(pmffile,binsX,dV_anharm):
 
 def output_dV_stat(pmffile,binsX,dV_avg,dV_std,dV_anharm):
     	fpmf = open(pmffile, 'w')
-    	strpmf='#RC \tdV_avg(kcal/mol) \tError\n\n@    xaxis  label \"RC\"\n@    yaxis  label \"dV(kcal/mol)\"\n@TYPE xydy\n'
+    	strpmf="" # '#RC \tdV_avg(kcal/mol) \tError\n\n@    xaxis  label \"RC\"\n@    yaxis  label \"dV(kcal/mol)\"\n@TYPE xydy\n'
     	fpmf.write(strpmf)
     	for j in range(len(dV_avg[:])):
 		strpmf=str(binsX[j]) + ' \t' + str(dV_avg[j]) + ' \t' + str(dV_std[j]) + ' \t' + str(dV_anharm[j]) + '\n'
@@ -461,7 +470,7 @@ def output_dV_stat(pmffile,binsX,dV_avg,dV_std,dV_anharm):
 
 def output_dV_mat(pmffile,binsX,hist,dV_avg,dV_std,dV_anharm,dV_mat):
     	fpmf = open(pmffile, 'w')
-    	strpmf='#RC \tNf \tdV_avg \tdV_std \tdV_ij \n\n@    xaxis  label \"RC\"\n@    yaxis  label \"dV(kcal/mol)\"\n@TYPE xy\n'
+    	strpmf="" # '#RC \tNf \tdV_avg \tdV_std \tdV_ij \n\n@    xaxis  label \"RC\"\n@    yaxis  label \"dV(kcal/mol)\"\n@TYPE xy\n'
     	fpmf.write(strpmf)
     	for j in range(len(dV_avg[:])):
 		nf_j = int(hist[j])
@@ -519,3 +528,4 @@ def anharmND(datafull):
   
 if __name__ == '__main__':
     main()
+    

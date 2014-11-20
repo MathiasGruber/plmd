@@ -1,6 +1,6 @@
 import MDAnalysis, os, re
 import plmd
-import energy, pca, kld, endToEnd, RMSdFrequency
+import energy, pca, kld, endToEnd, RMSdFrequency, dihedral
 
 # The analysis handler provides the interface to all the analysis modules
 class analysisHandler (plmd.PLMD_module):
@@ -28,9 +28,22 @@ class analysisHandler (plmd.PLMD_module):
     # Run all the analyses modules
     def runAll( self ):
     
+        # Plot Dihedral
+        try:
+            self.printStage( "Plotting dihedrals")
+            dihedral.runAnalysis( self.dataFiles[ 'caseDirs' ] , self.resultDir, self.backbone, self.config.noReweight );
+        except Exception as e:
+            print "Failed dihedral analysis",e  
+    
+        # Do the PCA analysis
+        try:
+            pca.runAnalysis( self.dataFiles[ 'caseDirs' ] , self.resultDir )
+        except Exception as e:
+            print "Failed pca analysis",e    
+    
         # RMSd frequency
         try:
-            RMSdFrequency.runAnalysis( self.dataFiles[ 'caseDirs' ] , self.resultDir )    
+            RMSdFrequency.runAnalysis( self.dataFiles[ 'caseDirs' ] , self.resultDir, self.config.noReweight )    
         except Exception as e:
             print "Failed rmsd frequency analysis",e    
     
@@ -40,11 +53,6 @@ class analysisHandler (plmd.PLMD_module):
         except Exception as e:
             print "Failed kld analysis",e
         
-        # Do the PCA analysis
-        try:
-            pca.runAnalysis( self.dataFiles[ 'caseDirs' ] , self.resultDir )
-        except Exception as e:
-            print "Failed pca analysis",e
         
         # Plot Energies
         try:

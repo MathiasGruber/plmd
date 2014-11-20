@@ -4,7 +4,7 @@ import numpy as np
 import plmd.plotData as myPlot
 
 # Function for running the actual analysis
-def runAnalysis( caseDirs , resultsDir ):
+def runAnalysis( caseDirs , resultsDir , noReweight = False ):
 
     # User info
     print "Doing RMSd analysis."
@@ -56,36 +56,36 @@ def runAnalysis( caseDirs , resultsDir ):
         dataLabels.append( "Case "+caseDir.split("/")[-1] )
         
         # Check if we should do a reweighted version
-        if os.path.isfile( caseDir+"/md-logs/weights.dat" ):
+        if noReweight == False:
+            if os.path.isfile( caseDir+"/md-logs/weights.dat" ):
+                
+                # User info
+                print "aMD weights found. Now attempting reweighting"
+                
+                # Prepare input file
+                numLines = 0
+                with open(caseDir+"/analysis/data/refGlobalMinimized.rmsd", "r") as fi:
+                    with open(caseDir+"/analysis/data/refGlobalMinimized_singleColumn.rmsd", "w") as fo:
+                        next(fi)
+                        for line in fi:
+                            numLines += 1
+                            fo.write( line.split()[1]+"\n" )
+                
+                # Run the reweighting procedure
+                os.system("python $PLMDHOME/src/PyReweighting/PyReweighting-1D.py \
+                            -input "+caseDir+"/analysis/data/refGlobalMinimized_singleColumn.rmsd \
+                            -name "+caseDir+"/analysis/data/refGlobalMinimized_reweighted \
+                            -Xdim 0 6 \
+                            -disc 0.06 \
+                            -cutoff 5 \
+                            -Emax 200 \
+                            -job amdweight_CE \
+                            -weight "+caseDir+"/md-logs/weights.dat | tee -a reweight_variable.log")
+                            
+                # Save references for plotting            
+                dataFiles.append( caseDir+"/analysis/data/refGlobalMinimized_reweighted-hist-c2.dat" )
+                dataLabels.append( "Case "+caseDir.split("/")[-1]+" Reweigthed 2" )
             
-            # User info
-            print "aMD weights found. Now attempting reweighting"
-            
-            # Prepare input file
-            with open(caseDir+"/analysis/data/refGlobalMinimized.rmsd", "r") as fi:
-                with open(caseDir+"/analysis/data/refGlobalMinimized_singleColumn.rmsd", "w") as fo:
-                    next(fi)
-                    for line in fi:
-                        fo.write( line.split()[1]+"\n" )
-            
-            # Run the reweighting procedure
-            os.system("python $PLMDHOME/src/PyReweighting/PyReweighting-1D.py \
-                        -input "+caseDir+"/analysis/data/refGlobalMinimized_singleColumn.rmsd \
-                        -name "+caseDir+"/analysis/data/refGlobalMinimized_reweighted \
-                        -Xdim 0 7 \
-                        -disc 1 \
-                        -cutoff 1 \
-                        -Emax 20 \
-                        -job amdweight_CE \
-                        -weight "+caseDir+"/md-logs/weights.dat | tee -a reweight_variable.log")
-                        
-            # Save references for plotting
-            dataFiles.append( caseDir+"/analysis/data/refGlobalMinimized_reweightedpmf-c2.dat" )
-            dataLabels.append( "Case "+caseDir.split("/")[-1]+" Reweithed" )
-            
-            
-    print "========================================="
-
     # Do that plotting    
     myPlot.plotData( 
         resultsDir+"/plots" , 
@@ -96,5 +96,4 @@ def runAnalysis( caseDirs , resultsDir ):
         xUnit="RMSd ($\AA$)",
         skipLines = 1
     )
-    
     
