@@ -1,6 +1,6 @@
 import MDAnalysis, os, re
 import plmd
-import energy, pca, kld, endToEnd, RMSdFrequency, dihedral
+import cluster, energy, pca, kld, endToEnd, RMSdFrequency, dihedral
 
 # The analysis handler provides the interface to all the analysis modules
 class analysisHandler (plmd.PLMD_module):
@@ -27,6 +27,14 @@ class analysisHandler (plmd.PLMD_module):
         
     # Run all the analyses modules
     def runAll( self ):
+    
+        # Cluster Comparisons & Reweighting
+        try:
+            self.printStage( "Comparing and plotting clusters")
+            cluster.runAnalysis( self.dataFiles[ 'caseDirs' ] , self.resultDir, self.config.noReweight );
+        except Exception as e:
+            print "Failed cluster comparison & plotting",e    
+            sys.exit(2)
     
         # Plot Dihedral
         try:

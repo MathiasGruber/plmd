@@ -51,7 +51,7 @@ def getDefaultConfig():
     config.set('analysisParameters', 'noEnergy', 'false')
     config.set('analysisParameters', 'noReweight', 'false')
     config.set('analysisParameters', 'noFTP', 'false')
-    config.set('analysisParameters', 'dbscanEps', '0.9')
+    config.set('analysisParameters', 'dbscanEps', '1.2')
     config.set('analysisParameters', 'dbscanMinPoints', '20')
     config.set('analysisParameters', 'clusterFrames', '10000')
     

@@ -53,7 +53,7 @@ cluster dbscan \
     sieve [SIEVE] 
 
 cluster hieragglo \
-    epsilon 2.3 \
+    epsilon 2.5 \
     averagelinkage \
     rms :1-[LASTRESI] @CA,C,N \
     out [FOLDER]/analysis/data/cluster_hier_out \

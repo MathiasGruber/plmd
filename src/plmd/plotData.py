@@ -188,11 +188,12 @@ def plotDataMap( outputDir , title , inputFile , xUnit , yUnit , xColumn=0 , yCo
     ax.set_yticklabels(labels)
 
     # put the major ticks at the middle of each cell
-    ax.set_xticks(np.arange(data.shape[0])+0.5, minor=False)
-    ax.set_yticks(np.arange(data.shape[1])+0.5, minor=False)
+    ax.set_xticks(np.arange(data.shape[1])+0.5, minor=False)
+    ax.set_yticks(np.arange(data.shape[0])+0.5, minor=False)
 
     # Set it up
     if xColumn != 0 and yColumn != 0:
+        print xColumn, yColumn
         ax.set_xticklabels(xColumn, minor=False)
         ax.set_yticklabels(yColumn, minor=False)
     else:

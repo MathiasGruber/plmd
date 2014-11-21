@@ -12,9 +12,6 @@ def runAnalysis( caseDir , eps, minPoints ):
     print "Now Doing dbscan Cluster"
     titlePostpend = "eps: "+str(eps)+", minPoints: "+str(minPoints)
     
-    # Instantiate the class
-    handler = cluster.clusterBase( caseDir+"/analysis/data/cluster_dbscan_out" )
-
     ## KDIST PLOT
     #############
 
@@ -31,9 +28,11 @@ def runAnalysis( caseDir , eps, minPoints ):
         "k-dist",
         xUnit = "points",
         skipLines = 1,
-        xLimits=[0,100])
-
-
+        xLimits=[0,100])    
+    
+    # Instantiate the class
+    handler = cluster.clusterBase( caseDir+"/analysis/data/cluster_dbscan_out" )
+    
     ## RMSd PLOT
     ############
     numRmsdDataSets = handler.separateDataSet( 
