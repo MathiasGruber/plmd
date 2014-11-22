@@ -193,7 +193,6 @@ def plotDataMap( outputDir , title , inputFile , xUnit , yUnit , xColumn=0 , yCo
 
     # Set it up
     if xColumn != 0 and yColumn != 0:
-        print xColumn, yColumn
         ax.set_xticklabels(xColumn, minor=False)
         ax.set_yticklabels(yColumn, minor=False)
     else:
