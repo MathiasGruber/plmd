@@ -116,6 +116,7 @@ class Analysis (plmd.PLMD_module):
                 ftpObject.shipTar( archieveName1+".tar" , "globalAnalysesResults", postpend = "plots" )
                 ftpObject.shipTar( archieveName2+".tar" , "globalAnalysesResults", postpend = "structures" )
                 ftpObject.shipDir( folderToCompres1 , "globalAnalysesResults" )
+                ftpObject.shipDir( "globalAnalysesResults/clusterComparison" , "globalAnalysesResults" )
             
         else:
             raise Exception("Not enough data was found to run global analysis")
