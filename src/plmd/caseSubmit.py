@@ -296,5 +296,5 @@ class Setup (plmd.PLMD_module):
         if peptideRegion:
             self.peptideRegion = ":"+peptideRegion[0]+"-"+peptideRegion[-1] 
         else:
-            self.peptideRegion = self.qmRegion
+            self.peptideRegion = ""
             
