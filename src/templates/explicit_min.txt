@@ -7,8 +7,6 @@ Peptide: Minimization in solvatebox
   ntr = 1,
   restraint_wt=1.0,
   restraintmask='[PEPTIDERESI]',
-  ntc = [NTC],
-  ntf = [NTF],
   cut = 10.0,
   ifqnt=[EABLEQM]
  /
