@@ -293,5 +293,8 @@ class Setup (plmd.PLMD_module):
             self.qmRegion = ":"+qmRegion[0]+"-"+qmRegion[ len(qmRegion)-1 ] 
             
         # Set the peptide region
-        self.peptideRegion = ":"+peptideRegion[0]+"-"+peptideRegion[-1] 
+        if self.peptideRegion:
+            self.peptideRegion = ":"+peptideRegion[0]+"-"+peptideRegion[-1] 
+        else:
+            self.peptideRegion = self.qmRegion
             
