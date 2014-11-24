@@ -104,13 +104,16 @@ class Setup (plmd.PLMD_module):
             structureManipulation.processStructureFile( self.config.peptide , "pdb", self.peptideCoordinates, self.peptideResnames )
             self.peptideCenterOfMass = structureManipulation.centerOfMass( self.peptideCoordinates )
         else:
-            raise Exception("A simulation without protein is senseless. If you are trying to debug the ion, please run Amber manually for increased control.") 
+            self.peptideCenterOfMass = [0,0,0]
+            self.peptideCoordinates = [ self.peptideCenterOfMass ]
         
         # Get the coordinates, resnames and center of masses of ligand. Passed by reference.
         if self.config.ligandCount > 0:
             structureManipulation.processStructureFile( self.config.ligand , "mol2", self.ligandCoordinates, self.ligandResnames )
             self.ligandCenterOfMass = structureManipulation.centerOfMass( self.ligandCoordinates )
         
+        if self.config.peptideCount == 0 and self.config.ligandCount == 0:
+            raise Exception("A simulation without receptor or ligand is senseless.") 
         
         # Create main folder for project
         self.createMainFolder()        
