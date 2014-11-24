@@ -185,6 +185,7 @@ class Setup (plmd.PLMD_module):
         TEMP = TEMPLATE.read().replace("[FORCEFIELDS]", ffString ). \
                               replace("[PLMDHOME]", self.config.PLMDHOME ). \
                               replace("[STRUCTURES_IMPORT]", structureString ). \
+                              replace("[WATERBOXSIZE]", str(self.config.waterboxsize) ). \
                               replace("[FOLDER]", "cases/"+caseName )
         TEMPLATE.close()
         FILE = open("cases/"+caseName+"/LEaP.ff","w");

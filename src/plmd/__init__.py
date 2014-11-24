@@ -60,6 +60,7 @@ class PLMD_Config:
         self.peptideCount = config.getint('inputFiles', 'peptideCount')
         self.cases = config.getint('inputFiles', 'cases')
         self.noTranslate = config.getboolean('inputFiles', 'noTranslate')
+        self.waterboxsize = config.getfloat('inputFiles', 'waterboxsize')
         
         self.quiet = config.getboolean('inputFiles', 'quiet')
         

@@ -22,6 +22,7 @@ def getDefaultConfig():
     config.set('inputFiles', 'cases', '4')
     config.set('inputFiles', 'quiet', 'false')
     config.set('inputFiles', 'noTranslate', 'false')
+    config.set('inputFiles', 'waterboxsize', '8.0')
     
     config.add_section('simulationParameters')
     config.set('simulationParameters', 'forceField', 'leaprc.ff14SB')
