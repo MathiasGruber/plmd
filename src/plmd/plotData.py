@@ -48,8 +48,9 @@ def plotData(
         for aline in qbfile:
             if n >= skipLines:
                 values = aline.split()
-                xData.append(float(values[0])*xFactor)
-                yData.append(float(values[1]))
+                if float(values[1]) > 0:
+                    xData.append(float(values[0])*xFactor)
+                    yData.append(float(values[1]))
             n = n + 1
             
         # Limit data to 500 data points
