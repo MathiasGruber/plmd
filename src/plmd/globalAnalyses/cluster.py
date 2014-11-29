@@ -52,7 +52,7 @@ def runAnalysis( caseDirs, resultsDir, noReweight = False ):
                                         # Get RMSd value
                                         refPdb  = Universe( refFile )
                                         casePdb = Universe( caseFile )
-                                        alignto(casePdb, refPdb, select="protein and name CA", mass_weighted=True)
+                                        alignto(casePdb, refPdb, select="not (name H*)", mass_weighted=True)
                                         rmsdValue    = rmsd(refPdb.atoms.CA.coordinates(), casePdb.atoms.CA.coordinates())
                                         
                                         # Add to data array

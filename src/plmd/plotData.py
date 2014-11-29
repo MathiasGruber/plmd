@@ -20,6 +20,7 @@ def plotData(
     tightYlimits = False,
     skipLines = 0, 
     xFactor = 1,
+    showTitle = True,
     figWidth = 8,
     figHeight = 6,
     legendLoc = 1,
@@ -101,14 +102,14 @@ def plotData(
     # Check if tight x-limits
     if tightXlimits == True:
         xmin,xmax = math.floor(xmin), math.ceil(xmax)
+        print "Now setting X limites to: ",xmin, xmax
         ax.set_xlim([xmin,xmax]) 
-        print "Setting X limites to: ",xmin, xmax
         
     # Check if tight y-limits
     if tightYlimits == True:
         ymin,ymax = math.floor(ymin), math.ceil(ymax)
+        print "Now setting Y limites to: ",ymin, ymax
         ax.set_ylim([ymin,ymax]) 
-        print "Setting Y limites to: ",ymin, ymax
         
     # Force limits
     if xLimits != False:
@@ -121,7 +122,8 @@ def plotData(
         ax.set_yscale('log')
         
     # Plot title
-    plt.title( title )
+    if showTitle == True:
+        plt.title( title )
     
     # Create the legend
     plt.legend(
