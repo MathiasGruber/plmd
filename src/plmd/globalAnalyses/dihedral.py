@@ -45,7 +45,6 @@ def runAnalysis( caseDirs, resultsDir, backbone , noReweight = False ):
                     
                     #Convert to free energy in Kcal/mol
                     hist=(0.001987*300)*np.log(hist) 
-                    print "PMF_min = ", -np.max(hist)
                     
                     # zero value to lowest energy state
                     hist=np.max(hist)-hist  

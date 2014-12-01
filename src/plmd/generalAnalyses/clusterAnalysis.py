@@ -45,13 +45,12 @@ class clusterBase():
                         data[ cluster ]["x"].append( temp[ xColumn ] )
                         data[ cluster ]["y"].append( temp[ i ] )
     
-        print "==================="
-        print clusters
         # Save it in appropriate files
         for cluster, dataset in data.iteritems():
             with open( outFiles+str(cluster) , "w") as fo:
                 for i in range( 0, len(dataset["x"]) ):
                     fo.write( dataset["x"][i]+"\t"+dataset["y"][i]+"\n" )
-          
+        
+        print "Clusters: ", clusters
         return len(clusters)
 

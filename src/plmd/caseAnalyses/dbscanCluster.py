@@ -127,10 +127,6 @@ def runAnalysis( caseDir , eps, minPoints ):
             # First one is noise
             clusterLabels[0] = "Noise"        
             
-            print "Calling plot"
-            print "labels", clusterLabels  
-            print "files", clusterFiles  
-            
             myPlot.plotData( 
                 caseDir+"/analysis/plots" , 
                 "PCA DBscan Cluster, 1vs"+str(n), 

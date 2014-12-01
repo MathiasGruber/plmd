@@ -42,6 +42,7 @@ def plotData(
     # Go through the to plot
     i = 0
     xmin,xmax,ymin,ymax = 0,0,0,0
+    
     for filename in inputFiles:
         xData, yData = [],[]
         qbfile = open(filename,"r")
@@ -49,51 +50,54 @@ def plotData(
         for aline in qbfile:
             if n >= skipLines:
                 values = aline.split()
-                if float(values[1]) > 0:
+                if yLimits == False or float(values[1]) > yLimits[0]:
                     xData.append(float(values[0])*xFactor)
                     yData.append(float(values[1]))
             n = n + 1
             
-        # Limit data to 500 data points
-        if n > 500:
-            timesOver = int(math.floor( n / 500. ))
-            if timesOver > 2:
-                xData = xData[::timesOver]
-                yData = yData[::timesOver]
+        # Check if there's any data
+        if yData:            
         
-        # If xFactor is above 1, save the corrected data set in a new data file
-        if xFactor > 1:
-            with open( filename+"_timeCorrected", "w" ) as fo:
-                for n in range( 0, len(xData) ):
-                    fo.write( str(xData[n]) + "\t" + str(yData[n])  +"\n")
-        
-        # Do the plotting (rasterize to reduce load time)
-        if scatter == False:
+            # Limit data to 500 data points
+            if n > 1000:
+                timesOver = int(math.floor( n / 1000. ))
+                if timesOver > 2:
+                    xData = xData[::timesOver]
+                    yData = yData[::timesOver]
             
-             # Set linetype for the plot
-            lineType = '-'
-            if types != None:
-                lineType = types[i]
+            # If xFactor is above 1, save the corrected data set in a new data file
+            if xFactor > 1:
+                with open( filename+"_timeCorrected", "w" ) as fo:
+                    for n in range( 0, len(xData) ):
+                        fo.write( str(xData[n]) + "\t" + str(yData[n])  +"\n")
             
-            # Do the plot
-            plt.plot( xData, yData , lineType, label = labels[i] , rasterized=True)
-        
-        else:
-        
-            # Do the plot
-            colors = plt.rcParams['axes.color_cycle']
-            color = colors[i % len(colors)]
-            plt.scatter( xData, yData , s=2, color=color, label = labels[i] , rasterized=True)
-        
-        # Get limits
-        xmax = np.max( xData ) if np.max( xData ) > xmax else xmax
-        xmin = np.min( xData ) if np.min( xData ) < xmin else xmin
-        ymax = np.max( yData ) if np.max( yData ) > ymax else ymax
-        ymin = np.min( yData ) if np.min( yData ) < ymin else ymin
+            # Do the plotting (rasterize to reduce load time)
+            if scatter == False:
+                
+                # Set linetype for the plot
+                lineType = '-'
+                if types != None:
+                    lineType = types[i]
+                
+                # Do the plot
+                plt.plot( xData, yData , lineType, label = labels[i] , rasterized=True)
+            
+            else:
+            
+                # Do the plot
+                colors = plt.rcParams['axes.color_cycle']
+                color = colors[i % len(colors)]
+                plt.scatter( xData, yData , s=2, color=color, label = labels[i] , rasterized=True)
+            
+            # Get limits
+            xmax = np.max( xData ) if np.max( xData ) > xmax else xmax
+            xmin = np.min( xData ) if np.min( xData ) < xmin else xmin
+            ymax = np.max( yData ) if np.max( yData ) > ymax else ymax
+            ymin = np.min( yData ) if np.min( yData ) < ymin else ymin
     
         # Next in line
         i = i + 1
-                
+        
     # Set title, labels etc
     ax = fig.gca()
     ax.set_xlabel(xUnit, fontsize=12)

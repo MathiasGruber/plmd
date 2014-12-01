@@ -95,13 +95,13 @@ def main():
 	c12 = np.add(c1,c2)
 	c123 = np.add(c12,c3)
 	pmf_c1 = np.add(pmf, c1)
-	print "pmf_min-c1 = ", np.min(pmf_c1)
+	#print "pmf_min-c1 = ", np.min(pmf_c1)
 	pmf_c1 = normalize(pmf_c1,cb_max)
 	pmf_c2 = np.add(pmf, c12)
-	print "pmf_min-c2 = ", np.min(pmf_c2)
+	#print "pmf_min-c2 = ", np.min(pmf_c2)
 	pmf_c2 = normalize(pmf_c2,cb_max)
 	pmf_c3 = np.add(pmf, c123)
-	print "pmf_min-c3 = ", np.min(pmf_c3)
+	#print "pmf_min-c3 = ", np.min(pmf_c3)
 	pmf_c3 = normalize(pmf_c3,cb_max)
     elif args.job == "amdweight_MC":
         n=order
@@ -151,9 +151,9 @@ def main():
 	hist = np.exp(c12)
     	pmffile = str(args.name)+'-weights-c2.dat'
 	output_pmf(pmffile,hist,binsX) 
-	print hist / np.sum( hist ), len(hist / np.sum( hist ))
-	print distribution
-	print (hist / np.sum( hist )) * distribution
+	#print hist / np.sum( hist ), len(hist / np.sum( hist ))
+	#print distribution
+	#print (hist / np.sum( hist )) * distribution
 	pmffile = str(args.name)+'-hist-c2.dat'
 	output_pmf(pmffile, (hist / np.sum( hist )) * distribution * 100 ,binsX)
 

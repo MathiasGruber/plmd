@@ -67,7 +67,7 @@ def runAnalysis( caseDirs, resultsDir, noReweight = False ):
                             
                             # CA rmsd distance map
                             myPlot.plotDataMap( 
-                                resultsDir+"/clusterComparison" , 
+                                resultsDir+"/plots/clusterComparison" , 
                                 plotName, 
                                 resultsDir+"/data/"+plotName+".dat", 
                                 "Case "+caseDir.split("/")[-1]+", Cluster ID", 
@@ -82,7 +82,7 @@ def runAnalysis( caseDirs, resultsDir, noReweight = False ):
                                                         
                             # CA distance map
                             myPlot.plotDataMap( 
-                                resultsDir+"/clusterComparison" , 
+                                resultsDir+"/plots/clusterComparison" , 
                                 "similars_"+plotName, 
                                 resultsDir+"/data/similars_"+plotName+".dat", 
                                 "Case "+caseDir.split("/")[-1]+", Cluster ID", 

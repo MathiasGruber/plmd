@@ -80,7 +80,8 @@ class Analysis (plmd.PLMD_module):
             analysisDir = "globalAnalysesResults"
             self.createFolder( analysisDir , True ) 
             self.createFolder( analysisDir+"/plots/" , True )
-            self.createFolder( analysisDir+"/clusterComparison/" , True )
+            self.createFolder( analysisDir+"/plots/clusterComparison/" , True )
+            self.createFolder( analysisDir+"/plots/pcaComparison/" , True )
             self.createFolder( analysisDir+"/structures/" , True )
             self.createFolder( analysisDir+"/data/" , True )
             

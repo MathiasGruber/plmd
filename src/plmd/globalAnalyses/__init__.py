@@ -28,7 +28,13 @@ class analysisHandler (plmd.PLMD_module):
     # Run all the analyses modules
     def runAll( self ):
     
-        # Cluster Comparisons & Reweighting
+        # Do the PCA analysis
+        try:
+            pca.runAnalysis( self.dataFiles[ 'caseDirs' ] , self.resultDir )
+        except Exception as e:
+            print "Failed pca analysis",e        
+    
+        # Cluster Comparisons
         try:
             self.printStage( "Comparing and plotting clusters")
             cluster.runAnalysis( self.dataFiles[ 'caseDirs' ] , self.resultDir, self.config.noReweight );
@@ -42,12 +48,6 @@ class analysisHandler (plmd.PLMD_module):
             dihedral.runAnalysis( self.dataFiles[ 'caseDirs' ] , self.resultDir, self.backbone, self.config.noReweight );
         except Exception as e:
             print "Failed dihedral analysis",e  
-    
-        # Do the PCA analysis
-        try:
-            pca.runAnalysis( self.dataFiles[ 'caseDirs' ] , self.resultDir )
-        except Exception as e:
-            print "Failed pca analysis",e    
     
         # RMSd frequency
         try:

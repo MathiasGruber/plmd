@@ -1,24 +1,17 @@
 #!/usr/bin/python
 import plmd.generalAnalyses.componentAnalysis as pcaFuncs
+import plmd.generalAnalyses.clusterAnalysis as cluster
+import plmd.plotData as myPlot
 import os, sys
 
 # Function for running the actual analysis
 def runAnalysis( caseDirs , resultsDir ):
     
-    # User info
-    print "Doing PCA analysis."
-    
-    # Determine layout
-    rows,columns = 1,1
-    dirs = len( caseDirs )
-    if dirs > 1:
-        columns = 2
-        if dirs > 2:
-            rows = 2
-            
-    
     # Do a reference for each one
     for refDir in caseDirs:
+        
+        # User info
+        print "Doing PCA analysis with "+refDir+" as reference"
 
         # ID of reference case
         refID = refDir.split("/")[-1]
@@ -26,21 +19,25 @@ def runAnalysis( caseDirs , resultsDir ):
         # Get the PCA limits of component 1-2 plot
         limit = 10
         with open(refDir+"/analysis/data/pca_limits_1", "r") as fi:
-            limit = int(fi.read())
+            limit = int(float(fi.read()))
+            limit += 0.01
         
-         # PCA plotter
-        pcaHandler = pcaFuncs.PCA( 
-            resultsDir+"/plots/PCA_analysis_Components"+refID+".pdf",
-            subplotColums = columns,
-            subplotRows = rows
-        )
-
         # Go through the case dirs to plot
         for caseDir in caseDirs:
+            
+            print "Using "+caseDir+" as case"
+            
+            # ID of case
+            caseID = caseDir.split("/")[-1]
             
             # Create & run cpptraj for plotting all cases on the axes of the first eigenvector
             # Good URLs for PCA in CPPTRAJ:
             # http://archive.ambermd.org/201404/0243.html
+                        
+            # PCA plotter
+            pcaHandler = pcaFuncs.PCA( 
+                resultsDir+"/plots/pcaComparison/PCA_"+caseID+" on "+refID+".pdf"
+            )    
             
             # Create new submission file
             TEMPLATE = open( caseDir+"/ccptraj_analysis_pca.ptraj", 'r')
@@ -55,10 +52,9 @@ def runAnalysis( caseDirs , resultsDir ):
             # Run the cpptraj utility
             os.system( "$AMBERHOME/bin/cpptraj -p "+caseDir+"/md-files/peptide_nowat.prmtop -i "+caseDir+"/ccptraj_analysis_pca.ptraj" )
         
-    
             # Do the plots of energy landscapes & distributions
             pcaHandler.plotPCA( 
-                "Case: "+caseDir.split("/")[-1]+". Ref case: "+refID,   # Plot Title
+                "Case: "+caseID+". Ref case: "+refID,   # Plot Title
                 caseDir+"/analysis/data/" ,        # Data Dir
                 "global_pca",                      # Eigenvector file
                 eigenVectorCount = 2,              # Only plot two
@@ -66,5 +62,49 @@ def runAnalysis( caseDirs , resultsDir ):
                 limits = limit
             )
             
-        # Save the plot
-        pcaHandler.savePlot()
+            # Save the plot
+            pcaHandler.savePlot()
+            
+            # Instantiate the class
+            if os.path.isfile(caseDir+"/analysis/data/cluster_dbscan_out"):   
+                
+                print "Doing the cluster equivalent of the PCA plot"
+            
+                # Start the cluster handler. Load the file declaring cluster for each frame
+                clusterHandler = cluster.clusterBase( caseDir+"/analysis/data/cluster_dbscan_out" )
+                
+                # Separate the dataset.
+                # global_pca is the projection file for this case on the ref modes
+                numPCAdataSets = clusterHandler.separateDataSet( 
+                    caseDir+"/analysis/data/global_pca",            # Input file
+                    caseDir+"/analysis/data/cluster_dbscan_pca_",   # Output files
+                    xColumn = 1
+                ) 
+                
+                # Create lists of labels and files for plotting
+                clusterLabels = []
+                clusterFiles = []
+                for i in range( 0, numPCAdataSets):
+                    clusterLabels.append( "Cluster "+str(i) )
+                    clusterFiles.append( caseDir+"/analysis/data/cluster_dbscan_pca_d2_c"+str(i) )
+                
+                # First one is noise
+                clusterLabels[0] = "Noise"                 
+                
+                myPlot.plotData( 
+                    resultsDir+"/plots/pcaComparison/" , 
+                    "DBscan, "+caseID+" on "+refID, 
+                    clusterLabels, 
+                    clusterFiles , 
+                    "PC1",
+                    xUnit = "PC1",
+                    scatter = True,
+                    legendLoc = 4,
+                    figWidth = 8,
+                    figHeight = 8,
+                    tightXlimits = False,
+                    legendFrame = 1,
+                    legendAlpha = 1,
+                    xLimits = [-limit,limit],
+                    yLimits = [-limit,limit]
+                )

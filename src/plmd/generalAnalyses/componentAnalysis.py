@@ -86,7 +86,16 @@ class PCA():
         
 
     # Function for running the actual analysis
-    def plotPCA( self, plotTitleIdentifier, dataDir, eigenVectorFile , eigenValueFile = False , eigenVectorCount = 4, plotDistibution = True, limits = False ):
+    def plotPCA( 
+        self, 
+        plotTitleIdentifier, 
+        dataDir, 
+        eigenVectorFile , 
+        eigenValueFile = False , 
+        eigenVectorCount = 4, 
+        plotDistibution = True, 
+        limits = False 
+    ):
     
         # If this is the first plot, create grid
         if self.subPlots == 0:
@@ -121,7 +130,7 @@ class PCA():
             if n > 1 and aline:
                 values = aline.split()
                 
-                # Add frames
+                # Add frames                
                 frames.append( int(values[0]) )
                 
                 # If requesting more vectors than present
@@ -208,7 +217,7 @@ class PCA():
                     ax.set_ylabel("PC"+str(component+1), fontsize=12)
                 
                 ax.set_title( "PCA. "+plotTitleIdentifier )
-                #ax.rc('font', **font)   
+                plt.rc('font', **font)   
         
                 # Save pdf page if it's filled
                 if self.subPlots >= (self.rows*self.columns):

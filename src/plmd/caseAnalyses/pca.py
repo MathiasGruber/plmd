@@ -26,7 +26,7 @@ def runAnalysis( caseDir, mdTrajectory ):
         "Case: "+caseDir.split("/")[-1],              # Plot Title
         caseDir+"/analysis/data/" ,                   # Data Dir
         "pca12-ca",                                   # Eigenvector file
-        "evecs-cleaned.dat"                                # Eigenvalue file
+        "evecs-cleaned.dat"                           # Eigenvalue file
     )
     
     # Save all the structures
