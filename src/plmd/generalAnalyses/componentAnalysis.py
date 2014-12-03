@@ -5,6 +5,7 @@ import MDAnalysis
 from pylab import plt
 from matplotlib.backends.backend_pdf import PdfPages
 from matplotlib.colors import LogNorm
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 class PCA():
     
@@ -52,7 +53,7 @@ class PCA():
     # Create subplot page
     def createPdfPage( self ):
         print "Creating a new subplot grid"
-        self.fig, self.axarr = plt.subplots( nrows=self.rows, ncols=self.columns )
+        self.fig, self.axarr = plt.subplots(figsize=(8, 8), nrows=self.rows, ncols=self.columns )
         
     # Save current plot
     def savePdfPage( self ):
@@ -180,7 +181,14 @@ class PCA():
                     
                     # Now plot the 2d histogram
                     img = ax.imshow(H,  interpolation='nearest', origin='lower',extent=[yedges[0], yedges[-1],xedges[0], xedges[-1]] , rasterized=True )
-                    colorbar = plt.colorbar(img, ax=ax)
+                    
+                    # create an axes on the right side of ax. The width of cax will be 5%
+                    # of ax and the padding between cax and ax will be fixed at 0.05 inch.
+                    divider = make_axes_locatable(ax)
+                    cax = divider.append_axes("right", size="5%", pad=0.05)                    
+                    
+                    # Create colorbar
+                    colorbar = plt.colorbar(img, ax=ax, cax = cax)
                     colorbar.set_label("Kcal / mol")
                     self.colorBars.append(colorbar)
                     
