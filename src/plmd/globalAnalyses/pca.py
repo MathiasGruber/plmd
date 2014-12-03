@@ -9,12 +9,12 @@ def runAnalysis( caseDirs , resultsDir ):
     
     # Do a reference for each one
     for refDir in caseDirs:
-        
-        # User info
-        print "Doing PCA analysis with "+refDir+" as reference"
 
         # ID of reference case
         refID = refDir.split("/")[-1]
+        
+        # User info
+        print "Doing PCA analysis with "+refDir+" as reference"
         
         # Get the PCA limits of component 1-2 plot
         limit = 10
@@ -64,47 +64,52 @@ def runAnalysis( caseDirs , resultsDir ):
             
             # Save the plot
             pcaHandler.savePlot()
-            
-            # Instantiate the class
-            if os.path.isfile(caseDir+"/analysis/data/cluster_dbscan_out"):   
+
+            # Do both hier and dbscan
+            for clusterType in ["dbscan","hier"]:            
                 
-                print "Doing the cluster equivalent of the PCA plot"
-            
-                # Start the cluster handler. Load the file declaring cluster for each frame
-                clusterHandler = cluster.clusterBase( caseDir+"/analysis/data/cluster_dbscan_out" )
+                # Instantiate the class
+                if os.path.isfile(caseDir+"/analysis/data/cluster_"+clusterType+"_out"):   
+                    
+                    print "Doing the "+clusterType+" cluster equivalent of the PCA plot"
                 
-                # Separate the dataset.
-                # global_pca is the projection file for this case on the ref modes
-                numPCAdataSets = clusterHandler.separateDataSet( 
-                    caseDir+"/analysis/data/global_pca",            # Input file
-                    caseDir+"/analysis/data/cluster_dbscan_pca_",   # Output files
-                    xColumn = 1
-                ) 
-                
-                # Create lists of labels and files for plotting
-                clusterLabels = []
-                clusterFiles = []
-                for i in range( 0, numPCAdataSets):
-                    clusterLabels.append( "Cluster "+str(i) )
-                    clusterFiles.append( caseDir+"/analysis/data/cluster_dbscan_pca_d2_c"+str(i) )
-                
-                # First one is noise
-                clusterLabels[0] = "Noise"                 
-                
-                myPlot.plotData( 
-                    resultsDir+"/plots/pcaComparison/" , 
-                    "DBscan, "+caseID+" on "+refID, 
-                    clusterLabels, 
-                    clusterFiles , 
-                    "PC1",
-                    xUnit = "PC1",
-                    scatter = True,
-                    legendLoc = 4,
-                    figWidth = 8,
-                    figHeight = 8,
-                    tightXlimits = False,
-                    legendFrame = 1,
-                    legendAlpha = 1,
-                    xLimits = [-limit,limit],
-                    yLimits = [-limit,limit]
-                )
+                    # Start the cluster handler. Load the file declaring cluster for each frame
+                    clusterHandler = cluster.clusterBase( caseDir+"/analysis/data/cluster_"+clusterType+"_out" )
+                    
+                    # Separate the dataset.
+                    # global_pca is the projection file for this case on the ref modes
+                    numPCAdataSets = clusterHandler.separateDataSet( 
+                        caseDir+"/analysis/data/global_pca",            # Input file
+                        caseDir+"/analysis/data/cluster_"+clusterType+"_pca_",   # Output files
+                        xColumn = 1
+                    ) 
+                    
+                    # Create lists of labels and files for plotting
+                    clusterLabels = []
+                    clusterFiles = []
+                    offset = 1 if clusterType == "hier" else 0
+                    for i in range( 0+offset, numPCAdataSets+offset):
+                        clusterLabels.append( "Cluster "+str(i) )
+                        clusterFiles.append( caseDir+"/analysis/data/cluster_"+clusterType+"_pca_d2_c"+str(i) )
+                    
+                    # First one is noise
+                    if offset == 0:
+                        clusterLabels[0] = "Noise"                 
+                    
+                    myPlot.plotData( 
+                        resultsDir+"/plots/pcaComparison/" , 
+                        clusterType+", "+caseID+" on "+refID, 
+                        clusterLabels, 
+                        clusterFiles , 
+                        "PC1",
+                        xUnit = "PC1",
+                        scatter = True,
+                        legendLoc = 4,
+                        figWidth = 8,
+                        figHeight = 8,
+                        tightXlimits = False,
+                        legendFrame = 1,
+                        legendAlpha = 1,
+                        xLimits = [-limit,limit],
+                        yLimits = [-limit,limit]
+                    )
