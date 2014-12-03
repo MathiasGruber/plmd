@@ -36,7 +36,7 @@ def runAnalysis( caseDirs , resultsDir ):
                         
             # PCA plotter
             pcaHandler = pcaFuncs.PCA( 
-                resultsDir+"/plots/pcaComparison/PCA_"+caseID+" on "+refID+".pdf"
+                resultsDir+"/plots/pcaComparison/PCA_"+caseID+"_on_"+refID+".pdf"
             )    
             
             # Create new submission file
@@ -98,10 +98,10 @@ def runAnalysis( caseDirs , resultsDir ):
                     
                     myPlot.plotData( 
                         resultsDir+"/plots/pcaComparison/" , 
-                        clusterType+", "+caseID+" on "+refID, 
+                        clusterType+"_"+caseID+"_on_"+refID, 
                         clusterLabels, 
                         clusterFiles , 
-                        "PC1",
+                        "PC2",
                         xUnit = "PC1",
                         scatter = True,
                         legendLoc = 4,
