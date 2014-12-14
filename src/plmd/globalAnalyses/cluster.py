@@ -22,6 +22,9 @@ def runAnalysis( caseDirs, resultsDir, noReweight = False ):
     showClusters = 10
     clusterTypes = ["hier", "dbscan"]   
     
+    # Save information in these arrays
+    clusterFiles = []
+    
     # Take each directory as ref directory
     for refDir in caseDirs:
         for refType in clusterTypes:
@@ -30,6 +33,9 @@ def runAnalysis( caseDirs, resultsDir, noReweight = False ):
             for caseDir in caseDirs:
                 if caseDir != refDir:
                     for caseType in clusterTypes:
+                    
+                        ## CLUSTER COMPARISON 2D PLOTS
+                        ##############################                    
                     
                         # The Data Array
                         data = []   
@@ -48,6 +54,12 @@ def runAnalysis( caseDirs, resultsDir, noReweight = False ):
                                 for caseFile in sorted(caseFiles, key=numericalSort):
                                     if caseCases < showClusters:
                                         caseCases += 1
+                                        
+                                        # Save files
+                                        if caseFile not in clusterFiles:
+                                            clusterFiles.append(caseFile)
+                                        if refFile not in clusterFiles:
+                                            clusterFiles.append(refFile)
                                         
                                         # Get RMSd value
                                         refPdb  = Universe( refFile )
@@ -90,4 +102,7 @@ def runAnalysis( caseDirs, resultsDir, noReweight = False ):
                                 xColumn=range(1,showClusters+1),
                                 yColumn=range(1,showClusters+1)
                             )
+                            
+    ## DISTINCT CLUSTERS SAVING & 2D HISTOGRAM
+    ##########################################
         

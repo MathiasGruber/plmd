@@ -2,10 +2,14 @@
 import plmd.generalAnalyses.componentAnalysis as pcaFuncs
 import plmd.generalAnalyses.clusterAnalysis as cluster
 import plmd.plotData as myPlot
-import os, sys
+import os, sys, math
+from pylab import plt
+import numpy as np
+from matplotlib.colors import LogNorm
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 # Function for running the actual analysis
-def runAnalysis( caseDirs , resultsDir ):
+def runAnalysis( caseDirs , resultsDir , noReweight = False):
     
     # Do a reference for each one
     for refDir in caseDirs:
@@ -29,6 +33,9 @@ def runAnalysis( caseDirs , resultsDir ):
             
             # ID of case
             caseID = caseDir.split("/")[-1]
+            
+            ## PCA PLOTTING ON REF DIR PCA COMPONENTS
+            #########################################
             
             # Create & run cpptraj for plotting all cases on the axes of the first eigenvector
             # Good URLs for PCA in CPPTRAJ:
@@ -64,6 +71,98 @@ def runAnalysis( caseDirs , resultsDir ):
             
             # Save the plot
             pcaHandler.savePlot()
+            
+            ## REWEIGHTING OF PCA PLOTS ON RED DIR PCA COMPONENTS
+            #####################################################
+
+            # Check if we should do a reweighted version
+            if noReweight == False:
+                if os.path.isfile( caseDir+"/md-logs/weights.dat" ):
+                    
+                    # User info
+                    print "aMD weights found. Now attempting 2D reweighting"   
+                    
+                    # Prepare input file
+                    numLines = 0
+                    with open(caseDir+"/analysis/data/global_pca", "r") as fi:
+                        with open(caseDir+"/analysis/data/global_pca_singleColumn", "w") as fo:
+                            next(fi)
+                            for line in fi:
+                                numLines += 1
+                                fo.write( line.split()[1]+"\t"+line.split()[2]+"\n" )
+
+                    # Set the discretization
+                    reqBins = 100         
+                    discretization = (2*limit) / reqBins                       
+                    
+                    # Run the reweighting procedure
+                    command = "python $PLMDHOME/src/PyReweighting/PyReweighting-2D.py \
+                                -input "+caseDir+"/analysis/data/global_pca_singleColumn \
+                                -name "+caseDir+"/analysis/data/global_pca_singleColumn_reweighted \
+                                -Xdim -"+str(limit)+" "+str(limit)+" \
+                                -Ydim -"+str(limit)+" "+str(limit)+" \
+                                -discX "+str(discretization)+" \
+                                -discY "+str(discretization)+" \
+                                -cutoff 1 \
+                                -Emax 10 \
+                                -job amdweight_CE \
+                                -weight "+refDir+"/md-logs/weights.dat | tee -a reweight_variable.log"
+                    print "Running command:", command
+                    os.system( command )
+                    
+                    # Create long file for PCA module
+                    with open(caseDir+"/analysis/data/global_pca_reweightedDone", "w") as fo:
+                        with open(caseDir+"/analysis/data/global_pca_singleColumn_reweighted-pmf-c2.dat", "r") as fi:
+                            frame = 0
+                            for line in fi:
+                                temp = line.split()
+                                entries = int(float(temp[2])*10)
+                                for i in range(0,entries):
+                                    fo.write( str(frame) + "\t" + temp[0] + "\t" + temp[1] +"\n" )
+                                    frame += 1
+
+                    # Print block analysis
+                    fig, ax = plt.subplots(figsize=(8, 8), nrows=1, ncols=1 )
+                    font = {'family' : 'Arial','weight' : 'normal','size' : 10}
+                    plt.rc('font', **font)
+                    
+                    # Now plot the 2d histogram
+                    hist = np.load(caseDir+"/analysis/data/global_pca_singleColumn_reweighted_c2EnergyHist.npy")   
+                    xedges = np.load(caseDir+"/analysis/data/global_pca_singleColumn_reweighted_c2edgesX.npy")   
+                    yedges = np.load(caseDir+"/analysis/data/global_pca_singleColumn_reweighted_c2edgesY.npy")   
+                    
+                    # Remove points above limit
+                    for jy in range(len(hist[0,:])):
+                        for jx in range(len(hist[:,0])):
+                            if hist[jx,jy] >= 10:
+                                hist[jx,jy] = float("inf")
+                    
+                    # Do plot
+                    img = plt.imshow(hist.transpose(),  interpolation='nearest', origin='lower',extent=[yedges[0], yedges[-1],xedges[0], xedges[-1]] , rasterized=True )
+                    
+                    # create an axes on the right side of ax. The width of cax will be 5%
+                    # of ax and the padding between cax and ax will be fixed at 0.05 inch.
+                    divider = make_axes_locatable(ax)
+                    cax = divider.append_axes("right", size="5%", pad=0.05)   
+                    
+                    # Create colorbar
+                    colorbar = plt.colorbar(img, ax=ax, cax = cax)
+                    colorbar.set_label("Kcal / mol")
+                    
+                    # Set title, labels etc
+                    plt.legend()
+                    ax.set_xlabel("PC1", fontsize=12)
+                    ax.set_ylabel("PC2", fontsize=12)
+                    
+                    ax.set_title( "PCA. Case: "+caseID+" Reweighted. Ref case: "+refID )
+                    plt.rc('font', **font) 
+                    
+                    # Save figure
+                    fig.savefig(resultsDir+"/plots/pcaComparison/PCA_"+caseID+"_on_"+refID+"_reweighted.pdf")
+                    
+
+            ## CLUSTER PLOTS ON PCA COMPONENTS
+            ##################################
 
             # Do both hier and dbscan
             for clusterType in ["dbscan","hier"]:            

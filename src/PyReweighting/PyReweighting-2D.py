@@ -26,7 +26,7 @@ print " "
 ###########MAIN
 def main():
 ## Set control parameters
-    plt_figs = 1
+    plt_figs = 0
 
     args = cmdlineparse()   
     
@@ -79,6 +79,7 @@ def main():
 
 ##REWEIGHTING
     if args.job == "amdweight_CE":
+        
     	hist2,newedgesX,newedgesY,c1,c2,c3 = reweight_CE(inputfile,hist_min,binsX,discX,binsY,discY,dV,T,fit)
 	pmf = hist2pmf2D(hist2,hist_min,T)
 	c1 = -np.multiply(1.0/beta,c1)
@@ -88,14 +89,20 @@ def main():
 	c12 = np.add(c1,c2)
 	c123 = np.add(c12,c3)
 	pmf_c1 = np.add(pmf, c1)
-	print "pmf_min-c1 = ", np.min(pmf_c1)
+	#print "pmf_min-c1 = ", np.min(pmf_c1)
 	pmf_c1 = normalize2D(pmf_c1,cb_max)
 	pmf_c2 = np.add(pmf, c12)
-	print "pmf_min-c2 = ", np.min(pmf_c2)
+	#print "pmf_min-c2 = ", np.min(pmf_c2)
 	pmf_c2 = normalize2D(pmf_c2,cb_max)
 	pmf_c3 = np.add(pmf, c123)
-	print "pmf_min-c3 = ", np.min(pmf_c3)
+	#print "pmf_min-c3 = ", np.min(pmf_c3)
 	pmf_c3 = normalize2D(pmf_c3,cb_max)
+ 
+	# Save histogram & Edges using numpy
+	np.save( str(args.name)+"_c2EnergyHist" , pmf_c2)
+	np.save( str(args.name)+"_c2edgesX" , newedgesX)
+	np.save( str(args.name)+"_c2edgesY" , newedgesY)
+ 
     elif args.job == "amdweight_MC":
         n=order
 	MCweight=np.zeros(len(dV))
@@ -118,15 +125,15 @@ def main():
 	output_pmf2D(pmffile,hist2,binsX,binsY)
     if args.job == "amdweight_CE" :
 	hist2 = pmf_c1
-    	pmffile = 'pmf-c1-'+str(args.input)+'.xvg'
+    	pmffile = str(args.name)+'-pmf-c1.dat'
 	output_pmf2D(pmffile,hist2,binsX,binsY)
 
 	hist2 = pmf_c3
-    	pmffile = 'pmf-c3-'+str(args.input)+'.xvg'
+    	pmffile = str(args.name)+'-pmf-c3.dat'
 	output_pmf2D(pmffile,hist2,binsX,binsY)
 
 	hist2 = pmf_c2
-    	pmffile = 'pmf-c2-'+str(args.input)+'.xvg'
+    	pmffile = str(args.name)+'-pmf-c2.dat'
 	output_pmf2D(pmffile,hist2,binsX,binsY)
 
     if args.job == "amd_dV":
@@ -199,6 +206,7 @@ def main():
 def cmdlineparse():
     parser = ArgumentParser(description="command line arguments")
     parser.add_argument("-input", dest="input", required=True, help="2D input file", metavar="<2D input file>")
+    parser.add_argument("-name", dest="name", required=True, help="output file", metavar="<output file>")
     parser.add_argument("-job", dest="job", required=True, help="Reweighting method to use: <noweight>, <weighthist>, <amd_time>, <amd_dV>, <amdweight>, <amdweight_MC>, <amdweight_CE>", metavar="<Job type reweighting method>")
     parser.add_argument("-weight", dest="weight", required=False, help="weight file", metavar="<weight file>")
     parser.add_argument("-Xdim", dest="Xdim", required=False, nargs="+", help="Xdimensions", metavar="<Xmin Xmax >")
@@ -267,8 +275,8 @@ def normalize2D(pmf,cb_max):
     #set infinity free energy values to is cb_max
     for jy in range(len(temphist[0,:])):
       for jx in range(len(temphist[:,0])):
-        if np.isinf(temphist[jx,jy]):
-                temphist[jx,jy]=cb_max
+        if temphist[jx,jy] > cb_max:
+            temphist[jx,jy]=cb_max          
     return temphist
 
 def prephist(hist2,T,cb_max):
@@ -420,7 +428,7 @@ def hist2pmf2D(hist,hist_min,T):
 
 def output_pmf2D(pmffile,hist,binsX,binsY):
     	fpmf = open(pmffile, 'w')
-    	strpmf='#RC1\tRC2\tPMF(kcal/mol)\n\n@    xaxis  label \"RC1\"\n@    yaxis  label \"RC2\"\n@TYPE xy\n'
+    	strpmf="" # '#RC1\tRC2\tPMF(kcal/mol)\n\n@    xaxis  label \"RC1\"\n@    yaxis  label \"RC2\"\n@TYPE xy\n'
     	fpmf.write(strpmf)
     	for jx in range(len(hist[:,0])):
     	  for jy in range(len(hist[0,:])):
@@ -431,7 +439,7 @@ def output_pmf2D(pmffile,hist,binsX,binsY):
 
 def output_dV(pmffile,dV):
     	fpmf = open(pmffile, 'w')
-    	strpmf='#dV \tp(dV) \n\n@    xaxis  label \"dV\"\n@    yaxis  label \"p(dV)\"\n@TYPE xy\n'
+    	strpmf="" # '#dV \tp(dV) \n\n@    xaxis  label \"dV\"\n@    yaxis  label \"p(dV)\"\n@TYPE xy\n'
 	hist_dV, bin_dV = np.histogram(dV, bins=50)
         for k in range(len(hist_dV)):
 		strpmf=strpmf + str(bin_dV[k]) + ' \t' + str(hist_dV[k]) + ' \n'

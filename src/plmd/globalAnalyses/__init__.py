@@ -30,9 +30,10 @@ class analysisHandler (plmd.PLMD_module):
     
         # Do the PCA analysis
         try:
-            pca.runAnalysis( self.dataFiles[ 'caseDirs' ] , self.resultDir )
+            pca.runAnalysis( self.dataFiles[ 'caseDirs' ] , self.resultDir, self.config.noReweight )
         except Exception as e:
             print "Failed pca analysis",e        
+        
     
         # Cluster Comparisons
         try:
@@ -40,8 +41,8 @@ class analysisHandler (plmd.PLMD_module):
             cluster.runAnalysis( self.dataFiles[ 'caseDirs' ] , self.resultDir, self.config.noReweight );
         except Exception as e:
             print "Failed cluster comparison & plotting",e    
-            sys.exit(2)
-    
+            sys.exit(2)    
+        
         # Plot Dihedral
         try:
             self.printStage( "Plotting dihedrals")
