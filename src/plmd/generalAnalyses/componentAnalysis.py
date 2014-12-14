@@ -21,6 +21,7 @@ class PCA():
         
         # The main data array. Used also for saving structures
         self.np_arrays =  []
+        self.latestMax = 0
         
         # Counter for the amount of figures plotted
         self.subPlots = 0
@@ -49,6 +50,10 @@ class PCA():
         
         # The end
         self.pp.close()
+        
+    # Get latest max energy
+    def getLatestMax(self):
+        return self.latestMax
         
     # Create subplot page
     def createPdfPage( self ):
@@ -178,6 +183,12 @@ class PCA():
                     H, xedges, yedges = np.histogram2d(self.np_arrays[component], self.np_arrays[0], bins=100 )
                     H_normalized = H/len(self.np_arrays[0])
                     H = -1 * boltzman * temperature * (np.log( H_normalized )-np.log(np.max(H_normalized)))
+                    
+                    # Set max energy
+                    for vec in H:
+                        for val in vec:
+                            if not np.isinf(val) and val > self.latestMax:
+                                self.latestMax = val                   
                     
                     # Now plot the 2d histogram
                     img = ax.imshow(H,  interpolation='nearest', origin='lower',extent=[yedges[0], yedges[-1],xedges[0], xedges[-1]] , rasterized=True )

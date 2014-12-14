@@ -93,7 +93,10 @@ def runAnalysis( caseDirs , resultsDir , noReweight = False):
 
                     # Set the discretization
                     reqBins = 100         
-                    discretization = (2*limit) / reqBins                       
+                    discretization = (2*limit) / reqBins    
+                    
+                    # Get the max value of normal plot
+                    maxValue = math.ceil(pcaHandler.getLatestMax())
                     
                     # Run the reweighting procedure
                     command = "python $PLMDHOME/src/PyReweighting/PyReweighting-2D.py \
@@ -104,7 +107,7 @@ def runAnalysis( caseDirs , resultsDir , noReweight = False):
                                 -discX "+str(discretization)+" \
                                 -discY "+str(discretization)+" \
                                 -cutoff 1 \
-                                -Emax 10 \
+                                -Emax "+str(maxValue)+" \
                                 -job amdweight_CE \
                                 -weight "+refDir+"/md-logs/weights.dat | tee -a reweight_variable.log"
                     print "Running command:", command
@@ -134,7 +137,7 @@ def runAnalysis( caseDirs , resultsDir , noReweight = False):
                     # Remove points above limit
                     for jy in range(len(hist[0,:])):
                         for jx in range(len(hist[:,0])):
-                            if hist[jx,jy] >= 10:
+                            if hist[jx,jy] >= maxValue:
                                 hist[jx,jy] = float("inf")
                     
                     # Do plot
