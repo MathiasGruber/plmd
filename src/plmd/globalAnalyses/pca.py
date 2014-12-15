@@ -106,7 +106,7 @@ def runAnalysis( caseDirs , resultsDir , noReweight = False):
                                 -Ydim -"+str(limit)+" "+str(limit)+" \
                                 -discX "+str(discretization)+" \
                                 -discY "+str(discretization)+" \
-                                -cutoff 1 \
+                                -cutoff 10 \
                                 -Emax "+str(maxValue)+" \
                                 -job amdweight_CE \
                                 -weight "+refDir+"/md-logs/weights.dat | tee -a reweight_variable.log"

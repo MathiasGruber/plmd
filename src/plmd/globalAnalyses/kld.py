@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import os, sys
 import plmd.generalAnalyses.componentAnalysis as pcaFuncs
+import plmd.generalAnalyses.clusterAnalysis as cluster
 import plmd.plotData as myPlot
 
 # Function for running the actual analysis
@@ -150,6 +151,63 @@ def runAnalysis( caseDirs, resultsDir, trajectories, backbone ):
     
     # Save the plot
     pcaHandler.savePlot()
+    
+    ## CLUSTER PLOTS ON PCA COMPONENTS
+    ##################################
+
+    # Do both hier and dbscan
+    for clusterType in ["dbscan","hier"]:            
+
+        # Use the first case        
+        caseDir = caseDirs[0]
+        caseID = caseDir.split("/")[-1]      
+        limit = 25
+        
+        # Instantiate the class
+        if os.path.isfile(caseDir+"/analysis/data/cluster_"+clusterType+"_out"):   
+            
+            print "Doing the "+clusterType+" cluster equivalent of the PCA plot"
+        
+            # Start the cluster handler. Load the file declaring cluster for each frame
+            clusterHandler = cluster.clusterBase( caseDir+"/analysis/data/cluster_"+clusterType+"_out" )
+            
+            # Separate the dataset.
+            # global_pca is the projection file for this case on the ref modes
+            numPCAdataSets = clusterHandler.separateDataSet( 
+                caseDir+"/analysis/data/global_pca",            # Input file
+                caseDir+"/analysis/data/cluster_"+clusterType+"_pca_",   # Output files
+                xColumn = 1
+            ) 
+            
+            # Create lists of labels and files for plotting
+            clusterLabels = []
+            clusterFiles = []
+            offset = 1 if clusterType == "hier" else 0
+            for i in range( 0+offset, numPCAdataSets+offset):
+                clusterLabels.append( "Cluster "+str(i) )
+                clusterFiles.append( caseDir+"/analysis/data/cluster_"+clusterType+"_pca_d2_c"+str(i) )
+            
+            # First one is noise
+            if offset == 0:
+                clusterLabels[0] = "Noise"                 
+            
+            myPlot.plotData( 
+                resultsDir+"/plots/pcaComparison/" , 
+                clusterType+"_"+caseID+"_on_Global", 
+                clusterLabels, 
+                clusterFiles , 
+                "PC2",
+                xUnit = "PC1",
+                scatter = True,
+                legendLoc = 4,
+                figWidth = 8,
+                figHeight = 8,
+                tightXlimits = False,
+                legendFrame = 1,
+                legendAlpha = 1,
+                xLimits = [-limit,limit],
+                yLimits = [-limit,limit]
+            )
     
     # Save an eigenvalue vs eigenvector plot
     print "Creating plot of eigenvalues"

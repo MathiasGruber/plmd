@@ -28,13 +28,19 @@ class analysisHandler (plmd.PLMD_module):
     # Run all the analyses modules
     def runAll( self ):
     
+        # Run KLD analysis
+        try:
+            kld.runAnalysis( self.dataFiles['caseDirs'] , self.resultDir, self.mdTrajectories, self.backbone )    
+        except Exception as e:
+            print "Failed kld analysis",e    
+     
         # Do the PCA analysis
         try:
             pca.runAnalysis( self.dataFiles[ 'caseDirs' ] , self.resultDir, self.config.noReweight )
         except Exception as e:
             print "Failed pca analysis",e        
-        
     
+       
         # Cluster Comparisons
         try:
             self.printStage( "Comparing and plotting clusters")
@@ -56,13 +62,6 @@ class analysisHandler (plmd.PLMD_module):
         except Exception as e:
             print "Failed rmsd frequency analysis",e    
     
-        # Run KLD analysis
-        try:
-            kld.runAnalysis( self.dataFiles['caseDirs'] , self.resultDir, self.mdTrajectories, self.backbone )    
-        except Exception as e:
-            print "Failed kld analysis",e
-        
-        
         # Plot Energies
         try:
             if self.config.noEnergy == False:
