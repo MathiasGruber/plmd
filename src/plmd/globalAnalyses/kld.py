@@ -174,8 +174,8 @@ def runAnalysis( caseDirs, resultsDir, trajectories, backbone ):
             # Separate the dataset.
             # global_pca is the projection file for this case on the ref modes
             numPCAdataSets = clusterHandler.separateDataSet( 
-                caseDir+"/analysis/data/global_pca",            # Input file
-                caseDir+"/analysis/data/cluster_"+clusterType+"_pca_",   # Output files
+                resultsDir+"/data/pca12-ca",            # Input file
+                resultsDir+"/data/cluster_"+clusterType+"_pca_",   # Output files
                 xColumn = 1
             ) 
             
@@ -185,7 +185,7 @@ def runAnalysis( caseDirs, resultsDir, trajectories, backbone ):
             offset = 1 if clusterType == "hier" else 0
             for i in range( 0+offset, numPCAdataSets+offset):
                 clusterLabels.append( "Cluster "+str(i) )
-                clusterFiles.append( caseDir+"/analysis/data/cluster_"+clusterType+"_pca_d2_c"+str(i) )
+                clusterFiles.append( resultsDir+"/data/cluster_"+clusterType+"_pca_d2_c"+str(i) )
             
             # First one is noise
             if offset == 0:
