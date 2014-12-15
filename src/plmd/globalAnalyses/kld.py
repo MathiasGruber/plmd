@@ -145,8 +145,7 @@ def runAnalysis( caseDirs, resultsDir, trajectories, backbone ):
     pcaHandler.plotPCA( 
         "Combined PCA Plot",              # Plot Title
         resultsDir+"/data/" ,             # Data Dir
-        "pca12-ca",                       # Eigenvector file
-        "evecs-cleaned.dat"               # Eigenvalue file
+        "pca12-ca"                        # Eigenvector file
     )
     
     # Save the plot
