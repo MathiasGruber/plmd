@@ -25,9 +25,6 @@ def getDefaultConfig():
     config.set('inputFiles', 'waterboxsize', '8.0')
     
     config.add_section('mmpbsaSettings')
-    config.set('mmpbsaSettings', 'complexCharge', '-1')
-    config.set('mmpbsaSettings', 'receptorCharge', '1')
-    config.set('mmpbsaSettings', 'ligandCharge', '-2')
     config.set('mmpbsaSettings', 'interval', '1000')
     
     config.add_section('simulationParameters')

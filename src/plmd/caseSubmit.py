@@ -311,9 +311,8 @@ class Setup (plmd.PLMD_module):
                                   replace("[QMSHAKE]", self.config.qmShake ). \
                                   replace("[AMDsetup]", self.aMDinput ). \
                                   replace("[COMPLEXIDS]", self.complexids ). \
-                                  replace("[COMPLEXCHARGE]", str(self.config.mmpbsaChargeC) ). \
-                                  replace("[RECEPTORCHARGE]", str(self.config.mmpbsaChargeR) ). \
-                                  replace("[LIGANDCHARGE]", str(self.config.mmpbsaChargeL) ). \
+                                  replace("[COMPLEXCHARGE]", str(self.config.qmCharge) ). \
+                                  replace("[LIGANDCHARGE]", str(self.config.qmCharge) ). \
                                   replace("[INTERVAL]", str(self.config.mmpbsaInterval) ). \
                                   replace("[TIMESTEPPERFRAME]", str(self.config.timestepPerFrame) )
             
@@ -379,5 +378,5 @@ class Setup (plmd.PLMD_module):
             self.peptideRegion = ""
             
         # Get complex IDs for MMPBSA       
-        self.complexids = ";".join(complexIDs)
+        self.complexids = ";".join(ligandIDs)
             

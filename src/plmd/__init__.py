@@ -64,9 +64,6 @@ class PLMD_Config:
         
         self.quiet = config.getboolean('inputFiles', 'quiet')
         
-        self.mmpbsaChargeC = config.getint('mmpbsaSettings', 'complexCharge')
-        self.mmpbsaChargeR = config.getint('mmpbsaSettings', 'receptorCharge')
-        self.mmpbsaChargeL = config.getint('mmpbsaSettings', 'ligandCharge')
         self.mmpbsaInterval = config.getint('mmpbsaSettings', 'interval')
         
         self.ff = config.get('simulationParameters', 'forceField')
