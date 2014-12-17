@@ -94,8 +94,8 @@ class Setup (plmd.PLMD_module):
         TEMP = TEMPLATE.read().replace("[FOLDER]", caseName  ). \
                               replace("[NAME]", self.config.name+"_"+caseID  ). \
                               replace("[CPUCONTROL]", self.config.nodeControl ). \
-                              replace("[WALLCLOCK]", self.config.wallClock )
-                              replace("[CASEID]", str(caseName.split("/")[-1]) ). \
+                              replace("[WALLCLOCK]", self.config.wallClock ). \
+                              replace("[CASEID]", str(caseName.split("/")[-1]) )
         TEMPLATE.close()
                               
         # Create folder for this
