@@ -379,5 +379,5 @@ class Setup (plmd.PLMD_module):
             self.peptideRegion = ""
             
         # Get complex IDs for MMPBSA       
-        self.complexids = ";".join(ligandIDs)
+        self.complexids = ";".join(complexIDs)
             
