@@ -88,14 +88,21 @@ class Setup (plmd.PLMD_module):
         # User information
         self.printStage( "Stage 3, Case: "+caseName+". Creating HPC MMPBSA submission files" )          
         caseID = caseName.split("/")[-1] 
-        
+                      
+        # Add all trajectory files to ptraj script
+        self.num_files = self.getNumberOfFiles( caseName+'/md-files/' ) 
+        files = ""
+        for i in range(1,self.num_files):
+            files += caseName+'/md-files/'+ str(i)+ ".mdcrd "                       
+            
         # Replace stuff within
         TEMPLATE = open( self.config.PLMDHOME+"/src/templates/mmpbsa_submit.txt", 'r')
         TEMP = TEMPLATE.read().replace("[FOLDER]", caseName  ). \
                               replace("[NAME]", self.config.name+"_"+caseID  ). \
                               replace("[CPUCONTROL]", self.config.nodeControl ). \
                               replace("[WALLCLOCK]", self.config.wallClock ). \
-                              replace("[CASEID]", str(caseName.split("/")[-1]) )
+                              replace("[CASEID]", str(caseName.split("/")[-1]) ). \
+                              replace("[INPUTFILES]", files )
         TEMPLATE.close()
                               
         # Create folder for this
@@ -107,7 +114,12 @@ class Setup (plmd.PLMD_module):
         FILE.close();
         
         print "Create submission file: "+caseName+"/submit_mmpbsa.sh"
-        
+
+    # Get number of files
+    def getNumberOfFiles( self, path ):        
+        return len([f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f)) and ".mdcrd" in f and "equil" in f] ) 
+            
+    
     def runAnteMMPBSA(self, caseName):
 
         os.system("rm -rf "+caseName+"/md-files/complex.prmtop "+caseName+"/md-files/receptor.prmtop "+caseName+"/md-files/ligand.prmtop")        
@@ -303,7 +315,7 @@ class Setup (plmd.PLMD_module):
                                   replace("[LIGANDCHARGE]", str(self.config.mmpbsaChargeL) ). \
                                   replace("[INTERVAL]", str(self.config.mmpbsaInterval) ). \
                                   replace("[TIMESTEPPERFRAME]", str(self.config.timestepPerFrame) )
-            TEMPLATE.close()
+            
             
             # If not QM, delete qmmm dict from TEMP
             if self.config.qmEnable == 0:
