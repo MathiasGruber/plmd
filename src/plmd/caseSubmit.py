@@ -109,7 +109,7 @@ class Setup (plmd.PLMD_module):
         TEMPLATE = open( self.config.PLMDHOME+"/src/templates/mmpbsa_submit.txt", 'r')
         TEMP = TEMPLATE.read().replace("[FOLDER]", caseName  ). \
                               replace("[RECEPTORFOLDER]", receptorCase  ). \
-                              replace("[LIGANDFOLDER]", receptorCase  ). \
+                              replace("[LIGANDFOLDER]", ligandCase  ). \
                               replace("[NAME]", self.config.name+"_"+caseID  ). \
                               replace("[CPUCONTROL]", self.config.nodeControl ). \
                               replace("[WALLCLOCK]", self.config.wallClock ). \
