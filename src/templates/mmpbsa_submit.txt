@@ -14,7 +14,7 @@ rm -rf _MMPBSA_* MMPBSA_MTP.dat
 
 $AMBERHOME/bin/MMPBSA.py -O \
 -i [FOLDER]/in_files/explicit_mmpbsa.in \
--prefix [FOLDER] \
+-prefix [CASEID] \
 -o [FOLDER]/mmpbsa/FINAL_RESULTS_MMPBSA.dat \
 -eo [FOLDER]/mmpbsa/energyPerFrame.dat \
 -do [FOLDER]/mmpbsa/FINAL_DECOMP_MMPBSA.dat \
