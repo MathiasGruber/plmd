@@ -95,6 +95,7 @@ class Setup (plmd.PLMD_module):
                               replace("[NAME]", self.config.name+"_"+caseID  ). \
                               replace("[CPUCONTROL]", self.config.nodeControl ). \
                               replace("[WALLCLOCK]", self.config.wallClock )
+                              replace("[CASEID]", str(caseName.split("/")[-1]) ). \
         TEMPLATE.close()
                               
         # Create folder for this
@@ -301,7 +302,6 @@ class Setup (plmd.PLMD_module):
                                   replace("[RECEPTORCHARGE]", str(self.config.mmpbsaChargeR) ). \
                                   replace("[LIGANDCHARGE]", str(self.config.mmpbsaChargeL) ). \
                                   replace("[INTERVAL]", str(self.config.mmpbsaInterval) ). \
-                                  replace("[CASEID]", str(caseName.split("/")[-1]) ). \
                                   replace("[TIMESTEPPERFRAME]", str(self.config.timestepPerFrame) )
             TEMPLATE.close()
             
