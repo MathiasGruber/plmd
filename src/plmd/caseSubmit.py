@@ -343,6 +343,8 @@ class Setup (plmd.PLMD_module):
         peptideRegion = []
         
         complexIDs = []
+        receptorIDs = []
+        ligandIDs = []
         
         # Go throug the file and find all residues having the resname of the ligand
         for line in pdb:
@@ -350,8 +352,12 @@ class Setup (plmd.PLMD_module):
                 resID = str(int(line[22:26]))
                 if line[17:20] in self.ligandResnames:
                     qmRegion.append( resID )
+                    if resID not in ligandIDs:
+                        ligandIDs.append(resID)
                 elif line[17:20] in self.peptideResnames:
                     peptideRegion.append( resID )
+                    if resID not in receptorIDs:
+                        receptorIDs.append(resID)
                 if resID not in complexIDs:
                     complexIDs.append(resID)
         
@@ -373,5 +379,5 @@ class Setup (plmd.PLMD_module):
             self.peptideRegion = ""
             
         # Get complex IDs for MMPBSA       
-        self.complexids = ";".join(qmRegion)
+        self.complexids = ";".join(ligandIDs)
             
