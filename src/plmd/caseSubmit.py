@@ -122,7 +122,8 @@ class Setup (plmd.PLMD_module):
     
     def runAnteMMPBSA(self, caseName):
 
-        os.system("rm -rf "+caseName+"/md-files/complex.prmtop "+caseName+"/md-files/receptor.prmtop "+caseName+"/md-files/ligand.prmtop")        
+        # Delete old files?
+        #os.system("rm -rf "+caseName+"/md-files/complex.prmtop "+caseName+"/md-files/receptor.prmtop "+caseName+"/md-files/ligand.prmtop")        
         
         command = "ante-MMPBSA.py \
         -p "+caseName+"/md-files/peptide.prmtop \
