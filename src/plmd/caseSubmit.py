@@ -301,7 +301,7 @@ class Setup (plmd.PLMD_module):
                                   replace("[RECEPTORCHARGE]", str(self.config.mmpbsaChargeR) ). \
                                   replace("[LIGANDCHARGE]", str(self.config.mmpbsaChargeL) ). \
                                   replace("[INTERVAL]", str(self.config.mmpbsaInterval) ). \
-                                  replace("[CASEID]", str(caseName.split()[-1]) ). \
+                                  replace("[CASEID]", str(caseName.split("")[-1]) ). \
                                   replace("[TIMESTEPPERFRAME]", str(self.config.timestepPerFrame) )
             TEMPLATE.close()
             
