@@ -1,6 +1,6 @@
 import os, math, sys
 import MDAnalysis
-import block, energy, bFactor, dihedral, timeCorr, endToEnd,CaToCaMap, RMSdMap, hbond, pca, hierCluster, dbscanCluster, RMSdFrequency
+import block, energy, bFactor, dihedral, timeCorr, endToEnd,CaToCaMap, RMSdMap, hbond, pca, hierCluster, dbscanCluster, RMSdFrequency, mmpbsa
 import plmd
 
 # The analysis handler provides the interface to all the analysis modules
@@ -141,6 +141,12 @@ class analysisHandler (plmd.PLMD_module):
         
         ## Run analyses using cpptraj
         #############################
+
+         # MMPBSA Energies
+        try:
+            mmpbsa.runAnalysis( self.directory, self.timePerFrame  )
+        except Exception as e:
+            print "Failed mmpbsa analysis",e
 
         # RMSd Frequencies
         try:
