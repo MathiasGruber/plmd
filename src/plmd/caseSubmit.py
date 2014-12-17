@@ -50,15 +50,7 @@ class Setup (plmd.PLMD_module):
             TEMPLATE = open( self.config.PLMDHOME+"/src/templates/explicit_gpu_submit.txt", 'r')
         else:
             TEMPLATE = open( self.config.PLMDHOME+"/src/templates/explicit_submit.txt", 'r')
-            
-        # Check if we're running an aMD sim
-        #if self.config.amdEnabled == True:
-            # Check the equil file, ensure all AMD data is set properly
-        #    equilFile += ""
-        #else:
-            # Check the equil file, remove all AMD mentions
-        #    equilFile =+ ""
-            
+                        
         # What to call the logfile
         amdLogFile = ""
         if self.config.amdEnabled == True:
@@ -82,6 +74,49 @@ class Setup (plmd.PLMD_module):
         
         print "Create submission file: "+caseName+"/submit_run.sh"
         
+    
+        
+    # Create MMPBSA Submission file
+    def hpcMMPBSASubmissionCreate(self, caseName):
+        
+        # Create in-files
+        self.amberCreateInput( caseName )
+        
+        # Run ante-MMPBSA.py
+        self.runAnteMMPBSA(caseName)
+        
+        # User information
+        self.printStage( "Stage 3, Case: "+caseName+". Creating HPC MMPBSA submission files" )          
+        caseID = caseName.split("/")[-1] 
+        
+        # Replace stuff within
+        TEMPLATE = open( self.config.PLMDHOME+"/src/templates/mmpbsa_submit.txt", 'r')
+        TEMP = TEMPLATE.read().replace("[FOLDER]", caseName  ). \
+                              replace("[NAME]", self.config.name+"_"+caseID  ). \
+                              replace("[CPUCONTROL]", self.config.nodeControl ). \
+                              replace("[WALLCLOCK]", self.config.wallClock )
+        TEMPLATE.close()
+                              
+        # Create folder for this
+        self.createFolder( caseName+"/mmpbsa" , True )                               
+                              
+        # Write the submission file
+        FILE = open(caseName+"/submit_mmpbsa.sh","w");        
+        FILE.write( TEMP );
+        FILE.close();
+        
+        print "Create submission file: "+caseName+"/submit_mmpbsa.sh"
+        
+    def runAnteMMPBSA(self, caseName):
+        command = "ante-MMPBSA.py \
+        -p "+caseName+"/md-files/peptide.prmtop \
+        -c "+caseName+"/md-files/complex.prmtop \
+        -r "+caseName+"/md-files/receptor.prmtop \
+        -l "+caseName+"/md-files/ligand.prmtop \
+        -s \":WAT\" \
+        -n \""+self.qmRegion+"\""
+        os.system(command)
+        
     # Submit to HPC cluster
     def hpcSubmission( self, caseName ):
         
@@ -90,6 +125,15 @@ class Setup (plmd.PLMD_module):
         
         # Do submission        
         os.system( "qsub "+caseName+"/submit_run.sh" )
+        
+    # Submit MMPBSA run
+    def hpcMMPBSASubmission(self, caseName):
+        
+         # User information
+        self.printStage( "Stage 4, MMPBSA Case: "+caseName+". Submitting to HPC" )          
+        
+        # Do submission        
+        os.system( "qsub "+caseName+"/submit_mmpbsa.sh" )
              
     # Create all the amber input files for a case
     def amberCreateInput( self, caseName ):
@@ -101,7 +145,8 @@ class Setup (plmd.PLMD_module):
         templateFiles = [
             self.config.PLMDHOME+"/src/templates/explicit_min.txt",
             self.config.PLMDHOME+"/src/templates/explicit_heat.txt",
-            self.config.PLMDHOME+"/src/templates/explicit_equil.txt"
+            self.config.PLMDHOME+"/src/templates/explicit_equil.txt",
+            self.config.PLMDHOME+"/src/templates/explicit_mmpbsa.txt"
         ]
         
         # Open the pdb file created by LEaP to find residues
@@ -125,6 +170,8 @@ class Setup (plmd.PLMD_module):
                     else:
                         if line[17:20] not in self.ligandResnames:
                             self.ligandResnames.append( line[17:20] )
+                            
+                    
         
         # Set the QM region of this case
         self.calcQMregion( caseName )
@@ -246,6 +293,11 @@ class Setup (plmd.PLMD_module):
                                   replace("[EABLEQM]", str(self.config.qmEnable) ). \
                                   replace("[QMSHAKE]", self.config.qmShake ). \
                                   replace("[AMDsetup]", self.aMDinput ). \
+                                  replace("[COMPLEXIDS]", self.complexids ). \
+                                  replace("[COMPLEXCHARGE]", str(self.config.mmpbsaChargeC) ). \
+                                  replace("[RECEPTORCHARGE]", str(self.config.mmpbsaChargeR) ). \
+                                  replace("[LIGANDCHARGE]", str(self.config.mmpbsaChargeL) ). \
+                                  replace("[INTERVAL]", str(self.config.mmpbsaInterval) ). \
                                   replace("[TIMESTEPPERFRAME]", str(self.config.timestepPerFrame) )
             TEMPLATE.close()
             
@@ -272,14 +324,18 @@ class Setup (plmd.PLMD_module):
         # Set QM & peptide region
         qmRegion = []
         peptideRegion = []
+        complexIDs = []
         
         # Go throug the file and find all residues having the resname of the ligand
         for line in pdb:
             if line[22:26]:
+                resID = str(int(line[22:26]))
                 if line[17:20] in self.ligandResnames:
-                    qmRegion.append( str(int(line[22:26])) )
+                    qmRegion.append( resID )
                 elif line[17:20] in self.peptideResnames:
-                    peptideRegion.append( str(int(line[22:26])) )
+                    peptideRegion.append( resID )
+                if resID not in complexIDs:
+                    complexIDs.append(resID)
         
         # Define the region string, as per Amber specifications
         if not qmRegion:
@@ -297,4 +353,7 @@ class Setup (plmd.PLMD_module):
             self.peptideRegion = ":"+peptideRegion[0]+"-"+peptideRegion[-1] 
         else:
             self.peptideRegion = ""
+            
+        # Get complex IDs for MMPBSA       
+        self.complexids = ";".join(complexIDs)
             

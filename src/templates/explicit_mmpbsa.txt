@@ -1,0 +1,14 @@
+#Input file for running PB and GB #
+&general
+   interval = [INTERVAL], 
+   keep_files = 0
+/ 
+&gb 
+   igb = 5,
+   ifqnt = 1,
+   qmcharge_com = [COMPLEXCHARGE],
+   qmcharge_rec = [RECEPTORCHARGE], 
+   qmcharge_lig = [LIGANDCHARGE], 
+   qm_residues = '[COMPLEXIDS]', 
+   qm_theory = 'PM6-D'
+/

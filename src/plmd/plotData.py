@@ -15,6 +15,7 @@ def plotData(
     unit , 
     xUnit = "Time (ps)", 
     types = None, 
+    markTypes = None, 
     scatter = False, 
     tightXlimits = True,
     tightYlimits = False,
@@ -84,10 +85,15 @@ def plotData(
             
             else:
             
+                # Set linetype for the plot
+                markType = 'o'
+                if markTypes != None:
+                    markType = markTypes[i]
+            
                 # Do the plot
                 colors = plt.rcParams['axes.color_cycle']
                 color = colors[i % len(colors)]
-                plt.scatter( xData, yData , s=2, color=color, label = labels[i] , rasterized=True)
+                plt.scatter( xData, yData , s=8, color=color, label = labels[i] , rasterized=True, marker = markType)
             
             # Get limits
             xmax = np.max( xData ) if np.max( xData ) > xmax else xmax
