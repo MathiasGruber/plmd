@@ -77,7 +77,7 @@ class Setup (plmd.PLMD_module):
     
         
     # Create MMPBSA Submission file
-    def hpcMMPBSASubmissionCreate(self, caseName):
+    def hpcMMPBSASubmissionCreate(self, caseName, receptorCase ):
         
         # Create in-files
         self.amberCreateInput( caseName )
@@ -86,23 +86,30 @@ class Setup (plmd.PLMD_module):
         self.runAnteMMPBSA(caseName)
         
         # User information
-        self.printStage( "Stage 3, Case: "+caseName+". Creating HPC MMPBSA submission files" )          
+        self.printStage( "Stage 3, Case: "+caseName+". Creating HPC MMPBSA submission files. Receptor case: "+receptorCase )          
         caseID = caseName.split("/")[-1] 
                       
         # Add all trajectory files to ptraj script
         self.num_files = self.getNumberOfFiles( caseName+'/md-files/' ) 
-        files = ""
+        complexFiles = ""
         for i in range(1,self.num_files):
-            files += caseName+'/md-files/equil'+ str(i)+ ".mdcrd "                       
+            complexFiles += caseName+'/md-files/equil'+ str(i)+ ".mdcrd "
+
+        self.num_files = self.getNumberOfFiles( receptorCase+'/md-files/' ) 
+        receptorFiles = ""
+        for i in range(1,self.num_files):
+            receptorFiles += receptorCase+'/md-files/equil'+ str(i)+ ".mdcrd "                       
             
         # Replace stuff within
         TEMPLATE = open( self.config.PLMDHOME+"/src/templates/mmpbsa_submit.txt", 'r')
         TEMP = TEMPLATE.read().replace("[FOLDER]", caseName  ). \
+                              replace("[RECEPTORFOLDER]", receptorCase  ). \
                               replace("[NAME]", self.config.name+"_"+caseID  ). \
                               replace("[CPUCONTROL]", self.config.nodeControl ). \
                               replace("[WALLCLOCK]", self.config.wallClock ). \
                               replace("[CASEID]", str(caseName.split("/")[-1]) ). \
-                              replace("[INPUTFILES]", files )
+                              replace("[COMPLEXFILES]", complexFiles ). \
+                              replace("[RECEPTORFILES]", receptorFiles )
         TEMPLATE.close()
                               
         # Create folder for this

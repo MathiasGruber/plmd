@@ -22,4 +22,6 @@ $AMBERHOME/bin/MMPBSA.py -O \
 -cp [FOLDER]/md-files/complex.prmtop \
 -rp [FOLDER]/md-files/receptor.prmtop \
 -lp [FOLDER]/md-files/ligand.prmtop \
--y [INPUTFILES]
+-srp [RECEPTORFOLDER]/md-files/peptide.prmtop \
+-yr [RECEPTORFILES] \
+-y [COMPLEXFILES]
