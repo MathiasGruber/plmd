@@ -16,7 +16,7 @@ try:
     parser.add_argument('configFile', help='a configuration file with details of the simulation')
     parser.add_argument('scanDir', help='Directory to scan for MD cases to submit to queue')  
     parser.add_argument('receptorCase', help='Case directory for a receptor-only simulation')
-    #parser.add_argument('ligandCase', help='Case directory for a ligand-only simulation')
+    parser.add_argument('ligandCase', help='Case directory for a ligand-only simulation')
     
     # Parse arguments
     args = parser.parse_args()  
@@ -41,7 +41,7 @@ try:
             if "in_files" in dirs and "md-files" in dirs and "md-logs" in dirs and "pdb-files" in dirs:
                 
                 # Create submission file
-                plmd.hpcMMPBSASubmissionCreate( subdir , args.receptorCase )
+                plmd.hpcMMPBSASubmissionCreate( subdir , args.receptorCase , args.ligandCase )
                 
                 # Run submission file
                 plmd.hpcMMPBSASubmission( subdir )

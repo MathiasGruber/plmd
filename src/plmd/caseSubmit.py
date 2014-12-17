@@ -77,7 +77,7 @@ class Setup (plmd.PLMD_module):
     
         
     # Create MMPBSA Submission file
-    def hpcMMPBSASubmissionCreate(self, caseName, receptorCase ):
+    def hpcMMPBSASubmissionCreate(self, caseName, receptorCase, ligandCase ):
         
         # Create in-files
         self.amberCreateInput( caseName )
@@ -98,18 +98,25 @@ class Setup (plmd.PLMD_module):
         self.num_files = self.getNumberOfFiles( receptorCase+'/md-files/' ) 
         receptorFiles = ""
         for i in range(1,self.num_files):
-            receptorFiles += receptorCase+'/md-files/equil'+ str(i)+ ".mdcrd "                       
+            receptorFiles += receptorCase+'/md-files/equil'+ str(i)+ ".mdcrd "
+
+        self.num_files = self.getNumberOfFiles( ligandCase+'/md-files/' ) 
+        ligandFiles = ""
+        for i in range(1,self.num_files):
+            ligandFiles += receptorCase+'/md-files/equil'+ str(i)+ ".mdcrd "                       
             
         # Replace stuff within
         TEMPLATE = open( self.config.PLMDHOME+"/src/templates/mmpbsa_submit.txt", 'r')
         TEMP = TEMPLATE.read().replace("[FOLDER]", caseName  ). \
                               replace("[RECEPTORFOLDER]", receptorCase  ). \
+                              replace("[LIGANDFOLDER]", receptorCase  ). \
                               replace("[NAME]", self.config.name+"_"+caseID  ). \
                               replace("[CPUCONTROL]", self.config.nodeControl ). \
                               replace("[WALLCLOCK]", self.config.wallClock ). \
                               replace("[CASEID]", str(caseName.split("/")[-1]) ). \
                               replace("[COMPLEXFILES]", complexFiles ). \
-                              replace("[RECEPTORFILES]", receptorFiles )
+                              replace("[RECEPTORFILES]", receptorFiles ). \
+                              replace("[LIGANDFILES]", ligandFiles )
         TEMPLATE.close()
                               
         # Create folder for this
