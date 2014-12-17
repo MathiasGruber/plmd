@@ -1,8 +1,7 @@
 #Input file for running PB and GB #
 &general
    interval = [INTERVAL], 
-   keep_files = 0,
-   entropy = 1
+   keep_files = 0
 / 
 &gb 
    igb = 5,
