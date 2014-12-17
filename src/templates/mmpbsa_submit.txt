@@ -21,4 +21,4 @@ $AMBERHOME/bin/MMPBSA.py -O \
 -cp [FOLDER]/md-files/complex.prmtop \
 -rp [FOLDER]/md-files/receptor.prmtop \
 -lp [FOLDER]/md-files/ligand.prmtop \
--y [FOLDER]/mergedResult.dcd
+-y [FOLDER]/md-files/equil1.mdcrd
