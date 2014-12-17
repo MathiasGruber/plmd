@@ -93,7 +93,7 @@ class Setup (plmd.PLMD_module):
         self.num_files = self.getNumberOfFiles( caseName+'/md-files/' ) 
         files = ""
         for i in range(1,self.num_files):
-            files += caseName+'/md-files/'+ str(i)+ ".mdcrd "                       
+            files += caseName+'/md-files/equil'+ str(i)+ ".mdcrd "                       
             
         # Replace stuff within
         TEMPLATE = open( self.config.PLMDHOME+"/src/templates/mmpbsa_submit.txt", 'r')
