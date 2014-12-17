@@ -341,6 +341,7 @@ class Setup (plmd.PLMD_module):
         # Set QM & peptide region
         qmRegion = []
         peptideRegion = []
+        
         complexIDs = []
         
         # Go throug the file and find all residues having the resname of the ligand
@@ -372,5 +373,5 @@ class Setup (plmd.PLMD_module):
             self.peptideRegion = ""
             
         # Get complex IDs for MMPBSA       
-        self.complexids = ";".join(complexIDs)
+        self.complexids = ";".join(qmRegion)
             
