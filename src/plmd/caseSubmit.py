@@ -103,7 +103,7 @@ class Setup (plmd.PLMD_module):
         self.num_files = self.getNumberOfFiles( ligandCase+'/md-files/' ) 
         ligandFiles = ""
         for i in range(1,self.num_files):
-            ligandFiles += receptorCase+'/md-files/equil'+ str(i)+ ".mdcrd "                       
+            ligandFiles += ligandCase+'/md-files/equil'+ str(i)+ ".mdcrd "                       
             
         # Replace stuff within
         TEMPLATE = open( self.config.PLMDHOME+"/src/templates/mmpbsa_submit.txt", 'r')
