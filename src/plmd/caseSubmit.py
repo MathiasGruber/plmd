@@ -108,6 +108,9 @@ class Setup (plmd.PLMD_module):
         print "Create submission file: "+caseName+"/submit_mmpbsa.sh"
         
     def runAnteMMPBSA(self, caseName):
+
+        os.system("rm -rf "+caseName+"/md-files/complex.prmtop "+caseName+"/md-files/receptor.prmtop "+caseName+"/md-files/ligand.prmtop")        
+        
         command = "ante-MMPBSA.py \
         -p "+caseName+"/md-files/peptide.prmtop \
         -c "+caseName+"/md-files/complex.prmtop \

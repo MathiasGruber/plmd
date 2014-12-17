@@ -21,4 +21,4 @@ $AMBERHOME/bin/MMPBSA.py -O \
 -cp [FOLDER]/md-files/complex.prmtop \
 -rp [FOLDER]/md-files/receptor.prmtop \
 -lp [FOLDER]/md-files/ligand.prmtop \
--y trajs/complex.mdcrd
+-y [FOLDER]/mergedResult.dcd
