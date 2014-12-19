@@ -12,7 +12,7 @@ try:
     """)
     
     # Predefined ligands available in this package
-    predefinedLigands = [ "PO4","HPO4","H2PO4","HAsO4","H2AsO4" ]
+    predefinedLigands = [ "PO4","HPO4","H2PO4","SO4","HSO4" ]
     
     # Only argument is the configFile
     parser.add_argument('configFile', help='a configuration file with details of the simulation')
