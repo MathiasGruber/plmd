@@ -152,8 +152,8 @@ class PCA():
         frames = np.array( frames )
         self.np_arrays = [ np.array( pc ) for pc in pcs ]
         
-        # Set the plotting font and default size
-        font = {'family' : 'Arial',
+        # Set the plotting font and default size 'family' : 'Arial',
+        font = {
                 'weight' : 'normal',
                 'size'   : 10}
                 

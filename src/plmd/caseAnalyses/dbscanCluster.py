@@ -85,9 +85,9 @@ def runAnalysis( caseDir , eps, minPoints ):
         # Create an array for the interactions
         y_pos = np.arange(len(names))
         
-        # Do a bar plot of fractions
+        # Do a bar plot of fractions 'family' : 'Arial',
         pp = PdfPages( caseDir+"/analysis/plots/ClusterDBscanOccupancy.pdf" )
-        font = {'family' : 'Arial',
+        font = {
                 'weight' : 'normal',
                 'size'   : 10}    
         fig = plt.figure(figsize=(16,5))

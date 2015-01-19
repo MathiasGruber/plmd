@@ -44,8 +44,8 @@ def runAnalysis( saveDir, mdTrajectory , timePerFrame ):
         results.append(blocked(mdTrajectory, nblocks, rgyr))
         r = numpy.array(results)
 
-    # Print block analysis
-    font = {'family' : 'Arial',
+    # Print block analysis 'family' : 'Arial',
+    font = {
     'weight' : 'normal',
     'size'   : 10}
     plt.rc('font', **font)

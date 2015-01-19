@@ -143,8 +143,8 @@ def plotData(
         frameon=legendFrame
     )   
     
-    # Set the plotting font and default size
-    font = {'family' : 'Arial',
+    # Set the plotting font and default size 'family' : 'Arial',
+    font = {
             'weight' : 'normal',
             'size'   : 10}
     plt.rc('font', **font)        
@@ -219,8 +219,8 @@ def plotDataMap( outputDir , title , inputFile , xUnit , yUnit , xColumn=0 , yCo
     myBar.set_label("Distance ($\AA$)")
     plt.title( title )
     
-    # Set the plotting font and default size
-    font = {'family' : 'Arial',
+    # Set the plotting font and default size 'family' : 'Arial',
+    font = {
         'weight' : 'normal',
         'size'   : 10}
     plt.rc('font', **font)

@@ -33,8 +33,8 @@ def runAnalysis( caseDir ):
     # Create an array for the interactions
     y_pos = np.arange(len(names))
     
-    # Set the plotting font and default size
-    font = {'family' : 'Arial',
+    # Set the plotting font and default size 'family' : 'Arial',
+    font = {
             'weight' : 'normal',
             'size'   : 10}
         

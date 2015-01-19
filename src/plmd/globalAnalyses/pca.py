@@ -124,9 +124,9 @@ def runAnalysis( caseDirs , resultsDir , noReweight = False):
                                     fo.write( str(frame) + "\t" + temp[0] + "\t" + temp[1] +"\n" )
                                     frame += 1
 
-                    # Print block analysis
+                    # Print block analysis 'family' : 'Arial',
                     fig, ax = plt.subplots(figsize=(8, 8), nrows=1, ncols=1 )
-                    font = {'family' : 'Arial','weight' : 'normal','size' : 10}
+                    font = {'weight' : 'normal','size' : 10}
                     plt.rc('font', **font)
                     
                     # Now plot the 2d histogram
