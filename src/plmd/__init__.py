@@ -67,6 +67,7 @@ class PLMD_Config:
         self.mmpbsaInterval = config.getint('mmpbsaSettings', 'interval')
         
         self.ff = config.get('simulationParameters', 'forceField')
+        self.polarizeable = config.get('simulationParameters', 'polarizeable')
         self.qmEnable = config.getboolean('simulationParameters', 'qmEnable')
         self.qmCharge = config.get('simulationParameters', 'qmCharge')
         self.qmShake = config.get('simulationParameters', 'qmShake')

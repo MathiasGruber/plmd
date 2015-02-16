@@ -187,6 +187,12 @@ class Setup (plmd.PLMD_module):
                               replace("[STRUCTURES_IMPORT]", structureString ). \
                               replace("[WATERBOXSIZE]", str(self.config.waterboxsize) ). \
                               replace("[FOLDER]", "cases/"+caseName )
+                              
+        # If polarizeable forcefield, same pol amber
+        if self.config.polarizeable == "true":
+            TEMP = TEMP.replace("saveamberparm", "saveamberparmpol")
+        
+        # Close the template
         TEMPLATE.close()
         FILE = open("cases/"+caseName+"/LEaP.ff","w");
         FILE.write( TEMP );

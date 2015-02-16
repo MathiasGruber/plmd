@@ -29,6 +29,7 @@ def getDefaultConfig():
     
     config.add_section('simulationParameters')
     config.set('simulationParameters', 'forceField', 'leaprc.ff14SB')
+    config.set('simulationParameters', 'polarizeable', 'false')
     config.set('simulationParameters', 'qmEnable', 'true')
     config.set('simulationParameters', 'qmCharge', '-2')
     config.set('simulationParameters', 'qmShake', '1')
