@@ -12,7 +12,7 @@ class Creator:
         self.xLEaP = self.AMBERHOME+"/bin/tleap -f "
         
     # Creates a linear peptide from sequence using LEaP
-    def createPeptide( self , sequenceString, peptideCount, outFile ):
+    def createPeptide( self , sequenceString, peptideCount, outFile , forcefield = "leaprc.ff12SB"):
         
         # Check that output path exists
         outDir = os.path.dirname( outFile )
@@ -34,7 +34,7 @@ class Creator:
                     raise Exception("Invalid sequance supplied with residue entry: "+entry)
                     
             # Create input file
-            ffString = "source "+self.AMBERHOME+"/dat/leap/cmd/leaprc.ff12SB"
+            ffString = "source "+self.AMBERHOME+"/dat/leap/cmd/"+forcefield
     
             # Structures Loading. Start with initial single peptide
             structureString = "compound = sequence { "+sequenceString+" }"    
@@ -59,7 +59,7 @@ class Creator:
             os.system(self.xLEaP + outDir+"/LEaP.ff &> "+outDir+"/LEaP_peptideCreation.log" )
                 
             # User information
-            print "Script finished. \n Check the file: "+outFile+" to inspect final result.  \n Check the file: "+outDir+"/LEaP_peptideCreation.log for debug information"
+            print "Script finished with ff: "+forcefield+". \n Check the file: "+outFile+" to inspect final result.  \n Check the file: "+outDir+"/LEaP_peptideCreation.log for debug information"
             
         else:
             

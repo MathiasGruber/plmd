@@ -63,7 +63,7 @@ class Setup (plmd.PLMD_module):
             
             # Create & save the peptide
             peptideCreator = peptideConstructor.Creator()
-            peptideCreator.createPeptide( self.config.pPeptide, self.config.peptideCount, "predefinedInput/peptides.pdb" )
+            peptideCreator.createPeptide( self.config.pPeptide, self.config.peptideCount, "predefinedInput/peptides.pdb", self.config.ff )
             
             # Overwrite default configs
             self.config.peptide = "predefinedInput/peptides.pdb"
