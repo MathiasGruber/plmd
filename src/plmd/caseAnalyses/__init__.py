@@ -156,13 +156,13 @@ class analysisHandler (plmd.PLMD_module):
         
         # Hieragglo cluster
         try:
-            hierCluster.runAnalysis( self.directory )
+            hierCluster.runAnalysis( self.directory , self.timePerFrame )
         except Exception as e:
             print "Failed hier cluster analysis",e
         
         # dbscan cluster
         try:
-            dbscanCluster.runAnalysis( self.directory, self.config.dbscanEps, self.config.dbscanMinPoints )
+            dbscanCluster.runAnalysis( self.directory, self.config.dbscanEps, self.config.dbscanMinPoints , self.timePerFrame )
         except Exception as e:
             print "Failed dbscan cluser analysis",e
         

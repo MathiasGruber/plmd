@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import plmd.generalAnalyses.componentAnalysis as pcaFuncs
 import plmd.plotData as myPlot
+import numpy as np
 
 # Function for running the actual analysis
 def runAnalysis( caseDir, mdTrajectory ):
@@ -46,3 +47,30 @@ def runAnalysis( caseDir, mdTrajectory ):
         scatter = True
     )
     
+    # Calculate total
+    eigenValues = []
+    eigenValueTotal = 0
+    with open(caseDir+"/analysis/data/evecs-cleaned.dat","r") as f:
+        for line in f:
+            temp = line.split()
+            eigenValueTotal += float(temp[1])
+            eigenValues.append(float(temp[1]))
+    eigenValues = (np.array(eigenValues) / eigenValueTotal) * 100
+    with open(caseDir+"/analysis/data/evecs-percent.dat", "w") as fo:
+        i = 1
+        for value in eigenValues:
+            fo.write( str(i)+"\t"+str(value)+"\n" )
+            i += 1
+
+    print "Creating plot of eigenvalue percentages: ",set
+    myPlot.plotData( 
+        caseDir+"/analysis/plots" ,
+        "Eigenvalue Percentage Plot",
+        ["Eigenvalue"], 
+        [caseDir+"/analysis/data/evecs-cleaned.dat"] ,
+        "Percent (%)",
+        scatter = True,
+        xUnit = "Eigenvector #",
+        yLimits = [0,60],
+        markTypes=["s"]
+    )

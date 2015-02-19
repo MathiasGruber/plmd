@@ -7,7 +7,7 @@ from matplotlib.backends.backend_pdf import PdfPages
 import plmd.generalAnalyses.clusterAnalysis as cluster
 
 # Function for running the actual analysis
-def runAnalysis( caseDir , eps, minPoints ):
+def runAnalysis( caseDir , eps, minPoints, timeFactor ):
 
     # User information
     print "Now Doing dbscan Cluster"
@@ -65,6 +65,7 @@ def runAnalysis( caseDir , eps, minPoints ):
             clusterLabels, 
             clusterFiles , 
             "RMSd ($\AA$)",
+            xFactor = timeFactor,
             scatter = True,
             legendLoc = 4
         )

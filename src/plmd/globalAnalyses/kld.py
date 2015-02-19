@@ -3,6 +3,7 @@ import os, sys
 import plmd.generalAnalyses.componentAnalysis as pcaFuncs
 import plmd.generalAnalyses.clusterAnalysis as cluster
 import plmd.plotData as myPlot
+import numpy as np
 
 # Function for running the actual analysis
 def runAnalysis( caseDirs, resultsDir, trajectories, backbone ):
@@ -217,6 +218,34 @@ def runAnalysis( caseDirs, resultsDir, trajectories, backbone ):
         [resultsDir+"/data/evecs-cleaned.dat"] , 
         "AU",
         scatter = True
+    )
+    
+    # Calculate total
+    eigenValues = []
+    eigenValueTotal = 0
+    with open(resultsDir+"/data/evecs-cleaned.dat","r") as f:
+        for line in f:
+            temp = line.split()
+            eigenValueTotal += float(temp[1])
+            eigenValues.append(float(temp[1]))
+    eigenValues = (np.array(eigenValues) / eigenValueTotal) * 100
+    with open(resultsDir+"/data/evecs-percent.dat", "w") as fo:
+        i = 1
+        for value in eigenValues:
+            fo.write( str(i)+"\t"+str(value)+"\n" )
+            i += 1
+
+    print "Creating plot of eigenvalue percentages: ",set
+    myPlot.plotData( 
+        resultsDir+"/plots" ,
+        "Eigenvalue Percentage Plot",
+        ["Eigenvalue"], 
+        [resultsDir+"/data/evecs-percent.dat"] ,
+        "Percent (%)",
+        scatter = True,
+        xUnit = "Eigenvector #",
+        yLimits = [0,60],
+        markTypes=["s"]
     )
     
     

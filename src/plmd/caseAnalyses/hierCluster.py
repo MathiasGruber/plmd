@@ -6,7 +6,7 @@ from matplotlib.backends.backend_pdf import PdfPages
 import plmd.generalAnalyses.clusterAnalysis as cluster
 
 # Function for running the actual analysis
-def runAnalysis( caseDir ):
+def runAnalysis( caseDir, timeFactor ):
 
     # User information
     print "Now Doing hier Cluster"
@@ -37,6 +37,7 @@ def runAnalysis( caseDir ):
         clusterLabels, 
         clusterFiles , 
         "RMSd ($\AA$)",
+        xFactor = timeFactor,
         scatter = True,
         legendLoc = 4
     )
