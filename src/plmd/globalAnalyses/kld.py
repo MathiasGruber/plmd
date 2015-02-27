@@ -6,7 +6,7 @@ import plmd.plotData as myPlot
 import numpy as np
 
 # Function for running the actual analysis
-def runAnalysis( caseDirs, resultsDir, trajectories, backbone ):
+def runAnalysis( caseDirs, resultsDir, trajectories, backbone, timeFactor ):
     
     # User info
     print "Doing KLD analysis."
@@ -120,6 +120,7 @@ def runAnalysis( caseDirs, resultsDir, trajectories, backbone ):
             "KLD",
             scatter = True,
             skipLines = 8,
+            xFactor = timeFactor,
             logY = True
         )
 

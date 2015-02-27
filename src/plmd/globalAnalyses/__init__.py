@@ -16,6 +16,9 @@ class analysisHandler (plmd.PLMD_module):
         # The directory we're working in 
         self.dataFiles = dataFiles
 
+        # Time per frame        
+        self.timePerFrame = self.config.timestepPerFrame * self.config.timestepSize   
+
         # Load Trajectory of first case only. Just to get backbone structure
         self.mdTrajectories = []
         for caseDir in self.dataFiles['caseDirs']:
@@ -30,7 +33,7 @@ class analysisHandler (plmd.PLMD_module):
     
         # Run KLD analysis
         try:
-            kld.runAnalysis( self.dataFiles['caseDirs'] , self.resultDir, self.mdTrajectories, self.backbone )    
+            kld.runAnalysis( self.dataFiles['caseDirs'] , self.resultDir, self.mdTrajectories, self.backbone, self.timePerFrame )    
         except Exception as e:
             print "Failed kld analysis",e    
      
