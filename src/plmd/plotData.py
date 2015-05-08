@@ -29,7 +29,8 @@ def plotData(
     legendFrame = 0,
     xLimits = False,
     yLimits = False,
-    logY = False
+    logY = False,
+    fontSize = 10
 ):
     
     # plot using pdf 
@@ -106,8 +107,8 @@ def plotData(
         
     # Set title, labels etc
     ax = fig.gca()
-    ax.set_xlabel(xUnit, fontsize=12)
-    ax.set_ylabel(unit, fontsize=12)
+    ax.set_xlabel(xUnit, fontsize=fontSize+2)
+    ax.set_ylabel(unit, fontsize=fontSize+2)
     
     # Check if tight x-limits
     if tightXlimits == True:
@@ -133,7 +134,7 @@ def plotData(
         
     # Plot title
     if showTitle == True:
-        plt.title( title )
+        plt.title( title , fontsize=fontSize+4 )
     
     # Create the legend
     plt.legend(
@@ -146,7 +147,7 @@ def plotData(
     # Set the plotting font and default size 'family' : 'Arial',
     font = {
             'weight' : 'normal',
-            'size'   : 10}
+            'size'   : fontSize}
     plt.rc('font', **font)        
     
     # Save figure in pdf and png
@@ -159,7 +160,7 @@ def plotData(
     pp.close()
 
 # Do 2d plots
-def plotDataMap( outputDir , title , inputFile , xUnit , yUnit , xColumn=0 , yColumn=0 , skipRow = 0, skipColumn = 0 ,xFactor=1, yFactor=1):
+def plotDataMap( outputDir , title , inputFile , xUnit , yUnit , xColumn=0 , yColumn=0 , skipRow = 0, skipColumn = 0 ,xFactor=1, yFactor=1, fontSize=10 ):
 
     # plot using pdf files
     pp = PdfPages( outputDir+"/"+title+".pdf" )
@@ -213,16 +214,16 @@ def plotDataMap( outputDir , title , inputFile , xUnit , yUnit , xColumn=0 , yCo
         ax.yaxis.set_major_locator(LinearLocator(numticks=len(labels)))
 
     # Set title
-    ax.set_xlabel(xUnit, fontsize=12)
-    ax.set_ylabel(yUnit, fontsize=12)
+    ax.set_xlabel(xUnit, fontsize=fontSize+2)
+    ax.set_ylabel(yUnit, fontsize=fontSize+2)
     myBar = plt.colorbar(heatmap)
     myBar.set_label("Distance ($\AA$)")
-    plt.title( title )
+    plt.title( title  , fontsize=fontSize+4 )
     
     # Set the plotting font and default size 'family' : 'Arial',
     font = {
         'weight' : 'normal',
-        'size'   : 10}
+        'size'   : fontSize}
     plt.rc('font', **font)
 
     # Save figure
