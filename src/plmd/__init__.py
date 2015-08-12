@@ -72,6 +72,7 @@ class PLMD_Config:
         self.qmCharge = config.get('simulationParameters', 'qmCharge')
         self.qmShake = config.get('simulationParameters', 'qmShake')
         self.qmTheory = config.get('simulationParameters', 'qmTheory')
+        self.qmRegionOverwrite = config.get('simulationParameters', 'qmRegionOverwrite')
         self.ntf = config.get('simulationParameters', 'ntf')
         self.ntc = config.get('simulationParameters', 'ntc')
         self.ntt = config.get('simulationParameters', 'ntt')

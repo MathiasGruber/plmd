@@ -34,6 +34,7 @@ def getDefaultConfig():
     config.set('simulationParameters', 'qmCharge', '-2')
     config.set('simulationParameters', 'qmShake', '1')
     config.set('simulationParameters', 'qmTheory', 'PM6-D')
+    config.set('simulationParameters', 'qmRegionOverwrite', 'false')
     config.set('simulationParameters', 'ntf', '2')
     config.set('simulationParameters', 'ntc', '2')
     config.set('simulationParameters', 'ntt', '3')
