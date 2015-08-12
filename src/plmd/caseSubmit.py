@@ -378,7 +378,7 @@ class Setup (plmd.PLMD_module):
             self.peptideRegion = ""
         
         # If the QM region is set to be overwritten, return that overwrite
-        if self.config.qmRegionOverwrite ~= "false":
+        if self.config.qmRegionOverwrite != "false":
             self.qmRegion = self.config.qmRegionOverwrite            
             
         # Get complex IDs for MMPBSA       
