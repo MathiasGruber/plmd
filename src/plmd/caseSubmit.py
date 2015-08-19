@@ -155,6 +155,8 @@ class Setup (plmd.PLMD_module):
         elif self.config.queueSystem == "lfs":
             print "Bsub Submission"            
             os.system( "bsub < "+caseName+"/submit_run.sh" )
+        else:
+            raise Exception("Does not recognize submission system: "+self.config.queueSystem)
             
         
     # Submit MMPBSA run
