@@ -152,7 +152,7 @@ class Setup (plmd.PLMD_module):
         if self.config.queueSystem == "pbs":
             print "Qsub Submission"
             os.system( "qsub "+caseName+"/submit_run.sh" )
-        elif self.config.queueSystem == "lfs":
+        elif self.config.queueSystem == "lsf":
             print "Bsub Submission"            
             os.system( "bsub < "+caseName+"/submit_run.sh" )
         else:
