@@ -59,12 +59,16 @@ class Setup (plmd.PLMD_module):
             amdLogFile = "outMD"
         
         # Replace stuff within
-        TEMP = TEMPLATE.read().replace("[FOLDER]", caseName  ). \
-                              replace("[NAME]", self.config.name+"_"+caseID  ). \
-                              replace("[CPUCONTROL]", self.config.nodeControl ). \
-                              replace("[WALLCLOCK]", self.config.wallClock ). \
-                              replace("[MDRUNS]", self.config.mdRuns ). \
-                              replace("[LOGFILENAME]", amdLogFile )
+        TEMP = TEMPLATE.read().replace("[HEADER]", self.config.headerData ). \
+                               replace("[FOLDER]", caseName  ). \
+                               replace("[NAME]", self.config.name+"_"+caseID  ). \
+                               replace("[QUEUE]", self.config.submissionQueue  ). \
+                               replace("[LFSCORES]", self.config.lfsCores  ). \
+                               replace("[LFSHOSTS]", self.config.lfsHosts  ). \
+                               replace("[CPUCONTROL]", self.config.nodeControl ). \
+                               replace("[WALLCLOCK]", self.config.wallClock ). \
+                               replace("[MDRUNS]", self.config.mdRuns ). \
+                               replace("[LOGFILENAME]", amdLogFile )
         TEMPLATE.close()
                               
         # Write the submission file
@@ -97,12 +101,16 @@ class Setup (plmd.PLMD_module):
             
         # Replace stuff within
         TEMPLATE = open( self.config.PLMDHOME+"/src/templates/mmpbsa_submit.txt", 'r')
-        TEMP = TEMPLATE.read().replace("[FOLDER]", caseName  ). \
-                              replace("[NAME]", self.config.name+"_"+caseID  ). \
-                              replace("[CPUCONTROL]", self.config.nodeControl ). \
-                              replace("[WALLCLOCK]", self.config.wallClock ). \
-                              replace("[CASEID]", str(caseName.split("/")[-1]) ). \
-                              replace("[COMPLEXFILES]", complexFiles )
+        TEMP = TEMPLATE.read().replace("[HEADER]", self.config.headerData ). \
+                               replace("[FOLDER]", caseName  ). \
+                               replace("[NAME]", self.config.name+"_"+caseID  ). \
+                               replace("[QUEUE]", self.config.submissionQueue  ). \
+                               replace("[LFSCORES]", "1"  ). \
+                               replace("[LFSHOSTS]", "1"  ). \
+                               replace("[CPUCONTROL]", "nodes=1:ppn=1" ). \
+                               replace("[WALLCLOCK]", self.config.wallClock ). \
+                               replace("[CASEID]", str(caseName.split("/")[-1]) ). \
+                               replace("[COMPLEXFILES]", complexFiles )
         TEMPLATE.close()
                               
         # Create folder for this
@@ -141,7 +149,11 @@ class Setup (plmd.PLMD_module):
         self.printStage( "Stage 4, Case: "+caseName+". Submitting to HPC" )          
         
         # Do submission        
-        os.system( "qsub "+caseName+"/submit_run.sh" )
+        if self.config.queueSystem == "pbs":
+            os.system( "qsub "+caseName+"/submit_run.sh" )
+        elif self.config.queueSystem == "lfs":
+            os.system( "bsub < "+caseName+"/submit_run.sh" )
+            
         
     # Submit MMPBSA run
     def hpcMMPBSASubmission(self, caseName):
@@ -149,8 +161,11 @@ class Setup (plmd.PLMD_module):
          # User information
         self.printStage( "Stage 4, MMPBSA Case: "+caseName+". Submitting to HPC" )          
         
-        # Do submission        
-        os.system( "qsub "+caseName+"/submit_mmpbsa.sh" )
+        # Do submission  
+        if self.config.queueSystem == "pbs":
+            os.system( "qsub "+caseName+"/submit_mmpbsa.sh" )
+        elif self.config.queueSystem == "lfs":
+            os.system( "bsub < "+caseName+"/submit_mmpbsa.sh" )
              
     # Create all the amber input files for a case
     def amberCreateInput( self, caseName ):

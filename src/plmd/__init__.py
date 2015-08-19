@@ -83,9 +83,13 @@ class PLMD_Config:
         self.timestepSize = config.getfloat('simulationParameters', 'timestepSize')
         self.timestepNumber = config.get('simulationParameters', 'timestepNumber')
         
+        self.queueSystem = config.get('submissionParameters', 'submissionSystem')
+        self.submissionQueue = config.get('submissionParameters', 'submissionQueue')        
         self.nodeControl = config.get('submissionParameters', 'nodeControl')
         self.wallClock = config.get('submissionParameters', 'wallClock')
         self.mdRuns = config.get('submissionParameters', 'mdRuns')
+        self.lfsCores = config.get('submissionParameters', 'lfs_Cores')
+        self.lfsHosts = config.get('submissionParameters', 'lfs_Hosts')        
         
         # GPU run
         self.gpuEnabled = config.getboolean('gpuRun', 'enable')       
@@ -120,3 +124,16 @@ class PLMD_Config:
         # Get environment vars for PLMD & Amber. Will raise exceptions if not found
         self.PLMDHOME = os.environ["PLMDHOME"]
         self.AMBERHOME = os.environ["AMBERHOME"] 
+        
+        # Set the submission data
+        # Figure out what submission system we're on (PBS or LFS
+        self.headerFile = ""
+        if self.queueSystem == "pbs":
+            self.headerFile = "pbs_header"
+        else:
+            self.headerFile = "lfs_header"
+        
+        # Get header content
+        self.headerData = ""
+        with open( self.PLMDHOME+"/src/templates/"+self.headerFile , "r") as fi:
+            self.headerData = fi.read()

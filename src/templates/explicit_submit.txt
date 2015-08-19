@@ -1,16 +1,8 @@
-#!/bin/sh
-#
-#PBS -N [NAME]
-#PBS -l [CPUCONTROL]
-#PBS -l walltime=[WALLCLOCK]
-
-cd $PBS_O_WORKDIR
+[HEADER]
 
 # Set absolute path to amber
 amber=$AMBERHOME/bin/sander.MPI
 
-# Load mpi
-module load mpi/gcc-4.7.2-openmpi-1.6.3
 
 # Number of MD steps
 md_steps=[MDRUNS]

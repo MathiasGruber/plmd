@@ -1,0 +1,18 @@
+#!/bin/sh
+#BSUB -J [NAME]
+#BSUB -q [QUEUE]
+#BSUB -n [LFSCORES]
+#BSUB -R "span[hosts=[LFSHOSTS]]"
+#BSUB -W [WALLCLOCK]
+#BSUB -u null@dtu.dk
+#BSUB -B
+#BSUB -N
+#BSUB -o Output_%J.out
+#BSUB -e Error_%J.err
+
+# here follow the commands you want to execute
+# 
+# load the necessary modules
+# NOTE: this is just an example, check with the available modules
+module load gcc
+module load mpi/gcc-openmpi-1.6.5-lsfib

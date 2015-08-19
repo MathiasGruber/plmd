@@ -1,11 +1,4 @@
-#!/bin/sh
-#
-#PBS -N [NAME]
-#PBS -l [CPUCONTROL]
-#PBS -l walltime=[WALLCLOCK]
-
-# Run in the current working (submission) directory
-if test X$PBS_ENVIRONMENT = XPBS_BATCH; then cd $PBS_O_WORKDIR; fi
+[HEADER]
 
 # The CUDA device reserved for you by the batch system
 CUDADEV=`cat $PBS_GPUFILE | rev | cut -d"-" -f1 | rev | tr -cd [:digit:]`

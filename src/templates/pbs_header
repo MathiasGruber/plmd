@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+#PBS -N [NAME]
+#PBS -l [CPUCONTROL]
+#PBS -l walltime=[WALLCLOCK]
+
+# Run in the current working (submission) directory
+if test X$PBS_ENVIRONMENT = XPBS_BATCH; then cd $PBS_O_WORKDIR; fi
+
+# load the necessary modules
+# NOTE: this is just an example, check with the available modules
+module load gcc
+module load mpi/gcc-openmpi-1.6.5-lsfib

@@ -46,11 +46,14 @@ def getDefaultConfig():
     config.set('simulationParameters', 'timestepNumber', '1000000')
 
     config.add_section('submissionParameters')
+    config.set('submissionParameters', 'submissionSystem', 'pbs')
     config.set('submissionParameters', 'nodeControl', 'nodes=2:ppn=8')
+    config.set('submissionParameters', 'submissionQueue', 'hpc')
     config.set('submissionParameters', 'wallClock', '72:00:00')
     config.set('submissionParameters', 'mdRuns', '50')
-    config.set('submissionParameters', 'submissionSystem', 'pbs')
-
+    config.set('submissionParameters', 'lfs_Cores', '8')
+    config.set('submissionParameters', 'lfs_Hosts', '1')
+    
     config.add_section('analysisParameters')
     config.set('analysisParameters', 'noMerge', 'false')
     config.set('analysisParameters', 'noStrip', 'false')

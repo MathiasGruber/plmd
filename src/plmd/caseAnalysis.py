@@ -29,8 +29,16 @@ class Analysis (plmd.PLMD_module):
         
         # Create new submission file
         TEMPLATE = open( self.config.PLMDHOME+"/src/templates/analysis_submit.txt", 'r')
-        TEMP = TEMPLATE.read().replace("[FOLDER]", caseDir  ). \
-                              replace("[PYTHONCALL]", pythonCall )
+        TEMP = TEMPLATE.read().replace("[HEADER]", self.config.headerData ). \
+                               replace("[NAME]", self.config.name+"-"+caseDir+"-ana"  ). \
+                               replace("[QUEUE]", self.config.submissionQueue  ). \
+                               replace("[LFSCORES]", "1"  ). \
+                               replace("[LFSHOSTS]", "1"  ). \
+                               replace("[WALLCLOCK]", self.config.wallClock ). \
+                               replace("[QUEUE]", self.config.submissionQueue ). \
+                               replace("[CPUCONTROL]", "nodes=1:ppn=1" ). \
+                               replace("[FOLDER]", caseDir  ). \
+                               replace("[PYTHONCALL]", pythonCall )
         TEMPLATE.close()
                               
         # Write the submission file
@@ -39,10 +47,11 @@ class Analysis (plmd.PLMD_module):
         FILE.close();
 
         # Submit the run
-        os.system( "qsub "+caseDir+"/submit_analysis.sh" )
+        if self.config.queueSystem == "pbs":
+            os.system( "qsub "+caseDir+"/submit_analysis.sh" )
+        elif self.config.queueSystem == "lfs":
+            os.system( "bsub < "+caseDir+"/submit_analysis.sh" )
         
-        # Remove submission file immidiately afterwards
-        os.remove( caseDir+"/submit_analysis.sh" )
           
     # Main function handling analysis of a single case directory
     def analyseGlobal( self, searchDir ):
