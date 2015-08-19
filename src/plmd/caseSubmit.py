@@ -146,12 +146,14 @@ class Setup (plmd.PLMD_module):
     def hpcSubmission( self, caseName ):
         
         # User information
-        self.printStage( "Stage 4, Case: "+caseName+". Submitting to HPC" )          
+        self.printStage( "Stage 4, Case: "+caseName+". Submitting to "+self.config.submissionQueue )          
         
         # Do submission        
         if self.config.queueSystem == "pbs":
+            print "Qsub Submission"
             os.system( "qsub "+caseName+"/submit_run.sh" )
         elif self.config.queueSystem == "lfs":
+            print "Bsub Submission"            
             os.system( "bsub < "+caseName+"/submit_run.sh" )
             
         
