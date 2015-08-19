@@ -51,8 +51,8 @@ def getDefaultConfig():
     config.set('submissionParameters', 'submissionQueue', 'hpc')
     config.set('submissionParameters', 'wallClock', '72:00:00')
     config.set('submissionParameters', 'mdRuns', '50')
-    config.set('submissionParameters', 'lfs_Cores', '8')
-    config.set('submissionParameters', 'lfs_Hosts', '1')
+    config.set('submissionParameters', 'lsf_Cores', '8')
+    config.set('submissionParameters', 'lsf_Hosts', '1')
     
     config.add_section('analysisParameters')
     config.set('analysisParameters', 'noMerge', 'false')

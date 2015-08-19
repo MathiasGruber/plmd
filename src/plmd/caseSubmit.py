@@ -63,8 +63,8 @@ class Setup (plmd.PLMD_module):
                                replace("[FOLDER]", caseName  ). \
                                replace("[NAME]", self.config.name+"_"+caseID  ). \
                                replace("[QUEUE]", self.config.submissionQueue  ). \
-                               replace("[LFSCORES]", self.config.lfsCores  ). \
-                               replace("[LFSHOSTS]", self.config.lfsHosts  ). \
+                               replace("[LFSCORES]", self.config.lsfCores  ). \
+                               replace("[LFSHOSTS]", self.config.lsfHosts  ). \
                                replace("[CPUCONTROL]", self.config.nodeControl ). \
                                replace("[WALLCLOCK]", self.config.wallClock ). \
                                replace("[MDRUNS]", self.config.mdRuns ). \
@@ -168,7 +168,7 @@ class Setup (plmd.PLMD_module):
         # Do submission  
         if self.config.queueSystem == "pbs":
             os.system( "qsub "+caseName+"/submit_mmpbsa.sh" )
-        elif self.config.queueSystem == "lfs":
+        elif self.config.queueSystem == "lsf":
             os.system( "bsub < "+caseName+"/submit_mmpbsa.sh" )
              
     # Create all the amber input files for a case

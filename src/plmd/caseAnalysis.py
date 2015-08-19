@@ -49,7 +49,7 @@ class Analysis (plmd.PLMD_module):
         # Submit the run
         if self.config.queueSystem == "pbs":
             os.system( "qsub "+caseDir+"/submit_analysis.sh" )
-        elif self.config.queueSystem == "lfs":
+        elif self.config.queueSystem == "lsf":
             os.system( "bsub < "+caseDir+"/submit_analysis.sh" )
         
           

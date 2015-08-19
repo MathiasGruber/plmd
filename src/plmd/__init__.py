@@ -88,8 +88,8 @@ class PLMD_Config:
         self.nodeControl = config.get('submissionParameters', 'nodeControl')
         self.wallClock = config.get('submissionParameters', 'wallClock')
         self.mdRuns = config.get('submissionParameters', 'mdRuns')
-        self.lfsCores = config.get('submissionParameters', 'lfs_Cores')
-        self.lfsHosts = config.get('submissionParameters', 'lfs_Hosts')        
+        self.lsfCores = config.get('submissionParameters', 'lsf_Cores')
+        self.lsfHosts = config.get('submissionParameters', 'lsf_Hosts')        
         
         # GPU run
         self.gpuEnabled = config.getboolean('gpuRun', 'enable')       
@@ -129,9 +129,25 @@ class PLMD_Config:
         # Figure out what submission system we're on (PBS or LFS
         self.headerFile = ""
         if self.queueSystem == "pbs":
+            
+            # PBS submission system
             self.headerFile = "pbs_header"
+            
+        elif self.queueSystem == "lsf":
+            
+            # LSF submission system
+            self.headerFile = "lsf_header"
+            
+            # Fix the wall time from HH:MM:SS to HH:MM
+            temp = self.wallClock.split(":")
+            self.wallClock = temp[0]+":"+temp[1]
+            
+            # Fix nodecontrol (for visual purposes)
+            self.nodeControl = "Cores: "+str(self.lsfCores)+". Hosts: "+str(self.lsfHosts)
         else:
-            self.headerFile = "lfs_header"
+            raise Exception("Could not determine queue system: "+self.queueSystem )
+            
+            
         
         # Get header content
         self.headerData = ""
