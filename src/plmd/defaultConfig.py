@@ -49,6 +49,7 @@ def getDefaultConfig():
     config.set('submissionParameters', 'nodeControl', 'nodes=2:ppn=8')
     config.set('submissionParameters', 'wallClock', '72:00:00')
     config.set('submissionParameters', 'mdRuns', '50')
+    config.set('submissionParameters', 'submissionSystem', 'pbs')
 
     config.add_section('analysisParameters')
     config.set('analysisParameters', 'noMerge', 'false')
