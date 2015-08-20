@@ -18,5 +18,7 @@ module load gcc/4.8.4
 module load mpi/gcc-openmpi-1.6.5-lsfib
 module load amber/14-gcc-4.8.4
 
+echo "CURRENT CPU TYPE"
+echo $CPUTYPEV
 echo "AMBER HOME DIRECTORY:"
 echo $AMBERHOME
