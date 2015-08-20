@@ -16,3 +16,7 @@
 # NOTE: this is just an example, check with the available modules
 module load gcc
 module load mpi/gcc-openmpi-1.6.5-lsfib
+module load amber/14-gcc-4.8.4
+
+echo "AMBER HOME DIRECTORY:"
+echo $AMBERHOME
