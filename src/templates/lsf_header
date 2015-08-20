@@ -10,10 +10,10 @@
 #BSUB -o Output_%J.out
 #BSUB -e Error_%J.err
 
-# here follow the commands you want to execute
-# 
+# Temporary fix on DTU HPC
+.  /etc/profile.d/machinetype.sh
+
 # load the necessary modules
-# NOTE: this is just an example, check with the available modules
 module load gcc/4.8.4
 module load mpi/gcc-openmpi-1.6.5-lsfib
 module load amber/14-gcc-4.8.4
