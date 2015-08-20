@@ -16,7 +16,7 @@ try:
     args = parser.parse_args()  
     
     # Unimportant files
-    dumbFiles = ["^leap.log$", "^.+\.e\d+$", "^.+\.o\d+$","^.+\.tar$", "^LEaP_setup.log$", "^ccptraj_analysis_.+\.ptraj", "^MMPBSATEMP.+"]    
+    dumbFiles = ["^leap.log$", "^.+\.e\d+$", "^.+\.o\d+$", "^Error.+\.err$", "^Output.+\.out$", "^.+\.tar$", "^LEaP_setup.log$", "^ccptraj_analysis_.+\.ptraj", "^MMPBSATEMP.+"]    
     
     # Do a walkthrough
     for subdir,dirs,files in os.walk( "." ):

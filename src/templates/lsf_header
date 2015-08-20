@@ -14,7 +14,7 @@
 # 
 # load the necessary modules
 # NOTE: this is just an example, check with the available modules
-module load gcc
+module load gcc/4.8.4
 module load mpi/gcc-openmpi-1.6.5-lsfib
 module load amber/14-gcc-4.8.4
 
