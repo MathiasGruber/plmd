@@ -1,0 +1,78 @@
+# Run Cluster analysis of global trajectory #
+#############################################
+
+# Load the trajectory
+trajin [ANALYSISDIR]/data/combinedCaseTrajectory.dcd 1 last 1
+
+# Save coordinates in memory
+createcrd crd1
+
+# Run for further processing
+run
+
+# Cluster Analysis
+##################
+cluster K1 dbscan \
+    kdist 1 \
+    rms :1-[LASTRESI]@CA,C,N,O \
+    sieve [SIEVE] \
+    loadpairdist pairdist [ANALYSISDIR]/data/CpptrajPairDist
+
+cluster K2 dbscan \
+    kdist 2 \
+    rms :1-[LASTRESI]@CA,C,N,O \
+    sieve [SIEVE] \
+    loadpairdist pairdist [ANALYSISDIR]/data/CpptrajPairDist
+
+cluster K3 dbscan \
+    kdist 3 \
+    rms :1-[LASTRESI]@CA,C,N,O \
+    sieve [SIEVE] \
+    loadpairdist pairdist [ANALYSISDIR]/data/CpptrajPairDist
+
+cluster K4 dbscan \
+    kdist 4 \
+    rms :1-[LASTRESI]@CA,C,N,O \
+    sieve [SIEVE] \
+    loadpairdist pairdist [ANALYSISDIR]/data/CpptrajPairDist
+
+cluster K5 dbscan \
+    kdist 5 \
+    rms :1-[LASTRESI]@CA,C,N,O \
+    sieve [SIEVE] \
+    loadpairdist pairdist [ANALYSISDIR]/data/CpptrajPairDist
+
+cluster K6 dbscan \
+    kdist 6 \
+    rms :1-[LASTRESI]@CA,C,N,O \
+    sieve [SIEVE] \
+    loadpairdist pairdist [ANALYSISDIR]/data/CpptrajPairDist
+
+cluster dbscan \
+    minpoints [MINPOINTS] \
+    epsilon [DBSCANEPS] \
+    sievetoframe \
+    rms :1-[LASTRESI] @CA,C,N,O \
+    out [ANALYSISDIR]/data/cluster_dbscan_out \
+    gracecolor \
+    summary [ANALYSISDIR]/data/cluster_dbscan_summary.dat \
+    info [ANALYSISDIR]/data/cluster_dbscan_info \
+    repout [ANALYSISDIR]/structures/cluster/cluster_dbscan_centroid \
+    repfmt pdb \
+    sieve [SIEVE] 
+
+cluster hieragglo \
+    epsilon 3.0 \
+    averagelinkage \
+    rms :1-[LASTRESI] @CA,C,N \
+    out [ANALYSISDIR]/data/cluster_hier_out \
+    gracecolor \
+    summary [ANALYSISDIR]/data/cluster_hier_summary.dat \
+    info [ANALYSISDIR]/data/cluster_hier_info \
+    repout [ANALYSISDIR]/structures/cluster/cluster_hier_centroid \
+    repfmt pdb \
+    sieve [SIEVE]
+
+
+# Run analysis
+go

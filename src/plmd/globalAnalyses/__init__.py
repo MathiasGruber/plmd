@@ -1,4 +1,4 @@
-import MDAnalysis, os, re, sys
+import MDAnalysis, os, re, sys, math
 import plmd
 import cluster, energy, pca, kld, endToEnd, RMSdFrequency, dihedral
 
@@ -26,11 +26,24 @@ class analysisHandler (plmd.PLMD_module):
                 caseDir+"/md-files/peptide_nowat.prmtop", 
                 caseDir+"/mergedResult.dcd") 
             ) 
-        self.backbone = self.mdTrajectories[0].selectAtoms('protein and backbone')    
+        self.backbone = self.mdTrajectories[0].selectAtoms('protein and backbone')  
+
+        # Count the number of simulation frames in total
+        self.simFrames = 0
+        for Traj in self.mdTrajectories:
+            self.simFrames += Traj.trajectory.numframes   
         
     # Run all the analyses modules
     def runAll( self ):
     
+        # Cluster Comparisons
+        try:
+            self.printStage( "Doing global clustering & comparing and plotting case clusters")
+            cluster.runAnalysis( self.dataFiles[ 'caseDirs' ] , self.resultDir, self.config.noReweight );
+        except Exception as e:
+            print "Failed global clustering & comparing and plotting case clusters",e    
+            sys.exit(2)    
+
         # Run KLD analysis
         try:
             kld.runAnalysis( self.dataFiles['caseDirs'] , self.resultDir, self.mdTrajectories, self.backbone, self.timePerFrame )    
@@ -43,15 +56,6 @@ class analysisHandler (plmd.PLMD_module):
         except Exception as e:
             print "Failed pca analysis",e        
     
-       
-        # Cluster Comparisons
-        try:
-            self.printStage( "Comparing and plotting clusters")
-            cluster.runAnalysis( self.dataFiles[ 'caseDirs' ] , self.resultDir, self.config.noReweight );
-        except Exception as e:
-            print "Failed cluster comparison & plotting",e    
-            sys.exit(2)    
-        
         # Plot Dihedral
         try:
             self.printStage( "Plotting dihedrals")
@@ -87,6 +91,9 @@ class analysisHandler (plmd.PLMD_module):
         # Get number of residues
         numOfResidues = self.backbone.numberOfResidues()
 
+        # Sieve limits. Aim for 10000 frames in cluster analysis
+        self.sieveValue = math.ceil( self.simFrames / self.config.clusterFrames )
+
         # Load cpptraj template files for each case
         for caseDir in self.dataFiles[ 'caseDirs' ]:
 
@@ -103,8 +110,12 @@ class analysisHandler (plmd.PLMD_module):
                 
                 # Create new submission file
                 TEMPLATE = open( self.config.PLMDHOME+"/src/templates/cpptraj_analysis_global_"+ptrajType+".txt", 'r')
-                TEMP = TEMPLATE.read().replace("[FOLDER]", caseDir  ). \
+                TEMP = TEMPLATE.read().replace("[ANALYSISDIR]", self.resultDir ). \
+                                       replace("[FOLDER]", caseDir  ). \
                                        replace("[FIRSTRESI]", "1" ). \
+                                       replace("[SIEVE]", str(self.sieveValue) ). \
+                                       replace("[MINPOINTS]", str(self.config.dbscanMinPoints) ). \
+                                       replace("[DBSCANEPS]", str(self.config.dbscanEps) ). \
                                        replace("[LASTRESI]", str(numOfResidues) ). \
                                        replace("[LASTID]", str( numOfResidues + self.config.ligandCount ) )
                 TEMPLATE.close()

@@ -3,6 +3,7 @@ import os, sys, glob, re
 from pylab import plt
 import numpy as np
 import plmd.plotData as myPlot
+from matplotlib.backends.backend_pdf import PdfPages
 
 from MDAnalysis import *
 from MDAnalysis.analysis.align import *
@@ -17,10 +18,77 @@ def numericalSort(value):
 # Function for running the actual analysis
 def runAnalysis( caseDirs, resultsDir, noReweight = False ):
     
-    # User info
-    print "Doing Cluster analyses."
     showClusters = 10
     clusterTypes = ["hier", "dbscan"]   
+
+    ## Do GLOBAL CLUSTER ANALYSIS using DBSCAN
+    ##########################################
+
+    # User info
+    print "Doing global clustering"
+
+    # Run the clustering analysis. It's saved in each case directory, but just use the first one.
+    os.system( "$AMBERHOME/bin/cpptraj -p "+caseDirs[0]+"/md-files/peptide_nowat.prmtop -i "+caseDirs[0]+"/ccptraj_analysis_clustering.ptraj" )
+
+    # Move k-dist from dbScan cluster to data directory
+    os.system("mv Kdist.*.dat "+resultsDir+"/data/")                                  
+
+    # Plot kdist... man
+    myPlot.plotData( 
+            resultsDir+"/plots" , 
+            "Kdist Plots", 
+            ["1-dist","2-dist","3-dist","4-dist","5-dist","6-dist"], 
+            [resultsDir+"/data/Kdist.1.dat", 
+             resultsDir+"/data/Kdist.2.dat", 
+             resultsDir+"/data/Kdist.3.dat", 
+             resultsDir+"/data/Kdist.4.dat", 
+             resultsDir+"/data/Kdist.5.dat", 
+             resultsDir+"/data/Kdist.6.dat"] , 
+            "k-dist",
+            xUnit = "points",
+            skipLines = 1,
+            xLimits=[0,100]) 
+
+    ## OCCUPANCY PLOT
+    #################
+    
+    for cluster in clusterTypes:
+
+        # Get the data to plot
+        names, fractions = [],[]
+        if os.path.isfile( resultsDir+"/data/cluster_"+cluster+"_summary.dat" ):
+            with open(resultsDir+"/data/cluster_"+cluster+"_summary.dat","r") as fi:
+                next(fi)
+                for aline in fi:
+                    if aline:
+                        values = aline.split()
+                        names.append( "Cluster "+values[0] )                      
+                        fractions.append( float(values[2]) )
+                        
+            # Create an array for the interactions
+            y_pos = np.arange(len(names))
+            
+            # Do a bar plot of fractions 'family' : 'Arial',
+            pp = PdfPages( resultsDir+"/plots/Cluster_"+cluster+"_occupancy.pdf" )
+            font = {
+                    'weight' : 'normal',
+                    'size'   : 10}    
+            fig = plt.figure(figsize=(16,5))
+            plt.barh( y_pos, fractions, align = 'center', color = plt.rcParams['axes.color_cycle'][0]  )   
+            plt.yticks(y_pos, names)
+            ax = fig.gca()
+            ax.set_xlabel("Occupied Fraction", fontsize=12)
+            ax.set_ylabel("", fontsize=12)
+            plt.title( "Cluster "+cluster+" Occupancy Fraction, " )
+            plt.rc('font', **font)        
+            plt.savefig(pp, format="pdf",dpi=100)
+            pp.close()  
+
+    ## Do cluster comparisons between cases
+    ##########################################
+
+    # User info
+    print "Doing case cluster comparisons & plotting"
     
     # Save information in these arrays
     clusterFiles = []
@@ -103,6 +171,7 @@ def runAnalysis( caseDirs, resultsDir, noReweight = False ):
                                 yColumn=range(1,showClusters+1)
                             )
                             
-    ## DISTINCT CLUSTERS SAVING & 2D HISTOGRAM
-    ##########################################
+    
+
+    
         

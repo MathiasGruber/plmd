@@ -92,6 +92,7 @@ class Analysis (plmd.PLMD_module):
             self.createFolder( analysisDir+"/plots/clusterComparison/" , True )
             self.createFolder( analysisDir+"/plots/pcaComparison/" , True )
             self.createFolder( analysisDir+"/structures/" , True )
+            self.createFolder( analysisDir+"/structures/cluster" , True )
             self.createFolder( analysisDir+"/data/" , True )
             
             # Instantiate the handler for the analyses
