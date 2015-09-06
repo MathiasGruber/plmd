@@ -28,7 +28,7 @@ def runAnalysis( caseDirs, resultsDir, noReweight = False ):
     print "Doing global clustering"
 
     # Run the clustering analysis. It's saved in each case directory, but just use the first one.
-    os.system( "$AMBERHOME/bin/cpptraj -p "+caseDirs[0]+"/md-files/peptide_nowat.prmtop -i "+caseDirs[0]+"/ccptraj_analysis_clustering.ptraj" )
+    os.system( "$AMBERHOME/bin/cpptraj -p "+caseDirs[0]+"/md-files/peptide_nowat.prmtop -i "+caseDirs[0]+"/ccptraj_analysis_clustering.ptraj > "+resultsDir+"/data/globalClustering.dat" )
 
     # Move k-dist from dbScan cluster to data directory
     os.system("mv Kdist.*.dat "+resultsDir+"/data/")                                  
